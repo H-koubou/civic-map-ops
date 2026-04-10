@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>このサービスについて — 伊丹シビックマップ</title>
+  <meta name="description" content="市民の「知りたい」を1枚の地図に。伊丹シビックマップが生まれた背景、技術スタック、自治体向けプラン、データ出典まで。" />
+  <meta name="theme-color" content="#006781" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/page-about.css" />
+</head>
+<body data-page="about" class="page">
+  <a href="#main" class="skip-link">本文へスキップ</a>
+
+  <!-- 共通ヘッダー -->
+  <div data-include="partials/header.html"></div>
+
+  <main id="main">
+    <!-- ========== Hero ========== -->
+    <section class="ab-hero">
+      <div class="ab-hero-bg" aria-hidden="true">
+        <div class="ab-hero-blob blob-1"></div>
+        <div class="ab-hero-blob blob-2"></div>
+        <div class="ab-hero-grid"></div>
+      </div>
+
+      <div class="container ab-hero-inner">
+        <div class="ab-hero-content">
+          <span class="chip chip-assist ab-hero-eyebrow">
+            <span class="material-symbols-rounded">flag</span>
+            ミッション
+          </span>
+          <h1 class="ab-hero-title">
+            市民が知りたい街の情報を、<br />
+            <span class="ab-hero-title-accent">1枚の地図で。</span>
+          </h1>
+          <p class="ab-hero-sub">
+            ゴミ出しのルール、処理施設の場所、下水道や側溝の管理情報 ——
+            暮らしに必要な「街のデータ」は点在しています。<br />
+            私たちはそれを、誰もが直感的に使える地図に束ね、市民の手元に届けます。
+          </p>
+          <div class="ab-hero-actions">
+            <a href="./map.html" class="btn btn-filled btn-lg">
+              <span class="material-symbols-rounded">map</span>
+              地図を開く
+            </a>
+            <a href="#contact" class="btn btn-outlined btn-lg">
+              <span class="material-symbols-rounded">mail</span>
+              お問い合わせ
+            </a>
+          </div>
+        </div>
+
+        <div class="ab-hero-visual" aria-hidden="true">
+          <div class="ab-hero-card">
+            <div class="ab-hero-card-label">
+              <span class="material-symbols-rounded">layers</span>
+              レイヤを重ねて表示
+            </div>
+            <svg viewBox="0 0 420 360" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="ab-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--md-sys-color-outline-variant)" stroke-width="0.5"/>
+                </pattern>
+              </defs>
+              <rect width="420" height="360" fill="var(--md-sys-color-surface-container-lowest)"/>
+              <rect width="420" height="360" fill="url(#ab-grid)"/>
+              <!-- District -->
+              <path d="M60 80 L360 60 L380 300 L50 320 Z"
+                fill="var(--md-sys-color-primary-container)" opacity="0.35"
+                stroke="var(--md-sys-color-primary)" stroke-width="1.5" stroke-dasharray="5 5"/>
+              <!-- Sewer -->
+              <path d="M0 180 Q110 140 210 180 T420 160" stroke="var(--layer-sewer)" stroke-width="4" fill="none" opacity="0.7"/>
+              <path d="M0 230 Q110 200 210 230 T420 220" stroke="var(--layer-ditch)" stroke-width="3" fill="none" opacity="0.7"/>
+              <!-- Facilities -->
+              <g>
+                <circle cx="150" cy="160" r="24" fill="var(--layer-facility)" opacity="0.25"/>
+                <circle cx="150" cy="160" r="12" fill="var(--layer-facility)" stroke="white" stroke-width="2"/>
+              </g>
+              <g>
+                <circle cx="280" cy="220" r="24" fill="var(--layer-gomi-recycle)" opacity="0.25"/>
+                <circle cx="280" cy="220" r="12" fill="var(--layer-gomi-recycle)" stroke="white" stroke-width="2"/>
+              </g>
+              <g>
+                <circle cx="330" cy="100" r="20" fill="var(--layer-shelter)" opacity="0.25"/>
+                <circle cx="330" cy="100" r="10" fill="var(--layer-shelter)" stroke="white" stroke-width="2"/>
+              </g>
+              <g>
+                <circle cx="95" cy="270" r="18" fill="var(--layer-gomi-petbottle)" opacity="0.25"/>
+                <circle cx="95" cy="270" r="9" fill="var(--layer-gomi-petbottle)" stroke="white" stroke-width="2"/>
+              </g>
+              <!-- Current loc pulse -->
+              <g>
+                <circle cx="220" cy="180" r="30" fill="var(--md-sys-color-primary)" opacity="0.15">
+                  <animate attributeName="r" values="20;36;20" dur="2.8s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="220" cy="180" r="10" fill="var(--md-sys-color-primary)" stroke="white" stroke-width="3"/>
+              </g>
+            </svg>
+          </div>
+          <div class="ab-hero-floatcard ab-hero-floatcard-1">
+            <div class="ab-hero-floatcard-ico" style="background: var(--layer-gomi-recycle);">
+              <span class="material-symbols-rounded">recycling</span>
+            </div>
+            <div>
+              <div class="ab-hero-floatcard-label">本日の収集</div>
+              <div class="ab-hero-floatcard-value">資源ゴミ</div>
+            </div>
+          </div>
+          <div class="ab-hero-floatcard ab-hero-floatcard-2">
+            <div class="ab-hero-floatcard-ico" style="background: var(--layer-facility);">
+              <span class="material-symbols-rounded">factory</span>
+            </div>
+            <div>
+              <div class="ab-hero-floatcard-label">最寄り施設</div>
+              <div class="ab-hero-floatcard-value">環境CS 1.2km</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Problem section ========== -->
+    <section class="ab-section ab-problem">
+      <div class="container">
+        <div class="ab-section-head">
+          <span class="chip chip-assist"><span class="material-symbols-rounded">help</span>なぜ作ったか</span>
+          <h2 class="display-small">暮らしの情報は、<br class="br-md"/>バラバラに点在している</h2>
+          <p class="ab-section-sub">
+            既存の行政GISと市民の間には、大きな距離があります。
+            私たちは4つの課題を解決するために、このサービスを立ち上げました。
+          </p>
+        </div>
+
+        <div class="ab-problem-grid">
+          <article class="ab-problem-card">
+            <div class="ab-problem-num">01</div>
+            <div class="ab-problem-ico"><span class="material-symbols-rounded">build_circle</span></div>
+            <h3 class="title-large">既存GISは業務向けUI</h3>
+            <p class="body-medium">
+              「たみまっぷ」は業務利用を想定して作られており、
+              情報の階層が深く、スマホ最適化も不十分。
+              市民が知りたい情報にたどり着きにくい設計です。
+            </p>
+          </article>
+
+          <article class="ab-problem-card">
+            <div class="ab-problem-num">02</div>
+            <div class="ab-problem-ico"><span class="material-symbols-rounded">picture_as_pdf</span></div>
+            <h3 class="title-large">ゴミ出しルールがPDFのみ</h3>
+            <p class="body-medium">
+              ゴミ収集ガイドブックは60ページを超えるPDF。
+              検索もできず、スマホでは読みにくい。
+              「これって何ゴミ？」という日常の疑問に応えられていません。
+            </p>
+          </article>
+
+          <article class="ab-problem-card">
+            <div class="ab-problem-num">03</div>
+            <div class="ab-problem-ico"><span class="material-symbols-rounded">translate</span></div>
+            <h3 class="title-large">外国人住民の情報アクセス</h3>
+            <p class="body-medium">
+              伊丹市には5,000人以上の外国籍住民が暮らしています。
+              日本語中心のPDFや複雑なサイトは、
+              生活情報への大きなハードルになっています。
+            </p>
+          </article>
+
+          <article class="ab-problem-card">
+            <div class="ab-problem-num">04</div>
+            <div class="ab-problem-ico"><span class="material-symbols-rounded">account_tree</span></div>
+            <h3 class="title-large">データのサイロ化</h3>
+            <p class="body-medium">
+              オープンデータ、都市計画、防災、廃棄物 ——
+              それぞれが別の担当部署・別のシステムで管理され、
+              市民からは「1つのサービス」として使えません。
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Solution section ========== -->
+    <section class="ab-section ab-solution">
+      <div class="container">
+        <div class="ab-section-head">
+          <span class="chip chip-assist"><span class="material-symbols-rounded">lightbulb</span>ソリューション</span>
+          <h2 class="display-small">私たちのアプローチ</h2>
+          <p class="ab-section-sub">
+            統合・モバイル最適化・オープンソース ——
+            3つの方針で、市民にとっての「使える地図」を実現します。
+          </p>
+        </div>
+
+        <div class="ab-solution-grid">
+          <div class="ab-solution-visual" aria-hidden="true">
+            <svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="sol-bg" cx="50%" cy="50%" r="60%">
+                  <stop offset="0%" stop-color="var(--md-sys-color-primary-container)" stop-opacity="0.5"/>
+                  <stop offset="100%" stop-color="var(--md-sys-color-primary-container)" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <circle cx="240" cy="240" r="220" fill="url(#sol-bg)"/>
+
+              <!-- Center hub -->
+              <g>
+                <circle cx="240" cy="240" r="70" fill="var(--md-sys-color-primary)" opacity="0.12"/>
+                <circle cx="240" cy="240" r="56" fill="var(--md-sys-color-primary)"/>
+                <text x="240" y="235" text-anchor="middle" fill="white" font-size="14" font-weight="600" font-family="Noto Sans JP, sans-serif">シビック</text>
+                <text x="240" y="255" text-anchor="middle" fill="white" font-size="14" font-weight="600" font-family="Noto Sans JP, sans-serif">マップ</text>
+              </g>
+
+              <!-- Data source nodes -->
+              <g>
+                <line x1="240" y1="240" x2="80" y2="120" stroke="var(--md-sys-color-outline)" stroke-width="1.5" stroke-dasharray="4 4"/>
+                <circle cx="80" cy="120" r="36" fill="var(--md-sys-color-surface-container)" stroke="var(--layer-facility)" stroke-width="2"/>
+                <text x="80" y="115" text-anchor="middle" fill="var(--md-sys-color-on-surface)" font-size="11" font-weight="600" font-family="Noto Sans JP, sans-serif">廃棄物</text>
+                <text x="80" y="130" text-anchor="middle" fill="var(--md-sys-color-on-surface)" font-size="11" font-weight="600" font-family="Noto Sans JP, sans-serif">処理施設</text>
+              </g>
+
+              <g>
+                <line x1="240" y1="240" x2="400" y2="120" stroke="var(--md-sys-color-outline)" stroke-width="1.5" stroke-dasharray="4 4"/>
+                <circle cx="400" cy="120" r="36" fill="var(--md-sys-color-surface-container)" stroke="var(--layer-gomi-recycle)" stroke-width="2"/>
+                <text x="400" y="115" text-anchor="middle" fill="var(--md-sys-color-on-surface)" font-size="11" font-weight="600" font-family="Noto Sans JP, sans-serif">ゴミ</text>
+                <text x="400" y="130" text-anchor="middle" fill="var(--md-sys-color-on-surface)" font-size="11" font-weight="600" font-family="Noto Sans JP, sans-serif">分別</text>
+              </g>
+
+              <g>
+                <line x1="240" y1="240" x2="80" y2="360" stroke="var(--md-sys-color-outline)" stroke-width="1.5" stroke-dasharray="4 4"/>
+                <circle cx="80" cy="360" r="36" fill="var(--md-sys-color-surface-container)" stroke="var(--layer-sewer)" stroke-width="2"/>
+                <text x="80" y="355" text-anchor="middle" fill="var(--md-sys-color-on-surface)" font-size="11" font-weight="600" font-family="Noto Sans JP, sans-serif">下水道</text>
+                <text x="80" y="370" text-anchor="middle" fill="var(--md-sys-color-on-surface)" font-size="11" font-weight="600" font-family="Noto Sans JP, sans-serif">・側溝</text>
+              </g>
+
+              <g>
+                <line x1="240" y1="240" x2="400" y2="360" stroke="var(--md-sys-color-outline)" stroke-width="1.5" stroke-dasharray="4 4"/>
+                <circle cx="400" cy="360" r="36" fill="var(--md-sys-color-surface-container)" stroke="var(--layer-shelter)" stroke-width="2"/>
+                <text x="400" y="355" text-anchor="middle" fill="var(--md-sys-color-on-surface)" font-size="11" font-weight="600" font-family="Noto Sans JP, sans-serif">防災</text>
+                <text x="400" y="370" text-anchor="middle" fill="var(--md-sys-color-on-surface)" font-size="11" font-weight="600" font-family="Noto Sans JP, sans-serif">避難所</text>
+              </g>
+
+              <g>
+                <line x1="240" y1="240" x2="240" y2="60" stroke="var(--md-sys-color-outline)" stroke-width="1.5" stroke-dasharray="4 4"/>
+                <circle cx="240" cy="60" r="36" fill="var(--md-sys-color-surface-container)" stroke="var(--md-sys-color-tertiary)" stroke-width="2"/>
+                <text x="240" y="55" text-anchor="middle" fill="var(--md-sys-color-on-surface)" font-size="11" font-weight="600" font-family="Noto Sans JP, sans-serif">オープン</text>
+                <text x="240" y="70" text-anchor="middle" fill="var(--md-sys-color-on-surface)" font-size="11" font-weight="600" font-family="Noto Sans JP, sans-serif">データ</text>
+              </g>
+
+              <g>
+                <line x1="240" y1="240" x2="240" y2="420" stroke="var(--md-sys-color-outline)" stroke-width="1.5" stroke-dasharray="4 4"/>
+                <circle cx="240" cy="420" r="36" fill="var(--md-sys-color-surface-container)" stroke="var(--md-sys-color-secondary)" stroke-width="2"/>
+                <text x="240" y="415" text-anchor="middle" fill="var(--md-sys-color-on-surface)" font-size="11" font-weight="600" font-family="Noto Sans JP, sans-serif">都市</text>
+                <text x="240" y="430" text-anchor="middle" fill="var(--md-sys-color-on-surface)" font-size="11" font-weight="600" font-family="Noto Sans JP, sans-serif">計画</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="ab-solution-list">
+            <div class="ab-solution-item">
+              <div class="ab-solution-ico">
+                <span class="material-symbols-rounded">hub</span>
+              </div>
+              <div>
+                <h3 class="title-large">統合</h3>
+                <p class="body-medium">
+                  6種類以上の行政データをひとつの地図上に束ね、レイヤ切替で自由に組み合わせ可能。
+                </p>
+              </div>
+            </div>
+
+            <div class="ab-solution-item">
+              <div class="ab-solution-ico">
+                <span class="material-symbols-rounded">smartphone</span>
+              </div>
+              <div>
+                <h3 class="title-large">モバイルファースト</h3>
+                <p class="body-medium">
+                  スマートフォンで片手操作できる UI を徹底追求。Material Design 3 準拠で直感的な操作感。
+                </p>
+              </div>
+            </div>
+
+            <div class="ab-solution-item">
+              <div class="ab-solution-ico">
+                <span class="material-symbols-rounded">code</span>
+              </div>
+              <div>
+                <h3 class="title-large">OSS 活用</h3>
+                <p class="body-medium">
+                  MapLibre GL JS / PMTiles など OSS スタックで構築。ライセンスコストゼロ、永続的な運用が可能。
+                </p>
+              </div>
+            </div>
+
+            <div class="ab-solution-item">
+              <div class="ab-solution-ico">
+                <span class="material-symbols-rounded">offline_bolt</span>
+              </div>
+              <div>
+                <h3 class="title-large">オフライン対応</h3>
+                <p class="body-medium">
+                  PWA として動作し、災害時や電波の届かない場所でも、地図とゴミ出し情報を閲覧できます。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Tech stack timeline ========== -->
+    <section class="ab-section ab-tech">
+      <div class="container">
+        <div class="ab-section-head">
+          <span class="chip chip-assist"><span class="material-symbols-rounded">stack</span>技術的特徴</span>
+          <h2 class="display-small">モダンなOSSスタック</h2>
+          <p class="ab-section-sub">
+            枯れた OSS と最新のフロントエンド技術を組み合わせ、低コストかつ高品質な体験を実現しています。
+          </p>
+        </div>
+
+        <ol class="ab-timeline">
+          <li class="ab-timeline-item">
+            <div class="ab-timeline-dot"><span class="material-symbols-rounded">palette</span></div>
+            <div class="ab-timeline-content">
+              <span class="ab-timeline-label">UI</span>
+              <h3 class="title-large">Material Design 3</h3>
+              <p class="body-medium">Google の最新デザインシステム。トークンベースのテーマ設計で、ダークモードやブランドカラー変更に柔軟に対応。</p>
+            </div>
+          </li>
+
+          <li class="ab-timeline-item">
+            <div class="ab-timeline-dot"><span class="material-symbols-rounded">map</span></div>
+            <div class="ab-timeline-content">
+              <span class="ab-timeline-label">Map Engine</span>
+              <h3 class="title-large">MapLibre GL JS</h3>
+              <p class="body-medium">Mapbox GL JS の OSS フォーク。高速なベクタータイル描画と、トークン不要の運用が魅力。</p>
+            </div>
+          </li>
+
+          <li class="ab-timeline-item">
+            <div class="ab-timeline-dot"><span class="material-symbols-rounded">database</span></div>
+            <div class="ab-timeline-content">
+              <span class="ab-timeline-label">Tile Format</span>
+              <h3 class="title-large">PMTiles (Protomaps)</h3>
+              <p class="body-medium">単一ファイルで配信できる次世代ベクタータイル形式。静的ホスティングのみで大容量データを高速配信。</p>
+            </div>
+          </li>
+
+          <li class="ab-timeline-item">
+            <div class="ab-timeline-dot"><span class="material-symbols-rounded">public</span></div>
+            <div class="ab-timeline-content">
+              <span class="ab-timeline-label">Base Map</span>
+              <h3 class="title-large">国土地理院ベクトルタイル</h3>
+              <p class="body-medium">日本の公的機関が提供する無料ベースマップ。精度・信頼性ともに商用地図と遜色なし。</p>
+            </div>
+          </li>
+
+          <li class="ab-timeline-item">
+            <div class="ab-timeline-dot"><span class="material-symbols-rounded">workspace_premium</span></div>
+            <div class="ab-timeline-content">
+              <span class="ab-timeline-label">License</span>
+              <h3 class="title-large">フルOSSスタック</h3>
+              <p class="body-medium">ライセンス料ゼロ。既存の ArcGIS 運用と比較して年間数百万円規模のコスト削減が可能。</p>
+            </div>
+          </li>
+
+          <li class="ab-timeline-item">
+            <div class="ab-timeline-dot"><span class="material-symbols-rounded">cloud_off</span></div>
+            <div class="ab-timeline-content">
+              <span class="ab-timeline-label">PWA</span>
+              <h3 class="title-large">オフラインファースト</h3>
+              <p class="body-medium">Service Worker で地図タイルと主要データをキャッシュ。災害時にも確実に機能する防災ツールとして設計。</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ========== Pricing ========== -->
+    <section class="ab-section ab-pricing">
+      <div class="container">
+        <div class="ab-section-head">
+          <span class="chip chip-assist"><span class="material-symbols-rounded">payments</span>自治体向けプラン</span>
+          <h2 class="display-small">スモールスタートから、<br class="br-md"/>本格導入まで</h2>
+          <p class="ab-section-sub">
+            まずはフリープランで市民サービスとして提供開始。
+            データ量や職員側の管理機能が必要になったら、上位プランへスムーズに移行できます。
+          </p>
+        </div>
+
+        <div class="ab-pricing-grid">
+          <article class="ab-pricing-card">
+            <div class="ab-pricing-head">
+              <span class="ab-pricing-badge">Free</span>
+              <h3 class="headline-small">市民フリー版</h3>
+              <p class="ab-pricing-desc">市民が誰でも無料で利用できる公開版</p>
+            </div>
+            <div class="ab-pricing-price">
+              <span class="ab-pricing-amount">¥0</span>
+              <span class="ab-pricing-period">永久無料</span>
+            </div>
+            <ul class="ab-pricing-features">
+              <li><span class="material-symbols-rounded">check_circle</span>オープンデータ標準レイヤ</li>
+              <li><span class="material-symbols-rounded">check_circle</span>ゴミ分別検索</li>
+              <li><span class="material-symbols-rounded">check_circle</span>施設一覧・ルート案内</li>
+              <li><span class="material-symbols-rounded">check_circle</span>PWA オフライン対応</li>
+              <li class="disabled"><span class="material-symbols-rounded">remove_circle</span>管理ダッシュボード</li>
+              <li class="disabled"><span class="material-symbols-rounded">remove_circle</span>独自データ取込</li>
+            </ul>
+            <button class="btn btn-outlined btn-lg ab-pricing-cta">
+              今すぐ使う
+            </button>
+          </article>
+
+          <article class="ab-pricing-card ab-pricing-card-featured">
+            <div class="ab-pricing-ribbon">おすすめ</div>
+            <div class="ab-pricing-head">
+              <span class="ab-pricing-badge">Basic</span>
+              <h3 class="headline-small">自治体ベーシック</h3>
+              <p class="ab-pricing-desc">中小規模自治体向けの標準プラン</p>
+            </div>
+            <div class="ab-pricing-price">
+              <span class="ab-pricing-amount">¥29,800</span>
+              <span class="ab-pricing-period">/ 月額（税別）</span>
+            </div>
+            <ul class="ab-pricing-features">
+              <li><span class="material-symbols-rounded">check_circle</span>フリー版の全機能</li>
+              <li><span class="material-symbols-rounded">check_circle</span>管理ダッシュボード</li>
+              <li><span class="material-symbols-rounded">check_circle</span>独自レイヤ登録 (〜10種)</li>
+              <li><span class="material-symbols-rounded">check_circle</span>アクセス解析レポート</li>
+              <li><span class="material-symbols-rounded">check_circle</span>ブランドカラー変更</li>
+              <li><span class="material-symbols-rounded">check_circle</span>メールサポート</li>
+            </ul>
+            <button class="btn btn-filled btn-lg ab-pricing-cta">
+              30日間無料で試す
+            </button>
+          </article>
+
+          <article class="ab-pricing-card">
+            <div class="ab-pricing-head">
+              <span class="ab-pricing-badge">Premium</span>
+              <h3 class="headline-small">自治体プレミアム</h3>
+              <p class="ab-pricing-desc">既存GISの置換を視野に入れた本格運用</p>
+            </div>
+            <div class="ab-pricing-price">
+              <span class="ab-pricing-amount">¥98,000</span>
+              <span class="ab-pricing-period">/ 月額（税別）</span>
+            </div>
+            <ul class="ab-pricing-features">
+              <li><span class="material-symbols-rounded">check_circle</span>ベーシックの全機能</li>
+              <li><span class="material-symbols-rounded">check_circle</span>独自レイヤ無制限</li>
+              <li><span class="material-symbols-rounded">check_circle</span>多言語対応 (英/中/韓/ベトナム)</li>
+              <li><span class="material-symbols-rounded">check_circle</span>住民向け通知プッシュ</li>
+              <li><span class="material-symbols-rounded">check_circle</span>職員向け API 提供</li>
+              <li><span class="material-symbols-rounded">check_circle</span>専任サポート・SLA</li>
+            </ul>
+            <button class="btn btn-tonal btn-lg ab-pricing-cta">
+              お問い合わせ
+            </button>
+          </article>
+        </div>
+
+        <!-- Comparison table -->
+        <div class="ab-compare card card-outlined">
+          <div class="ab-compare-head">
+            <h3 class="title-large">機能比較</h3>
+            <p class="body-small">全プランの主要機能を一覧で比較できます</p>
+          </div>
+          <div class="ab-compare-table-wrap">
+            <table class="ab-compare-table">
+              <thead>
+                <tr>
+                  <th scope="col">機能</th>
+                  <th scope="col">Free</th>
+                  <th scope="col" class="featured">Basic</th>
+                  <th scope="col">Premium</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">標準データレイヤ</th>
+                  <td><span class="material-symbols-rounded yes">check</span></td>
+                  <td class="featured"><span class="material-symbols-rounded yes">check</span></td>
+                  <td><span class="material-symbols-rounded yes">check</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">ゴミ分別検索</th>
+                  <td><span class="material-symbols-rounded yes">check</span></td>
+                  <td class="featured"><span class="material-symbols-rounded yes">check</span></td>
+                  <td><span class="material-symbols-rounded yes">check</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">独自レイヤ登録</th>
+                  <td><span class="ab-compare-dash">—</span></td>
+                  <td class="featured">10種まで</td>
+                  <td>無制限</td>
+                </tr>
+                <tr>
+                  <th scope="row">管理ダッシュボード</th>
+                  <td><span class="ab-compare-dash">—</span></td>
+                  <td class="featured"><span class="material-symbols-rounded yes">check</span></td>
+                  <td><span class="material-symbols-rounded yes">check</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">アクセス解析</th>
+                  <td><span class="ab-compare-dash">—</span></td>
+                  <td class="featured">基本</td>
+                  <td>詳細 + CSV出力</td>
+                </tr>
+                <tr>
+                  <th scope="row">多言語対応</th>
+                  <td><span class="ab-compare-dash">—</span></td>
+                  <td class="featured"><span class="ab-compare-dash">—</span></td>
+                  <td>4言語</td>
+                </tr>
+                <tr>
+                  <th scope="row">住民プッシュ通知</th>
+                  <td><span class="ab-compare-dash">—</span></td>
+                  <td class="featured"><span class="ab-compare-dash">—</span></td>
+                  <td><span class="material-symbols-rounded yes">check</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">API 提供</th>
+                  <td><span class="ab-compare-dash">—</span></td>
+                  <td class="featured"><span class="ab-compare-dash">—</span></td>
+                  <td><span class="material-symbols-rounded yes">check</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">サポート</th>
+                  <td>コミュニティ</td>
+                  <td class="featured">メール</td>
+                  <td>専任 / SLA</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Data Sources ========== -->
+    <section class="ab-section ab-sources">
+      <div class="container">
+        <div class="ab-section-head">
+          <span class="chip chip-assist"><span class="material-symbols-rounded">source</span>データ出典</span>
+          <h2 class="display-small">信頼性の高いデータソース</h2>
+          <p class="ab-section-sub">
+            公的機関が公開するオープンデータと、市民生活に欠かせない公共データソースを横断的に活用しています。
+          </p>
+        </div>
+
+        <div class="ab-source-grid">
+          <a href="https://www.city.itami.lg.jp/" class="ab-source-card" target="_blank" rel="noopener">
+            <div class="ab-source-ico" style="--src-color: var(--md-sys-color-primary);">
+              <span class="material-symbols-rounded">apartment</span>
+            </div>
+            <div class="ab-source-body">
+              <h3 class="title-medium">伊丹市オープンデータ</h3>
+              <p class="body-small">全61データセット。廃棄物施設、都市計画、統計情報など。CC BY 4.0 で公開。</p>
+              <span class="ab-source-link">
+                公式サイト
+                <span class="material-symbols-rounded">arrow_outward</span>
+              </span>
+            </div>
+          </a>
+
+          <a href="https://www.gsi.go.jp/" class="ab-source-card" target="_blank" rel="noopener">
+            <div class="ab-source-ico" style="--src-color: var(--layer-sewer);">
+              <span class="material-symbols-rounded">public</span>
+            </div>
+            <div class="ab-source-body">
+              <h3 class="title-medium">国土地理院</h3>
+              <p class="body-small">ベースマップ・標高データ・航空写真。日本最高精度の公的地理情報。</p>
+              <span class="ab-source-link">
+                公式サイト
+                <span class="material-symbols-rounded">arrow_outward</span>
+              </span>
+            </div>
+          </a>
+
+          <a href="https://www.geospatial.jp/" class="ab-source-card" target="_blank" rel="noopener">
+            <div class="ab-source-ico" style="--src-color: var(--layer-facility);">
+              <span class="material-symbols-rounded">travel_explore</span>
+            </div>
+            <div class="ab-source-body">
+              <h3 class="title-medium">G空間情報センター</h3>
+              <p class="body-small">全国の地理空間データを集約したプラットフォーム。伊丹市のデータもここから取得。</p>
+              <span class="ab-source-link">
+                公式サイト
+                <span class="material-symbols-rounded">arrow_outward</span>
+              </span>
+            </div>
+          </a>
+
+          <a href="https://www.openstreetmap.org/" class="ab-source-card" target="_blank" rel="noopener">
+            <div class="ab-source-ico" style="--src-color: var(--layer-ditch);">
+              <span class="material-symbols-rounded">groups</span>
+            </div>
+            <div class="ab-source-body">
+              <h3 class="title-medium">OpenStreetMap</h3>
+              <p class="body-small">世界中のボランティアが作るフリーな地図データ。補助的な POI データソースとして活用。</p>
+              <span class="ab-source-link">
+                公式サイト
+                <span class="material-symbols-rounded">arrow_outward</span>
+              </span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Contact CTA ========== -->
+    <section class="ab-section ab-contact" id="contact">
+      <div class="container">
+        <div class="ab-contact-card">
+          <div class="ab-contact-content">
+            <span class="chip chip-assist ab-contact-eyebrow">
+              <span class="material-symbols-rounded">mail</span>
+              お問い合わせ
+            </span>
+            <h2 class="headline-large">自治体の皆様へ、<br />導入のご相談を承ります</h2>
+            <p class="body-large">
+              まずはオンライン打ち合わせで現状の課題と、シビックマップがどのように役立てるかをお聞かせください。
+              デモ環境のご案内、試験導入、データ連携のご相談まで、無料で対応いたします。
+            </p>
+
+            <div class="ab-contact-methods">
+              <a href="mailto:hello@itami-civicmap.example" class="ab-contact-method">
+                <div class="ab-contact-method-ico">
+                  <span class="material-symbols-rounded">mail</span>
+                </div>
+                <div>
+                  <div class="ab-contact-method-label">メール</div>
+                  <div class="ab-contact-method-value">hello@itami-civicmap.example</div>
+                </div>
+              </a>
+
+              <a href="tel:0120000000" class="ab-contact-method">
+                <div class="ab-contact-method-ico">
+                  <span class="material-symbols-rounded">call</span>
+                </div>
+                <div>
+                  <div class="ab-contact-method-label">電話</div>
+                  <div class="ab-contact-method-value">0120-000-000</div>
+                </div>
+              </a>
+
+              <a href="#" class="ab-contact-method">
+                <div class="ab-contact-method-ico">
+                  <span class="material-symbols-rounded">edit_note</span>
+                </div>
+                <div>
+                  <div class="ab-contact-method-label">オンラインフォーム</div>
+                  <div class="ab-contact-method-value">24時間受付</div>
+                </div>
+              </a>
+            </div>
+
+            <div class="ab-contact-actions">
+              <a href="#" class="btn btn-filled btn-lg">
+                <span class="material-symbols-rounded">calendar_add_on</span>
+                打ち合わせを予約する
+              </a>
+              <a href="#" class="btn btn-outlined btn-lg">
+                <span class="material-symbols-rounded">download</span>
+                資料をダウンロード
+              </a>
+            </div>
+          </div>
+
+          <div class="ab-contact-visual" aria-hidden="true">
+            <div class="ab-contact-circle">
+              <span class="material-symbols-rounded">support_agent</span>
+            </div>
+            <div class="ab-contact-badge ab-contact-badge-1">
+              <span class="material-symbols-rounded">bolt</span>
+              即日返信
+            </div>
+            <div class="ab-contact-badge ab-contact-badge-2">
+              <span class="material-symbols-rounded">verified</span>
+              導入サポート無料
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 共通フッター -->
+  <div data-include="partials/footer.html"></div>
+
+  <!-- FAB -->
+  <a href="#contact" class="fab fab-extended" style="position: fixed; bottom: 96px; right: 24px; z-index: 90;" aria-label="お問い合わせへ">
+    <span class="material-symbols-rounded">mail</span>
+    <span>お問い合わせ</span>
+  </a>
+
+  <script src="js/include.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>施設一覧 — 伊丹シビックマップ</title>
+  <meta name="description" content="伊丹市の廃棄物処理施設・リサイクルセンター・資源回収拠点を地図とリストで。開館時間・受入品目・ルート案内を一括表示。" />
+  <meta name="theme-color" content="#006781" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/page-facilities.css" />
+</head>
+<body data-page="facilities" class="page">
+  <a href="#main" class="skip-link">本文へスキップ</a>
+
+  <!-- 共通ヘッダー -->
+  <div data-include="partials/header.html"></div>
+
+  <main id="main">
+    <!-- ========== Page Header ========== -->
+    <section class="fac-pageheader">
+      <div class="container">
+        <div class="fac-breadcrumb" aria-label="パンくずリスト">
+          <a href="./index.html"><span class="material-symbols-rounded">home</span>ホーム</a>
+          <span class="material-symbols-rounded sep">chevron_right</span>
+          <span>施設一覧</span>
+        </div>
+        <div class="fac-pageheader-inner">
+          <div class="fac-pageheader-text">
+            <span class="chip chip-assist fac-eyebrow">
+              <span class="material-symbols-rounded">location_city</span>
+              処理施設・リサイクル拠点
+            </span>
+            <h1 class="headline-large">伊丹市の処理施設を探す</h1>
+            <p class="body-large fac-pageheader-sub">
+              廃棄物処理施設・リサイクルセンター・資源回収拠点を、地図とリストで横断的に探せます。
+              受入品目、開館時間、ルート案内まで、この1ページで完結。
+            </p>
+          </div>
+          <div class="fac-pageheader-stats" aria-hidden="true">
+            <div class="fac-statcard">
+              <span class="material-symbols-rounded">factory</span>
+              <div>
+                <div class="fac-statcard-value">8</div>
+                <div class="fac-statcard-label">施設</div>
+              </div>
+            </div>
+            <div class="fac-statcard">
+              <span class="material-symbols-rounded">schedule</span>
+              <div>
+                <div class="fac-statcard-value">6</div>
+                <div class="fac-statcard-label">受入中</div>
+              </div>
+            </div>
+            <div class="fac-statcard">
+              <span class="material-symbols-rounded">recycling</span>
+              <div>
+                <div class="fac-statcard-value">42</div>
+                <div class="fac-statcard-label">品目対応</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Filter Bar ========== -->
+    <section class="fac-filterbar">
+      <div class="container">
+        <div class="fac-filterbar-row">
+          <div class="field field-outlined fac-search">
+            <input type="search" id="fac-search" placeholder=" " aria-label="施設を検索" />
+            <label for="fac-search">施設名・地域・品目で検索</label>
+            <span class="material-symbols-rounded fac-search-icon">search</span>
+          </div>
+
+          <div class="fac-filter-sort">
+            <div class="fac-select" role="group" aria-label="並び替え">
+              <span class="material-symbols-rounded">sort</span>
+              <select aria-label="ソート">
+                <option>距離順</option>
+                <option>名前順</option>
+                <option>開館中を優先</option>
+                <option>受入品目の多い順</option>
+              </select>
+              <span class="material-symbols-rounded arrow">expand_more</span>
+            </div>
+
+            <div class="fac-viewswitch" role="tablist" aria-label="表示切替">
+              <button class="fac-viewswitch-btn active" role="tab" aria-selected="true" data-view="both">
+                <span class="material-symbols-rounded">dashboard</span>
+                <span class="fac-viewswitch-label">両方</span>
+              </button>
+              <button class="fac-viewswitch-btn" role="tab" aria-selected="false" data-view="list">
+                <span class="material-symbols-rounded">view_list</span>
+                <span class="fac-viewswitch-label">リスト</span>
+              </button>
+              <button class="fac-viewswitch-btn" role="tab" aria-selected="false" data-view="map">
+                <span class="material-symbols-rounded">map</span>
+                <span class="fac-viewswitch-label">地図</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="fac-chips" role="group" aria-label="フィルタ">
+          <button class="chip chip-filter selected" data-filter="all">全施設</button>
+          <button class="chip chip-filter" data-filter="clean-center">
+            <span class="material-symbols-rounded">factory</span>環境クリーンセンター
+          </button>
+          <button class="chip chip-filter" data-filter="recycle">
+            <span class="material-symbols-rounded">recycling</span>リサイクルセンター
+          </button>
+          <button class="chip chip-filter" data-filter="bulk">
+            <span class="material-symbols-rounded">inventory_2</span>粗大ゴミ受付
+          </button>
+          <button class="chip chip-filter" data-filter="resource">
+            <span class="material-symbols-rounded">eco</span>資源回収
+          </button>
+          <button class="chip chip-filter" data-filter="open">
+            <span class="material-symbols-rounded">schedule</span>受入中のみ
+          </button>
+          <button class="chip chip-filter" data-filter="parking">
+            <span class="material-symbols-rounded">local_parking</span>駐車場あり
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Main: List + Map ========== -->
+    <section class="fac-main">
+      <div class="container fac-main-grid">
+        <!-- ========== Left: Facility List ========== -->
+        <div class="fac-list-wrap">
+          <div class="fac-list-head">
+            <div class="fac-list-head-text">
+              <span class="title-medium">検索結果</span>
+              <span class="fac-result-count">全 <strong>8</strong> 件</span>
+            </div>
+            <button class="btn btn-text btn-sm" aria-label="地図で現在地を表示">
+              <span class="material-symbols-rounded">my_location</span>
+              現在地から
+            </button>
+          </div>
+
+          <div class="fac-list" role="list">
+            <!-- Card 1 -->
+            <article class="fac-card card card-elevated" role="listitem" data-facility="1" data-type="clean-center" tabindex="0">
+              <div class="fac-card-head">
+                <div class="fac-card-icon" style="--fac-color: var(--layer-facility);">
+                  <span class="material-symbols-rounded">factory</span>
+                </div>
+                <div class="fac-card-title-wrap">
+                  <span class="fac-card-badge">環境クリーンセンター</span>
+                  <h3 class="fac-card-title">伊丹市環境クリーンセンター</h3>
+                </div>
+                <div class="fac-card-distance">
+                  <span class="material-symbols-rounded">near_me</span>
+                  1.2<small>km</small>
+                </div>
+              </div>
+              <div class="fac-card-meta">
+                <div class="fac-card-addr">
+                  <span class="material-symbols-rounded">place</span>
+                  伊丹市東有岡5丁目125
+                </div>
+                <div class="fac-card-status">
+                  <span class="fac-status-dot open" aria-hidden="true"></span>
+                  <span class="fac-status-text open">営業中</span>
+                  <span class="fac-status-time">〜 16:30</span>
+                </div>
+              </div>
+              <div class="fac-card-tags">
+                <span class="fac-tag">燃えるゴミ</span>
+                <span class="fac-tag">燃えないゴミ</span>
+                <span class="fac-tag">粗大ゴミ</span>
+                <span class="fac-tag">+5</span>
+              </div>
+              <div class="fac-card-actions">
+                <button class="btn btn-text btn-sm">
+                  <span class="material-symbols-rounded">call</span>電話
+                </button>
+                <button class="btn btn-text btn-sm">
+                  <span class="material-symbols-rounded">directions</span>ルート
+                </button>
+                <button class="btn btn-tonal btn-sm" data-action="open-detail">
+                  詳細
+                  <span class="material-symbols-rounded">arrow_forward</span>
+                </button>
+              </div>
+            </article>
+
+            <!-- Card 2 -->
+            <article class="fac-card card card-elevated" role="listitem" data-facility="2" data-type="recycle" tabindex="0">
+              <div class="fac-card-head">
+                <div class="fac-card-icon" style="--fac-color: var(--layer-gomi-recycle);">
+                  <span class="material-symbols-rounded">recycling</span>
+                </div>
+                <div class="fac-card-title-wrap">
+                  <span class="fac-card-badge">リサイクルセンター</span>
+                  <h3 class="fac-card-title">伊丹市資源リサイクルセンター</h3>
+                </div>
+                <div class="fac-card-distance">
+                  <span class="material-symbols-rounded">near_me</span>
+                  2.4<small>km</small>
+                </div>
+              </div>
+              <div class="fac-card-meta">
+                <div class="fac-card-addr">
+                  <span class="material-symbols-rounded">place</span>
+                  伊丹市北河原6丁目1-1
+                </div>
+                <div class="fac-card-status">
+                  <span class="fac-status-dot open" aria-hidden="true"></span>
+                  <span class="fac-status-text open">営業中</span>
+                  <span class="fac-status-time">〜 17:00</span>
+                </div>
+              </div>
+              <div class="fac-card-tags">
+                <span class="fac-tag">古紙</span>
+                <span class="fac-tag">ペットボトル</span>
+                <span class="fac-tag">ビン・缶</span>
+                <span class="fac-tag">+3</span>
+              </div>
+              <div class="fac-card-actions">
+                <button class="btn btn-text btn-sm">
+                  <span class="material-symbols-rounded">call</span>電話
+                </button>
+                <button class="btn btn-text btn-sm">
+                  <span class="material-symbols-rounded">directions</span>ルート
+                </button>
+                <button class="btn btn-tonal btn-sm" data-action="open-detail">
+                  詳細
+                  <span class="material-symbols-rounded">arrow_forward</span>
+                </button>
+              </div>
+            </article>
+
+            <!-- Card 3 -->
+            <article class="fac-card card card-elevated" role="listitem" data-facility="3" data-type="resource" tabindex="0">
+              <div class="fac-card-head">
+                <div class="fac-card-icon" style="--fac-color: var(--md-sys-color-primary);">
+                  <span class="material-symbols-rounded">inventory_2</span>
+                </div>
+                <div class="fac-card-title-wrap">
+                  <span class="fac-card-badge">資源回収</span>
+                  <h3 class="fac-card-title">北部資源収集ステーション</h3>
+                </div>
+                <div class="fac-card-distance">
+                  <span class="material-symbols-rounded">near_me</span>
+                  3.1<small>km</small>
+                </div>
+              </div>
+              <div class="fac-card-meta">
+                <div class="fac-card-addr">
+                  <span class="material-symbols-rounded">place</span>
+                  伊丹市荒牧2丁目10
+                </div>
+                <div class="fac-card-status">
+                  <span class="fac-status-dot closed" aria-hidden="true"></span>
+                  <span class="fac-status-text closed">受付終了</span>
+                  <span class="fac-status-time">明 08:30〜</span>
+                </div>
+              </div>
+              <div class="fac-card-tags">
+                <span class="fac-tag">古紙</span>
+                <span class="fac-tag">古着</span>
+                <span class="fac-tag">蛍光管</span>
+              </div>
+              <div class="fac-card-actions">
+                <button class="btn btn-text btn-sm">
+                  <span class="material-symbols-rounded">call</span>電話
+                </button>
+                <button class="btn btn-text btn-sm">
+                  <span class="material-symbols-rounded">directions</span>ルート
+                </button>
+                <button class="btn btn-tonal btn-sm" data-action="open-detail">
+                  詳細
+                  <span class="material-symbols-rounded">arrow_forward</span>
+                </button>
+              </div>
+            </article>
+
+            <!-- Card 4 -->
+            <article class="fac-card card card-elevated" role="listitem" data-facility="4" data-type="recycle" tabindex="0">
+              <div class="fac-card-head">
+                <div class="fac-card-icon" style="--fac-color: var(--layer-gomi-petbottle);">
+                  <span class="material-symbols-rounded">water_drop</span>
+                </div>
+                <div class="fac-card-title-wrap">
+                  <span class="fac-card-badge">リサイクルセンター</span>
+                  <h3 class="fac-card-title">南部リサイクルプラザ</h3>
+                </div>
+                <div class="fac-card-distance">
+                  <span class="material-symbols-rounded">near_me</span>
+                  3.8<small>km</small>
+                </div>
+              </div>
+              <div class="fac-card-meta">
+                <div class="fac-card-addr">
+                  <span class="material-symbols-rounded">place</span>
+                  伊丹市池尻7丁目1
+                </div>
+                <div class="fac-card-status">
+                  <span class="fac-status-dot open" aria-hidden="true"></span>
+                  <span class="fac-status-text open">営業中</span>
+                  <span class="fac-status-time">〜 17:30</span>
+                </div>
+              </div>
+              <div class="fac-card-tags">
+                <span class="fac-tag">ペットボトル</span>
+                <span class="fac-tag">プラスチック</span>
+                <span class="fac-tag">小型家電</span>
+                <span class="fac-tag">+2</span>
+              </div>
+              <div class="fac-card-actions">
+                <button class="btn btn-text btn-sm">
+                  <span class="material-symbols-rounded">call</span>電話
+                </button>
+                <button class="btn btn-text btn-sm">
+                  <span class="material-symbols-rounded">directions</span>ルート
+                </button>
+                <button class="btn btn-tonal btn-sm" data-action="open-detail">
+                  詳細
+                  <span class="material-symbols-rounded">arrow_forward</span>
+                </button>
+              </div>
+            </article>
+
+            <!-- Card 5 -->
+            <article class="fac-card card card-elevated" role="listitem" data-facility="5" data-type="bulk" tabindex="0">
+              <div class="fac-card-head">
+                <div class="fac-card-icon" style="--fac-color: var(--md-sys-color-tertiary);">
+                  <span class="material-symbols-rounded">chair</span>
+                </div>
+                <div class="fac-card-title-wrap">
+                  <span class="fac-card-badge">粗大ゴミ受付</span>
+                  <h3 class="fac-card-title">粗大ゴミ受付センター</h3>
+                </div>
+                <div class="fac-card-distance">
+                  <span class="material-symbols-rounded">near_me</span>
+                  2.0<small>km</small>
+                </div>
+              </div>
+              <div class="fac-card-meta">
+                <div class="fac-card-addr">
+                  <span class="material-symbols-rounded">place</span>
+                  伊丹市東有岡5丁目125（環境CS内）
+                </div>
+                <div class="fac-card-status">
+                  <span class="fac-status-dot open" aria-hidden="true"></span>
+                  <span class="fac-status-text open">受付中</span>
+                  <span class="fac-status-time">〜 16:00</span>
+                </div>
+              </div>
+              <div class="fac-card-tags">
+                <span class="fac-tag">家具</span>
+                <span class="fac-tag">寝具</span>
+                <span class="fac-tag">自転車</span>
+                <span class="fac-tag">+4</span>
+              </div>
+              <div class="fac-card-actions">
+                <button class="btn btn-text btn-sm">
+                  <span class="material-symbols-rounded">call</span>電話
+                </button>
+                <button class="btn btn-text btn-sm">
+                  <span class="material-symbols-rounded">directions</span>ルート
+                </button>
+                <button class="btn btn-tonal btn-sm" data-action="open-detail">
+                  詳細
+                  <span class="material-symbols-rounded">arrow_forward</span>
+                </button>
+              </div>
+            </article>
+
+            <!-- Card 6 -->
+            <article class="fac-card card card-elevated" role="listitem" data-facility="6" data-type="resource" tabindex="0">
+              <div class="fac-card-head">
+                <div class="fac-card-icon" style="--fac-color: var(--layer-ditch);">
+                  <span class="material-symbols-rounded">eco</span>
+                </div>
+                <div class="fac-card-title-wrap">
+                  <span class="fac-card-badge">資源回収</span>
+                  <h3 class="fac-card-title">中央コミュニティ資源ステーション</h3>
+                </div>
+                <div class="fac-card-distance">
+                  <span class="material-symbols-rounded">near_me</span>
+                  0.8<small>km</small>
+                </div>
+              </div>
+              <div class="fac-card-meta">
+                <div class="fac-card-addr">
+                  <span class="material-symbols-rounded">place</span>
+                  伊丹市中央3丁目1
+                </div>
+                <div class="fac-card-status">
+                  <span class="fac-status-dot open" aria-hidden="true"></span>
+                  <span class="fac-status-text open">営業中</span>
+                  <span class="fac-status-time">〜 18:00</span>
+                </div>
+              </div>
+              <div class="fac-card-tags">
+                <span class="fac-tag">古紙</span>
+                <span class="fac-tag">古着</span>
+                <span class="fac-tag">ビン・缶</span>
+              </div>
+              <div class="fac-card-actions">
+                <button class="btn btn-text btn-sm">
+                  <span class="material-symbols-rounded">call</span>電話
+                </button>
+                <button class="btn btn-text btn-sm">
+                  <span class="material-symbols-rounded">directions</span>ルート
+                </button>
+                <button class="btn btn-tonal btn-sm" data-action="open-detail">
+                  詳細
+                  <span class="material-symbols-rounded">arrow_forward</span>
+                </button>
+              </div>
+            </article>
+
+            <!-- Card 7 -->
+            <article class="fac-card card card-elevated" role="listitem" data-facility="7" data-type="recycle" tabindex="0">
+              <div class="fac-card-head">
+                <div class="fac-card-icon" style="--fac-color: var(--layer-gomi-burnable);">
+                  <span class="material-symbols-rounded">battery_android_full</span>
+                </div>
+                <div class="fac-card-title-wrap">
+                  <span class="fac-card-badge">リサイクルセンター</span>
+                  <h3 class="fac-card-title">小型家電・電池回収ボックス拠点</h3>
+                </div>
+                <div class="fac-card-distance">
+                  <span class="material-symbols-rounded">near_me</span>
+                  1.6<small>km</small>
+                </div>
+              </div>
+              <div class="fac-card-meta">
+                <div class="fac-card-addr">
+                  <span class="material-symbols-rounded">place</span>
+                  伊丹市千僧1丁目1（市役所内）
+                </div>
+                <div class="fac-card-status">
+                  <span class="fac-status-dot open" aria-hidden="true"></span>
+                  <span class="fac-status-text open">営業中</span>
+                  <span class="fac-status-time">〜 17:15</span>
+                </div>
+              </div>
+              <div class="fac-card-tags">
+                <span class="fac-tag">小型家電</span>
+                <span class="fac-tag">乾電池</span>
+                <span class="fac-tag">インクカートリッジ</span>
+              </div>
+              <div class="fac-card-actions">
+                <button class="btn btn-text btn-sm">
+                  <span class="material-symbols-rounded">call</span>電話
+                </button>
+                <button class="btn btn-text btn-sm">
+                  <span class="material-symbols-rounded">directions</span>ルート
+                </button>
+                <button class="btn btn-tonal btn-sm" data-action="open-detail">
+                  詳細
+                  <span class="material-symbols-rounded">arrow_forward</span>
+                </button>
+              </div>
+            </article>
+
+            <!-- Card 8 -->
+            <article class="fac-card card card-elevated" role="listitem" data-facility="8" data-type="clean-center" tabindex="0">
+              <div class="fac-card-head">
+                <div class="fac-card-icon" style="--fac-color: var(--layer-sewer);">
+                  <span class="material-symbols-rounded">local_fire_department</span>
+                </div>
+                <div class="fac-card-title-wrap">
+                  <span class="fac-card-badge">環境クリーンセンター</span>
+                  <h3 class="fac-card-title">第二クリーンセンター（予備炉）</h3>
+                </div>
+                <div class="fac-card-distance">
+                  <span class="material-symbols-rounded">near_me</span>
+                  4.5<small>km</small>
+                </div>
+              </div>
+              <div class="fac-card-meta">
+                <div class="fac-card-addr">
+                  <span class="material-symbols-rounded">place</span>
+                  伊丹市北伊丹8丁目45
+                </div>
+                <div class="fac-card-status">
+                  <span class="fac-status-dot closed" aria-hidden="true"></span>
+                  <span class="fac-status-text closed">定休日</span>
+                  <span class="fac-status-time">火 09:00〜</span>
+                </div>
+              </div>
+              <div class="fac-card-tags">
+                <span class="fac-tag">燃えるゴミ</span>
+                <span class="fac-tag">事業系廃棄物</span>
+              </div>
+              <div class="fac-card-actions">
+                <button class="btn btn-text btn-sm">
+                  <span class="material-symbols-rounded">call</span>電話
+                </button>
+                <button class="btn btn-text btn-sm">
+                  <span class="material-symbols-rounded">directions</span>ルート
+                </button>
+                <button class="btn btn-tonal btn-sm" data-action="open-detail">
+                  詳細
+                  <span class="material-symbols-rounded">arrow_forward</span>
+                </button>
+              </div>
+            </article>
+          </div>
+
+          <div class="fac-list-footer">
+            <button class="btn btn-outlined">
+              <span class="material-symbols-rounded">expand_more</span>
+              さらに表示
+            </button>
+          </div>
+        </div>
+
+        <!-- ========== Right: Map Preview ========== -->
+        <aside class="fac-map-wrap" aria-label="施設マップ">
+          <div class="fac-map-card card card-elevated">
+            <div class="fac-map-head">
+              <div class="fac-map-head-title">
+                <span class="material-symbols-rounded">map</span>
+                <span class="title-medium">マップビュー</span>
+              </div>
+              <div class="fac-map-head-actions">
+                <button class="icon-btn" aria-label="ズームイン">
+                  <span class="material-symbols-rounded">add</span>
+                </button>
+                <button class="icon-btn" aria-label="ズームアウト">
+                  <span class="material-symbols-rounded">remove</span>
+                </button>
+                <button class="icon-btn" aria-label="全画面表示">
+                  <span class="material-symbols-rounded">fullscreen</span>
+                </button>
+              </div>
+            </div>
+            <div class="fac-map-canvas">
+              <svg viewBox="0 0 600 700" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs>
+                  <pattern id="fac-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--md-sys-color-outline-variant)" stroke-width="0.5"/>
+                  </pattern>
+                  <radialGradient id="fac-bg" cx="50%" cy="50%" r="70%">
+                    <stop offset="0%" stop-color="var(--md-sys-color-primary-container)" stop-opacity="0.35"/>
+                    <stop offset="100%" stop-color="var(--md-sys-color-surface)" stop-opacity="0"/>
+                  </radialGradient>
+                </defs>
+                <rect width="600" height="700" fill="var(--md-sys-color-surface-container-low)"/>
+                <rect width="600" height="700" fill="url(#fac-grid)"/>
+                <rect width="600" height="700" fill="url(#fac-bg)"/>
+
+                <!-- Rivers & Roads -->
+                <path d="M0 220 Q150 180 300 240 T600 200" stroke="var(--layer-sewer)" stroke-width="6" fill="none" opacity="0.4"/>
+                <path d="M0 420 Q150 440 300 400 T600 460" stroke="var(--md-sys-color-outline-variant)" stroke-width="8" fill="none"/>
+                <path d="M150 0 Q200 150 170 300 T200 700" stroke="var(--md-sys-color-outline-variant)" stroke-width="6" fill="none"/>
+                <path d="M440 0 Q400 200 430 400 T400 700" stroke="var(--md-sys-color-outline-variant)" stroke-width="4" fill="none"/>
+
+                <!-- City area -->
+                <path d="M90 180 L510 160 L540 500 L80 520 Z"
+                  fill="var(--md-sys-color-primary-container)" opacity="0.15"
+                  stroke="var(--md-sys-color-primary)" stroke-width="1" stroke-dasharray="4 4"/>
+
+                <!-- Facility markers -->
+                <g class="fac-marker" data-facility="1">
+                  <circle cx="280" cy="320" r="22" fill="var(--layer-facility)" opacity="0.2"/>
+                  <circle cx="280" cy="320" r="14" fill="var(--layer-facility)" stroke="white" stroke-width="2"/>
+                  <text x="280" y="325" text-anchor="middle" fill="white" font-size="14" font-weight="700">1</text>
+                </g>
+                <g class="fac-marker" data-facility="2">
+                  <circle cx="380" cy="240" r="22" fill="var(--layer-gomi-recycle)" opacity="0.2"/>
+                  <circle cx="380" cy="240" r="14" fill="var(--layer-gomi-recycle)" stroke="white" stroke-width="2"/>
+                  <text x="380" y="245" text-anchor="middle" fill="white" font-size="14" font-weight="700">2</text>
+                </g>
+                <g class="fac-marker" data-facility="3">
+                  <circle cx="180" cy="180" r="22" fill="var(--md-sys-color-primary)" opacity="0.2"/>
+                  <circle cx="180" cy="180" r="14" fill="var(--md-sys-color-primary)" stroke="white" stroke-width="2"/>
+                  <text x="180" y="185" text-anchor="middle" fill="white" font-size="14" font-weight="700">3</text>
+                </g>
+                <g class="fac-marker" data-facility="4">
+                  <circle cx="420" cy="520" r="22" fill="var(--layer-gomi-petbottle)" opacity="0.2"/>
+                  <circle cx="420" cy="520" r="14" fill="var(--layer-gomi-petbottle)" stroke="white" stroke-width="2"/>
+                  <text x="420" y="525" text-anchor="middle" fill="white" font-size="14" font-weight="700">4</text>
+                </g>
+                <g class="fac-marker" data-facility="5">
+                  <circle cx="300" cy="340" r="22" fill="var(--md-sys-color-tertiary)" opacity="0.2"/>
+                  <circle cx="300" cy="340" r="14" fill="var(--md-sys-color-tertiary)" stroke="white" stroke-width="2"/>
+                  <text x="300" y="345" text-anchor="middle" fill="white" font-size="14" font-weight="700">5</text>
+                </g>
+                <g class="fac-marker" data-facility="6">
+                  <circle cx="320" cy="420" r="22" fill="var(--layer-ditch)" opacity="0.2"/>
+                  <circle cx="320" cy="420" r="14" fill="var(--layer-ditch)" stroke="white" stroke-width="2"/>
+                  <text x="320" y="425" text-anchor="middle" fill="white" font-size="14" font-weight="700">6</text>
+                </g>
+                <g class="fac-marker" data-facility="7">
+                  <circle cx="250" cy="440" r="22" fill="var(--layer-gomi-burnable)" opacity="0.2"/>
+                  <circle cx="250" cy="440" r="14" fill="var(--layer-gomi-burnable)" stroke="white" stroke-width="2"/>
+                  <text x="250" y="445" text-anchor="middle" fill="white" font-size="14" font-weight="700">7</text>
+                </g>
+                <g class="fac-marker" data-facility="8">
+                  <circle cx="460" cy="140" r="22" fill="var(--layer-sewer)" opacity="0.2"/>
+                  <circle cx="460" cy="140" r="14" fill="var(--layer-sewer)" stroke="white" stroke-width="2"/>
+                  <text x="460" y="145" text-anchor="middle" fill="white" font-size="14" font-weight="700">8</text>
+                </g>
+
+                <!-- Current location -->
+                <g>
+                  <circle cx="310" cy="370" r="30" fill="var(--md-sys-color-primary)" opacity="0.15">
+                    <animate attributeName="r" values="20;32;20" dur="2.6s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.3;0.05;0.3" dur="2.6s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle cx="310" cy="370" r="8" fill="var(--md-sys-color-primary)" stroke="white" stroke-width="3"/>
+                </g>
+              </svg>
+
+              <div class="fac-map-legend">
+                <div class="fac-map-legend-title">
+                  <span class="material-symbols-rounded">tune</span>
+                  凡例
+                </div>
+                <div class="fac-map-legend-items">
+                  <span class="fac-legend-item"><i style="background: var(--layer-facility);"></i>環境CS</span>
+                  <span class="fac-legend-item"><i style="background: var(--layer-gomi-recycle);"></i>リサイクル</span>
+                  <span class="fac-legend-item"><i style="background: var(--md-sys-color-primary);"></i>資源回収</span>
+                  <span class="fac-legend-item"><i style="background: var(--md-sys-color-tertiary);"></i>粗大ゴミ</span>
+                </div>
+              </div>
+
+              <div class="fac-map-attribution">© 国土地理院 / OpenStreetMap contributors</div>
+            </div>
+          </div>
+
+          <div class="fac-map-tip">
+            <span class="material-symbols-rounded">info</span>
+            <span>リストの施設にカーソルを合わせると地図上でハイライトされます</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ========== Reference Table ========== -->
+    <section class="fac-reference section">
+      <div class="container">
+        <div class="fac-ref-head">
+          <span class="chip chip-assist">
+            <span class="material-symbols-rounded">fact_check</span>
+            受入品目リファレンス
+          </span>
+          <h2 class="headline-medium">品目ごとの受入施設を早見表で</h2>
+          <p class="body-large fac-ref-sub">
+            「これはどこに持っていけばいいの？」を、品目・受入施設・料金・備考の4軸で整理しました。
+          </p>
+        </div>
+
+        <div class="fac-table-wrap card card-outlined">
+          <table class="fac-table">
+            <thead>
+              <tr>
+                <th scope="col" style="width: 24%;">品目</th>
+                <th scope="col" style="width: 32%;">受入施設</th>
+                <th scope="col" style="width: 18%;">料金</th>
+                <th scope="col">備考</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">
+                  <span class="fac-table-ico" style="--fac-color: var(--layer-gomi-burnable);">
+                    <span class="material-symbols-rounded">local_fire_department</span>
+                  </span>
+                  燃えるゴミ
+                </th>
+                <td>伊丹市環境クリーンセンター</td>
+                <td><span class="fac-price">10kg 100円</span></td>
+                <td>事前連絡不要。直接持込可。</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <span class="fac-table-ico" style="--fac-color: var(--md-sys-color-secondary);">
+                    <span class="material-symbols-rounded">block</span>
+                  </span>
+                  燃えないゴミ
+                </th>
+                <td>伊丹市環境クリーンセンター</td>
+                <td><span class="fac-price">10kg 100円</span></td>
+                <td>分別してお持ち込みください。</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <span class="fac-table-ico" style="--fac-color: var(--md-sys-color-tertiary);">
+                    <span class="material-symbols-rounded">chair</span>
+                  </span>
+                  粗大ゴミ
+                </th>
+                <td>粗大ゴミ受付センター</td>
+                <td><span class="fac-price">品目ごと 400円〜</span></td>
+                <td>事前予約制。電話またはWeb受付。</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <span class="fac-table-ico" style="--fac-color: var(--layer-gomi-petbottle);">
+                    <span class="material-symbols-rounded">water_drop</span>
+                  </span>
+                  ペットボトル
+                </th>
+                <td>南部リサイクルプラザ / 資源リサイクルセンター</td>
+                <td><span class="fac-price free">無料</span></td>
+                <td>キャップ・ラベルを外して。</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <span class="fac-table-ico" style="--fac-color: var(--layer-gomi-recycle);">
+                    <span class="material-symbols-rounded">description</span>
+                  </span>
+                  古紙・段ボール
+                </th>
+                <td>資源リサイクルセンター / 各資源ステーション</td>
+                <td><span class="fac-price free">無料</span></td>
+                <td>ひもで十字に縛ってお持ち込み。</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <span class="fac-table-ico" style="--fac-color: var(--layer-facility);">
+                    <span class="material-symbols-rounded">devices_other</span>
+                  </span>
+                  小型家電
+                </th>
+                <td>市役所1F回収ボックス / 南部リサイクルプラザ</td>
+                <td><span class="fac-price free">無料</span></td>
+                <td>30cm未満の家電。個人情報は事前削除。</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <span class="fac-table-ico" style="--fac-color: var(--md-sys-color-error);">
+                    <span class="material-symbols-rounded">battery_android_full</span>
+                  </span>
+                  乾電池・蛍光管
+                </th>
+                <td>市役所1F回収ボックス / 北部資源ST</td>
+                <td><span class="fac-price free">無料</span></td>
+                <td>ボタン電池はテープで端子絶縁。</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <span class="fac-table-ico" style="--fac-color: var(--layer-ditch);">
+                    <span class="material-symbols-rounded">checkroom</span>
+                  </span>
+                  古着
+                </th>
+                <td>北部資源ST / 中央コミュニティ資源ST</td>
+                <td><span class="fac-price free">無料</span></td>
+                <td>洗濯済みで透明袋に入れて。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="fac-ref-note">
+          <span class="material-symbols-rounded">info</span>
+          料金・受入品目は変更される場合があります。最新情報は各施設にお問い合わせください。
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== Detail Modal (初期は閉) ========== -->
+  <div class="dialog-backdrop" id="facDialog" aria-hidden="true">
+    <div class="dialog fac-dialog" role="dialog" aria-modal="true" aria-labelledby="facDialogTitle">
+      <div class="fac-dialog-hero">
+        <div class="fac-dialog-ico">
+          <span class="material-symbols-rounded">factory</span>
+        </div>
+        <div>
+          <span class="fac-card-badge">環境クリーンセンター</span>
+          <h2 class="fac-dialog-title" id="facDialogTitle">伊丹市環境クリーンセンター</h2>
+          <div class="fac-dialog-meta">
+            <span><span class="material-symbols-rounded">place</span>伊丹市東有岡5丁目125</span>
+            <span><span class="material-symbols-rounded">near_me</span>1.2km</span>
+          </div>
+        </div>
+        <button class="icon-btn fac-dialog-close" aria-label="閉じる" data-action="close-detail">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+
+      <div class="fac-dialog-body">
+        <div class="fac-dialog-section">
+          <h3 class="title-small">営業時間</h3>
+          <p class="body-medium">月〜金 9:00 – 16:30 ／ 土 9:00 – 12:00 ／ 日祝休</p>
+        </div>
+        <div class="fac-dialog-section">
+          <h3 class="title-small">受入品目</h3>
+          <div class="fac-card-tags">
+            <span class="fac-tag">燃えるゴミ</span>
+            <span class="fac-tag">燃えないゴミ</span>
+            <span class="fac-tag">粗大ゴミ</span>
+            <span class="fac-tag">ビン・缶</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dialog-actions">
+        <button class="btn btn-text" data-action="close-detail">閉じる</button>
+        <button class="btn btn-filled">
+          <span class="material-symbols-rounded">directions</span>
+          ルート案内
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 共通フッター -->
+  <div data-include="partials/footer.html"></div>
+
+  <!-- FAB -->
+  <button class="fab fab-extended" style="position: fixed; bottom: 96px; right: 24px; z-index: 90;" aria-label="地図で表示">
+    <span class="material-symbols-rounded">map</span>
+    <span>地図で開く</span>
+  </button>
+
+  <script src="js/include.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!-- ===== Top App Bar (共通ヘッダー) ===== -->
+<header class="top-app-bar" id="topAppBar">
+  <div class="top-app-bar-leading">
+    <button class="icon-btn menu-toggle" aria-label="メニューを開く" data-action="open-drawer">
+      <span class="material-symbols-rounded">menu</span>
+    </button>
+    <a href="./index.html" class="top-app-bar-title" aria-label="Civic Map Ops ホームへ">
+      <span class="logo-mark"><span class="material-symbols-rounded">explore</span></span>
+      <span class="brand-wrap">
+        <span class="brand-name">Civic Map Ops</span>
+        <span class="brand-tenant" data-tenant="itami">伊丹市 環境インフラ台帳</span>
+      </span>
+    </a>
+    <nav class="top-app-bar-nav" aria-label="メインナビゲーション">
+      <a href="./index.html" data-nav="home"><span class="material-symbols-rounded">dashboard</span>ダッシュボード</a>
+      <a href="./map.html" data-nav="map"><span class="material-symbols-rounded">map</span>地図</a>
+      <a href="./tasks.html" data-nav="tasks"><span class="material-symbols-rounded">assignment</span>案件</a>
+      <a href="./facilities.html" data-nav="facilities"><span class="material-symbols-rounded">location_city</span>施設</a>
+    </nav>
+  </div>
+  <div class="top-app-bar-spacer"></div>
+  <div class="top-app-bar-trailing">
+    <!-- 接続・同期ステータス -->
+    <button class="status-pill status-pill-online" type="button" aria-label="オンライン・同期済み">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span class="status-label">オンライン</span>
+      <span class="status-sync" aria-hidden="true">
+        <span class="material-symbols-rounded">cloud_done</span>
+      </span>
+    </button>
+    <button class="icon-btn" aria-label="検索" data-action="open-search">
+      <span class="material-symbols-rounded">search</span>
+    </button>
+    <button class="icon-btn" aria-label="通知">
+      <span class="material-symbols-rounded">notifications</span>
+      <span class="badge badge-dot" aria-hidden="true"></span>
+    </button>
+    <button class="icon-btn" id="themeToggle" aria-label="テーマ切替">
+      <span class="material-symbols-rounded">dark_mode</span>
+    </button>
+    <button class="icon-btn user-avatar" aria-label="ユーザーメニュー">
+      <span class="avatar-initial">KT</span>
+    </button>
+  </div>
+</header>
+
+<!-- ===== Navigation Drawer (モバイル/タブレット) ===== -->
+<div class="drawer-scrim" id="drawerScrim" data-action="close-drawer"></div>
+<aside class="nav-drawer" id="navDrawer" aria-label="ナビゲーション">
+  <div class="nav-drawer-header">
+    <div class="nav-drawer-title">
+      <span class="logo-mark"><span class="material-symbols-rounded">explore</span></span>
+      <span>Civic Map Ops</span>
+    </div>
+    <div class="nav-drawer-subtitle">自治体インフラ台帳・現場記録プラットフォーム</div>
+    <div class="nav-drawer-tenant">
+      <span class="material-symbols-rounded">domain</span>
+      <span>伊丹市 環境インフラ課</span>
+    </div>
+  </div>
+
+  <div class="nav-drawer-section-label">業務</div>
+  <div class="nav-drawer-list">
+    <a href="./index.html" class="nav-drawer-item" data-nav="home">
+      <span class="material-symbols-rounded">dashboard</span>ダッシュボード
+    </a>
+    <a href="./map.html" class="nav-drawer-item" data-nav="map">
+      <span class="material-symbols-rounded">map</span>地図で見る
+    </a>
+    <a href="./tasks.html" class="nav-drawer-item" data-nav="tasks">
+      <span class="material-symbols-rounded">assignment</span>案件一覧
+      <span class="badge">12</span>
+    </a>
+    <a href="./inspect.html" class="nav-drawer-item" data-nav="inspect">
+      <span class="material-symbols-rounded">edit_note</span>現場記録
+    </a>
+    <a href="./facilities.html" class="nav-drawer-item" data-nav="facilities">
+      <span class="material-symbols-rounded">location_city</span>施設台帳
+    </a>
+
+    <div class="nav-drawer-section-label">情報</div>
+    <a href="./about.html" class="nav-drawer-item" data-nav="about">
+      <span class="material-symbols-rounded">info</span>このサービスについて
+    </a>
+    <a href="#" class="nav-drawer-item">
+      <span class="material-symbols-rounded">help</span>ヘルプ・マニュアル
+    </a>
+    <a href="#" class="nav-drawer-item">
+      <span class="material-symbols-rounded">sync</span>同期・オフライン
+    </a>
+  </div>
+
+  <div class="nav-drawer-footer">
+    <div class="nav-drawer-user">
+      <span class="avatar-initial">KT</span>
+      <div>
+        <div class="nav-drawer-user-name">株式会社 つばめ建設</div>
+        <div class="nav-drawer-user-role">委託業者・現場担当</div>
+      </div>
+    </div>
+    <a href="#" class="nav-drawer-item" style="margin: 0;">
+      <span class="material-symbols-rounded">settings</span>設定
+    </a>
+  </div>
+</aside>
+
+<!-- ===== Bottom Navigation (モバイル) ===== -->
+<nav class="bottom-nav" aria-label="モバイルナビ">
+  <ul class="bottom-nav-list">
+    <li>
+      <a href="./index.html" class="bottom-nav-item" data-nav="home">
+        <span class="icon-wrap"><span class="material-symbols-rounded">dashboard</span></span>
+        <span class="label">ホーム</span>
+      </a>
+    </li>
+    <li>
+      <a href="./map.html" class="bottom-nav-item" data-nav="map">
+        <span class="icon-wrap"><span class="material-symbols-rounded">map</span></span>
+        <span class="label">地図</span>
+      </a>
+    </li>
+    <li>
+      <a href="./tasks.html" class="bottom-nav-item" data-nav="tasks">
+        <span class="icon-wrap"><span class="material-symbols-rounded">assignment</span></span>
+        <span class="label">案件</span>
+      </a>
+    </li>
+    <li>
+      <a href="./inspect.html" class="bottom-nav-item" data-nav="inspect">
+        <span class="icon-wrap"><span class="material-symbols-rounded">edit_note</span></span>
+        <span class="label">記録</span>
+      </a>
+    </li>
+    <li>
+      <a href="./facilities.html" class="bottom-nav-item" data-nav="facilities">
+        <span class="icon-wrap"><span class="material-symbols-rounded">location_city</span></span>
+        <span class="label">施設</span>
+      </a>
+    </li>
+  </ul>
+</nav>

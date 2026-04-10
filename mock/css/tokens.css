@@ -1,0 +1,190 @@
+/* ============================================================
+   Material Design 3 — Design Tokens
+   伊丹市シビックマップ
+   ベースカラー: 伊丹市シンボルカラー（さくらピンク + 空港ブルー）
+   ============================================================ */
+
+:root {
+  /* ----- Color: Light Scheme (Material 3 dynamic palette) ----- */
+  --md-sys-color-primary: #006781;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #b9eaff;
+  --md-sys-color-on-primary-container: #001f29;
+
+  --md-sys-color-secondary: #4d616c;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #d0e6f2;
+  --md-sys-color-on-secondary-container: #081e27;
+
+  --md-sys-color-tertiary: #5d5b7d;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #e3dfff;
+  --md-sys-color-on-tertiary-container: #1a1836;
+
+  --md-sys-color-error: #ba1a1a;
+  --md-sys-color-on-error: #ffffff;
+  --md-sys-color-error-container: #ffdad6;
+  --md-sys-color-on-error-container: #410002;
+
+  --md-sys-color-background: #fbfcfe;
+  --md-sys-color-on-background: #191c1d;
+  --md-sys-color-surface: #fbfcfe;
+  --md-sys-color-on-surface: #191c1d;
+
+  --md-sys-color-surface-variant: #dce4e9;
+  --md-sys-color-on-surface-variant: #40484c;
+  --md-sys-color-outline: #70787d;
+  --md-sys-color-outline-variant: #c0c8cd;
+
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #f5f6f8;
+  --md-sys-color-surface-container: #eff0f2;
+  --md-sys-color-surface-container-high: #e9eaec;
+  --md-sys-color-surface-container-highest: #e3e4e6;
+
+  --md-sys-color-inverse-surface: #2e3133;
+  --md-sys-color-inverse-on-surface: #eff1f3;
+  --md-sys-color-inverse-primary: #88d1ee;
+
+  --md-sys-color-shadow: #000000;
+  --md-sys-color-scrim: #000000;
+
+  /* レイヤカラー（地図上のレイヤ識別用） */
+  --layer-facility: #b14ad6;     /* 廃棄物処理施設 */
+  --layer-gomi-burnable: #e34a4a;
+  --layer-gomi-recycle: #f59e0b;
+  --layer-gomi-petbottle: #2563eb;
+  --layer-sewer: #0891b2;        /* 下水道 */
+  --layer-ditch: #16a34a;        /* 側溝 */
+  --layer-shelter: #dc2626;      /* 避難所 */
+
+  /* 案件ステータス（業務向けカラーコード） */
+  --case-new:      #d32f2f;   /* 未着手（要対応） */
+  --case-progress: #f9a825;   /* 進行中 */
+  --case-done:     #2e7d32;   /* 完了 */
+  --case-revisit:  #ef6c00;   /* 要再訪・要資材 */
+
+  /* ----- Typography (Material 3 type scale) ----- */
+  --md-sys-typescale-display-large: 400 57px/64px "Noto Sans JP", "Roboto", system-ui, sans-serif;
+  --md-sys-typescale-display-medium: 400 45px/52px "Noto Sans JP", "Roboto", system-ui, sans-serif;
+  --md-sys-typescale-display-small: 400 36px/44px "Noto Sans JP", "Roboto", system-ui, sans-serif;
+
+  --md-sys-typescale-headline-large: 500 32px/40px "Noto Sans JP", "Roboto", system-ui, sans-serif;
+  --md-sys-typescale-headline-medium: 500 28px/36px "Noto Sans JP", "Roboto", system-ui, sans-serif;
+  --md-sys-typescale-headline-small: 500 24px/32px "Noto Sans JP", "Roboto", system-ui, sans-serif;
+
+  --md-sys-typescale-title-large: 500 22px/28px "Noto Sans JP", "Roboto", system-ui, sans-serif;
+  --md-sys-typescale-title-medium: 500 16px/24px "Noto Sans JP", "Roboto", system-ui, sans-serif;
+  --md-sys-typescale-title-small: 500 14px/20px "Noto Sans JP", "Roboto", system-ui, sans-serif;
+
+  --md-sys-typescale-body-large: 400 16px/24px "Noto Sans JP", "Roboto", system-ui, sans-serif;
+  --md-sys-typescale-body-medium: 400 14px/20px "Noto Sans JP", "Roboto", system-ui, sans-serif;
+  --md-sys-typescale-body-small: 400 12px/16px "Noto Sans JP", "Roboto", system-ui, sans-serif;
+
+  --md-sys-typescale-label-large: 500 14px/20px "Noto Sans JP", "Roboto", system-ui, sans-serif;
+  --md-sys-typescale-label-medium: 500 12px/16px "Noto Sans JP", "Roboto", system-ui, sans-serif;
+  --md-sys-typescale-label-small: 500 11px/16px "Noto Sans JP", "Roboto", system-ui, sans-serif;
+
+  /* ----- Shape (Material 3 shape scale) ----- */
+  --md-sys-shape-corner-none: 0;
+  --md-sys-shape-corner-extra-small: 4px;
+  --md-sys-shape-corner-small: 8px;
+  --md-sys-shape-corner-medium: 12px;
+  --md-sys-shape-corner-large: 16px;
+  --md-sys-shape-corner-extra-large: 28px;
+  --md-sys-shape-corner-full: 9999px;
+
+  /* ----- Elevation (Material 3) ----- */
+  --md-sys-elevation-0: none;
+  --md-sys-elevation-1: 0 1px 2px 0 rgba(0, 0, 0, 0.30), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --md-sys-elevation-2: 0 1px 2px 0 rgba(0, 0, 0, 0.30), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+  --md-sys-elevation-3: 0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px 0 rgba(0, 0, 0, 0.30);
+  --md-sys-elevation-4: 0 6px 10px 4px rgba(0, 0, 0, 0.15), 0 2px 3px 0 rgba(0, 0, 0, 0.30);
+  --md-sys-elevation-5: 0 8px 12px 6px rgba(0, 0, 0, 0.15), 0 4px 4px 0 rgba(0, 0, 0, 0.30);
+
+  /* ----- Motion (Material 3 easing & duration) ----- */
+  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+
+  --md-sys-motion-duration-short1: 50ms;
+  --md-sys-motion-duration-short2: 100ms;
+  --md-sys-motion-duration-short3: 150ms;
+  --md-sys-motion-duration-short4: 200ms;
+  --md-sys-motion-duration-medium1: 250ms;
+  --md-sys-motion-duration-medium2: 300ms;
+  --md-sys-motion-duration-medium3: 350ms;
+  --md-sys-motion-duration-medium4: 400ms;
+  --md-sys-motion-duration-long1: 450ms;
+  --md-sys-motion-duration-long2: 500ms;
+
+  /* ----- Spacing ----- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* ----- Layout ----- */
+  --header-height: 64px;
+  --bottom-nav-height: 80px;
+  --rail-width: 80px;
+  --drawer-width: 320px;
+  --max-content-width: 1280px;
+}
+
+/* ============ Dark Scheme ============ */
+[data-theme="dark"] {
+  --md-sys-color-primary: #88d1ee;
+  --md-sys-color-on-primary: #003544;
+  --md-sys-color-primary-container: #004d61;
+  --md-sys-color-on-primary-container: #b9eaff;
+
+  --md-sys-color-secondary: #b4cad6;
+  --md-sys-color-on-secondary: #1f333c;
+  --md-sys-color-secondary-container: #354a53;
+  --md-sys-color-on-secondary-container: #d0e6f2;
+
+  --md-sys-color-tertiary: #c6c2ea;
+  --md-sys-color-on-tertiary: #2f2d4c;
+  --md-sys-color-tertiary-container: #454364;
+  --md-sys-color-on-tertiary-container: #e3dfff;
+
+  --md-sys-color-error: #ffb4ab;
+  --md-sys-color-on-error: #690005;
+  --md-sys-color-error-container: #93000a;
+  --md-sys-color-on-error-container: #ffdad6;
+
+  --md-sys-color-background: #0e1416;
+  --md-sys-color-on-background: #dee3e6;
+  --md-sys-color-surface: #0e1416;
+  --md-sys-color-on-surface: #dee3e6;
+
+  --md-sys-color-surface-variant: #40484c;
+  --md-sys-color-on-surface-variant: #c0c8cd;
+  --md-sys-color-outline: #8a9296;
+  --md-sys-color-outline-variant: #40484c;
+
+  --md-sys-color-surface-container-lowest: #090f11;
+  --md-sys-color-surface-container-low: #171c1f;
+  --md-sys-color-surface-container: #1b2023;
+  --md-sys-color-surface-container-high: #252b2d;
+  --md-sys-color-surface-container-highest: #303638;
+
+  --md-sys-color-inverse-surface: #dee3e6;
+  --md-sys-color-inverse-on-surface: #2e3133;
+  --md-sys-color-inverse-primary: #006781;
+
+  /* 案件ステータス（ダークモード・視認性確保のため少し明るく） */
+  --case-new:      #ff6b6b;
+  --case-progress: #ffca28;
+  --case-done:     #66bb6a;
+  --case-revisit:  #ffa726;
+}

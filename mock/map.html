@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>地図 | Civic Map Ops</title>
+  <meta name="description" content="自治体インフラ台帳と現場案件を1画面で管理。側溝・下水道・処理施設の巡回、記録、同期に対応。" />
+  <meta name="theme-color" content="#006781" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/page-map.css" />
+</head>
+<body data-page="map" class="page page-map" data-map-mode="view">
+  <a href="#main" class="skip-link">本文へスキップ</a>
+
+  <!-- 共通ヘッダー -->
+  <div data-include="partials/header.html"></div>
+
+  <main id="main" class="map-main">
+    <div class="map-shell">
+
+      <!-- ========== 左サイドバー：案件 + レイヤ ========== -->
+      <aside class="map-sidebar" aria-label="案件とレイヤ">
+        <div class="map-sidebar-inner">
+
+          <!-- 検索 -->
+          <div class="map-sidebar-section">
+            <h2 class="map-sidebar-heading">
+              <span class="material-symbols-rounded">search</span>
+              案件・住所・管理IDで検索
+            </h2>
+            <div class="field field-outlined map-sidebar-field">
+              <input type="search" id="sidebar-search" placeholder=" " aria-label="案件検索" />
+              <label for="sidebar-search">例: CASE-0142 / 東有岡 / MH-1123</label>
+            </div>
+          </div>
+
+          <hr class="divider" />
+
+          <!-- 今日の案件 -->
+          <div class="map-sidebar-section">
+            <h2 class="map-sidebar-heading">
+              <span class="material-symbols-rounded">today</span>
+              今日の案件
+              <span class="heading-badge">12</span>
+            </h2>
+
+            <div class="case-status-tabs" role="tablist" aria-label="ステータスフィルタ">
+              <button class="case-status-tab active" role="tab" data-status="all" aria-selected="true">
+                すべて<span>12</span>
+              </button>
+              <button class="case-status-tab" role="tab" data-status="new" aria-selected="false">
+                <span class="case-dot case-dot-new"></span>未着手<span>5</span>
+              </button>
+              <button class="case-status-tab" role="tab" data-status="progress" aria-selected="false">
+                <span class="case-dot case-dot-progress"></span>進行中<span>3</span>
+              </button>
+              <button class="case-status-tab" role="tab" data-status="done" aria-selected="false">
+                <span class="case-dot case-dot-done"></span>完了<span>4</span>
+              </button>
+            </div>
+
+            <ul class="case-list" role="list">
+              <li class="case-card case-card-selected" data-case-id="CASE-0142" data-status="progress">
+                <div class="case-card-head">
+                  <span class="case-id">CASE-0142</span>
+                  <span class="case-badge case-badge-progress">
+                    <span class="case-dot case-dot-progress"></span>進行中
+                  </span>
+                </div>
+                <div class="case-title">環境クリーンセンター 外周側溝 清掃点検</div>
+                <div class="case-meta">
+                  <span><span class="material-symbols-rounded">place</span>東有岡5丁目</span>
+                  <span><span class="material-symbols-rounded">schedule</span>09:00</span>
+                </div>
+                <div class="case-tags">
+                  <span class="case-tag case-tag-ditch">側溝</span>
+                  <span class="case-tag">清掃</span>
+                </div>
+              </li>
+
+              <li class="case-card" data-case-id="CASE-0138" data-status="new">
+                <div class="case-card-head">
+                  <span class="case-id">CASE-0138</span>
+                  <span class="case-badge case-badge-new">
+                    <span class="case-dot case-dot-new"></span>未着手
+                  </span>
+                </div>
+                <div class="case-title">北部資源回収ST マンホール点検</div>
+                <div class="case-meta">
+                  <span><span class="material-symbols-rounded">place</span>北本町3丁目</span>
+                  <span><span class="material-symbols-rounded">schedule</span>10:30</span>
+                </div>
+                <div class="case-tags">
+                  <span class="case-tag case-tag-sewer">下水道</span>
+                  <span class="case-tag">点検</span>
+                </div>
+              </li>
+
+              <li class="case-card" data-case-id="CASE-0145" data-status="new">
+                <div class="case-card-head">
+                  <span class="case-id">CASE-0145</span>
+                  <span class="case-badge case-badge-new">
+                    <span class="case-dot case-dot-new"></span>未着手
+                  </span>
+                </div>
+                <div class="case-title">東部中継ストックヤード 設備巡回</div>
+                <div class="case-meta">
+                  <span><span class="material-symbols-rounded">place</span>東野1丁目</span>
+                  <span><span class="material-symbols-rounded">schedule</span>13:00</span>
+                </div>
+                <div class="case-tags">
+                  <span class="case-tag case-tag-facility">施設</span>
+                  <span class="case-tag">巡回</span>
+                </div>
+              </li>
+
+              <li class="case-card" data-case-id="CASE-0140" data-status="done">
+                <div class="case-card-head">
+                  <span class="case-id">CASE-0140</span>
+                  <span class="case-badge case-badge-done">
+                    <span class="case-dot case-dot-done"></span>完了
+                  </span>
+                </div>
+                <div class="case-title">南部 U字溝 破損箇所補修</div>
+                <div class="case-meta">
+                  <span><span class="material-symbols-rounded">place</span>池尻8丁目</span>
+                  <span><span class="material-symbols-rounded">check_circle</span>08:40 完了</span>
+                </div>
+                <div class="case-tags">
+                  <span class="case-tag case-tag-ditch">側溝</span>
+                  <span class="case-tag">補修</span>
+                </div>
+              </li>
+
+              <li class="case-card case-card-revisit" data-case-id="CASE-0141" data-status="progress">
+                <div class="case-card-head">
+                  <span class="case-id">CASE-0141</span>
+                  <span class="case-badge case-badge-revisit">
+                    <span class="case-dot case-dot-revisit"></span>要再訪
+                  </span>
+                </div>
+                <div class="case-title">桜台 マンホール蓋 段差</div>
+                <div class="case-meta">
+                  <span><span class="material-symbols-rounded">place</span>桜ケ丘7丁目</span>
+                  <span><span class="material-symbols-rounded">warning</span>資材手配中</span>
+                </div>
+                <div class="case-tags">
+                  <span class="case-tag case-tag-sewer">下水道</span>
+                  <span class="case-tag">補修</span>
+                </div>
+              </li>
+            </ul>
+
+            <a href="./tasks.html" class="case-list-more">
+              すべての案件を見る
+              <span class="material-symbols-rounded">arrow_forward</span>
+            </a>
+          </div>
+
+          <hr class="divider" />
+
+          <!-- レイヤトグル -->
+          <div class="map-sidebar-section">
+            <h2 class="map-sidebar-heading">
+              <span class="material-symbols-rounded">layers</span>
+              台帳レイヤ
+            </h2>
+            <ul class="layer-list" role="list">
+              <li class="layer-item">
+                <span class="layer-dot" style="--dot: var(--layer-sewer);"></span>
+                <div class="layer-text">
+                  <div class="layer-name">下水道管</div>
+                  <div class="layer-meta">汚水・合流管 · 3,240本</div>
+                </div>
+                <label class="switch" aria-label="下水道管レイヤ">
+                  <input type="checkbox" checked />
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                </label>
+              </li>
+              <li class="layer-item">
+                <span class="layer-dot" style="--dot: var(--layer-ditch);"></span>
+                <div class="layer-text">
+                  <div class="layer-name">側溝・排水路</div>
+                  <div class="layer-meta">U型・L型 · 延長 88km</div>
+                </div>
+                <label class="switch" aria-label="側溝レイヤ">
+                  <input type="checkbox" checked />
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                </label>
+              </li>
+              <li class="layer-item">
+                <span class="layer-dot" style="--dot: var(--layer-sewer);"></span>
+                <div class="layer-text">
+                  <div class="layer-name">マンホール・弁室</div>
+                  <div class="layer-meta">1,812基</div>
+                </div>
+                <label class="switch" aria-label="マンホールレイヤ">
+                  <input type="checkbox" checked />
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                </label>
+              </li>
+              <li class="layer-item">
+                <span class="layer-dot" style="--dot: var(--layer-facility);"></span>
+                <div class="layer-text">
+                  <div class="layer-name">処理施設・資源拠点</div>
+                  <div class="layer-meta">12拠点</div>
+                </div>
+                <label class="switch" aria-label="処理施設レイヤ">
+                  <input type="checkbox" checked />
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                </label>
+              </li>
+              <li class="layer-item">
+                <span class="layer-dot" style="--dot: var(--md-sys-color-tertiary);"></span>
+                <div class="layer-text">
+                  <div class="layer-name">巡回ルート</div>
+                  <div class="layer-meta">今日の担当範囲</div>
+                </div>
+                <label class="switch" aria-label="巡回ルートレイヤ">
+                  <input type="checkbox" checked />
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                </label>
+              </li>
+              <li class="layer-item">
+                <span class="layer-dot" style="--dot: var(--md-sys-color-secondary);"></span>
+                <div class="layer-text">
+                  <div class="layer-name">占用・埋設物</div>
+                  <div class="layer-meta">ガス・水道・電気</div>
+                </div>
+                <label class="switch" aria-label="占用物レイヤ">
+                  <input type="checkbox" />
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                </label>
+              </li>
+            </ul>
+          </div>
+
+          <hr class="divider" />
+
+          <!-- 凡例 -->
+          <div class="map-sidebar-section">
+            <h2 class="map-sidebar-heading">
+              <span class="material-symbols-rounded">info</span>
+              案件ステータス
+            </h2>
+            <ul class="legend-list" role="list">
+              <li class="legend-row">
+                <span class="legend-swatch" style="background: var(--case-new);"></span>
+                <span class="legend-label">未着手</span>
+              </li>
+              <li class="legend-row">
+                <span class="legend-swatch" style="background: var(--case-progress);"></span>
+                <span class="legend-label">進行中</span>
+              </li>
+              <li class="legend-row">
+                <span class="legend-swatch" style="background: var(--case-done);"></span>
+                <span class="legend-label">完了</span>
+              </li>
+              <li class="legend-row">
+                <span class="legend-swatch" style="background: var(--case-revisit);"></span>
+                <span class="legend-label">要再訪・要資材</span>
+              </li>
+              <li class="legend-row">
+                <span class="legend-swatch legend-line" style="--c: var(--layer-sewer);"></span>
+                <span class="legend-label">下水道（汚水・合流）</span>
+              </li>
+              <li class="legend-row">
+                <span class="legend-swatch legend-line" style="--c: var(--layer-ditch);"></span>
+                <span class="legend-label">側溝</span>
+              </li>
+            </ul>
+          </div>
+
+          <hr class="divider" />
+
+          <!-- ベースマップ切替 -->
+          <div class="map-sidebar-section">
+            <h2 class="map-sidebar-heading">
+              <span class="material-symbols-rounded">map</span>
+              ベースマップ
+            </h2>
+            <div class="basemap-grid">
+              <button class="basemap-tile active" type="button" aria-pressed="true">
+                <span class="basemap-preview basemap-standard"></span>
+                <span class="basemap-name">標準</span>
+              </button>
+              <button class="basemap-tile" type="button" aria-pressed="false">
+                <span class="basemap-preview basemap-satellite"></span>
+                <span class="basemap-name">航空写真</span>
+              </button>
+              <button class="basemap-tile" type="button" aria-pressed="false">
+                <span class="basemap-preview basemap-terrain"></span>
+                <span class="basemap-name">白地図</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </aside>
+
+      <!-- ========== 中央：地図エリア ========== -->
+      <section class="map-canvas" aria-label="地図">
+
+        <!-- SVG モック地図 -->
+        <svg class="map-svg" viewBox="0 0 1600 1000" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="自治体インフラ台帳 模擬地図">
+          <defs>
+            <!-- グリッドパターン -->
+            <pattern id="mapGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--md-sys-color-outline-variant)" stroke-width="0.5" opacity="0.6" />
+            </pattern>
+            <pattern id="mapGridMajor" width="200" height="200" patternUnits="userSpaceOnUse">
+              <rect width="200" height="200" fill="url(#mapGrid)" />
+              <path d="M 200 0 L 0 0 0 200" fill="none" stroke="var(--md-sys-color-outline-variant)" stroke-width="1.2" opacity="0.9" />
+            </pattern>
+            <!-- 川のグラデーション -->
+            <linearGradient id="river" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#86c7e0" stop-opacity="0.7" />
+              <stop offset="1" stop-color="#5ca9c6" stop-opacity="0.85" />
+            </linearGradient>
+            <!-- 巡回ルート点線 -->
+            <pattern id="patrolPattern" width="14" height="6" patternUnits="userSpaceOnUse">
+              <rect width="14" height="6" fill="transparent" />
+              <rect width="8" height="6" fill="var(--md-sys-color-tertiary)" opacity="0.7" />
+            </pattern>
+          </defs>
+
+          <!-- 背景 -->
+          <rect width="1600" height="1000" fill="var(--md-sys-color-surface-container-lowest)" />
+          <rect width="1600" height="1000" fill="url(#mapGridMajor)" />
+
+          <!-- 巡回ルート（今日の担当範囲をぼんやり塗る） -->
+          <g class="layer-patrol">
+            <path d="M 260 260 Q 520 200 820 420 T 1400 560 L 1380 780 Q 900 860 500 780 T 240 520 Z"
+                  fill="color-mix(in srgb, var(--md-sys-color-tertiary) 10%, transparent)"
+                  stroke="var(--md-sys-color-tertiary)" stroke-width="2.5" stroke-dasharray="10 6" opacity="0.75" />
+            <!-- ルートパス -->
+            <path d="M 300 560 L 560 610 L 820 420 L 1180 260 L 1300 620"
+                  fill="none" stroke="var(--md-sys-color-tertiary)" stroke-width="4" stroke-linecap="round"
+                  stroke-dasharray="2 10" opacity="0.85" />
+          </g>
+
+          <!-- 川 (猪名川風) -->
+          <path class="river" d="M 60 0 C 120 200, 200 300, 160 500 S 240 800, 200 1000"
+                fill="none" stroke="url(#river)" stroke-width="36" stroke-linecap="round" opacity="0.85" />
+          <path class="river-edge" d="M 60 0 C 120 200, 200 300, 160 500 S 240 800, 200 1000"
+                fill="none" stroke="color-mix(in srgb, var(--md-sys-color-primary) 40%, transparent)" stroke-width="38" stroke-linecap="round" opacity="0.3" />
+
+          <!-- 線路風 -->
+          <g class="railway">
+            <line x1="0" y1="550" x2="1600" y2="470" stroke="var(--md-sys-color-on-surface-variant)" stroke-width="4" opacity="0.5" />
+            <line x1="0" y1="550" x2="1600" y2="470" stroke="var(--md-sys-color-surface-container-lowest)" stroke-width="2" stroke-dasharray="10 10" opacity="0.9" />
+          </g>
+
+          <!-- 主要道路 -->
+          <g class="roads" fill="none" stroke="var(--md-sys-color-outline-variant)">
+            <path d="M 0 300 Q 400 290 800 310 T 1600 320" stroke-width="14" stroke-linecap="round" />
+            <path d="M 0 300 Q 400 290 800 310 T 1600 320" stroke-width="10" stroke="var(--md-sys-color-surface-container-low)" stroke-linecap="round" />
+            <path d="M 0 680 Q 500 660 900 690 T 1600 700" stroke-width="14" stroke-linecap="round" />
+            <path d="M 0 680 Q 500 660 900 690 T 1600 700" stroke-width="10" stroke="var(--md-sys-color-surface-container-low)" stroke-linecap="round" />
+            <path d="M 420 0 Q 440 250 430 500 T 460 1000" stroke-width="12" stroke-linecap="round" />
+            <path d="M 420 0 Q 440 250 430 500 T 460 1000" stroke-width="8" stroke="var(--md-sys-color-surface-container-low)" stroke-linecap="round" />
+            <path d="M 960 0 Q 980 250 970 500 T 1000 1000" stroke-width="12" stroke-linecap="round" />
+            <path d="M 960 0 Q 980 250 970 500 T 1000 1000" stroke-width="8" stroke="var(--md-sys-color-surface-container-low)" stroke-linecap="round" />
+          </g>
+
+          <!-- 細道 -->
+          <g class="roads-minor" fill="none" stroke="var(--md-sys-color-outline-variant)" stroke-width="3" opacity="0.7">
+            <path d="M 180 0 L 200 1000" />
+            <path d="M 700 0 L 720 1000" />
+            <path d="M 1240 0 L 1260 1000" />
+            <path d="M 1440 0 L 1460 1000" />
+            <path d="M 0 180 L 1600 160" />
+            <path d="M 0 450 L 1600 430" />
+            <path d="M 0 860 L 1600 880" />
+          </g>
+
+          <!-- 下水道管 (アニメーションあり) -->
+          <g class="layer-sewer">
+            <path d="M 100 330 L 430 320 L 720 340 L 980 330 L 1250 340 L 1580 320"
+                  fill="none" stroke="var(--layer-sewer)" stroke-width="4"
+                  stroke-dasharray="12 6" class="flow-line"
+                  data-tt-icon="plumbing" data-tt-color="sewer"
+                  data-tt-title="公共下水道（汚水管 / L-4102）"
+                  data-tt-body="幹線 φ800mm／伏越し区間。深度 GL-2.4m。直近点検 2025-11-12。"
+                  data-tt-meta="管径:φ800mm,材質:塩ビ,勾配:0.3%"
+                  data-tt-warning="持出禁止：本台帳データの第三者提供・転載は不可。工事の際は埋設物照会窓口へ事前連絡必須。" />
+            <path d="M 440 30 L 450 320 L 470 700 L 460 980"
+                  fill="none" stroke="var(--layer-sewer)" stroke-width="4"
+                  stroke-dasharray="12 6" class="flow-line"
+                  data-tt-icon="plumbing" data-tt-color="sewer"
+                  data-tt-title="公共下水道（合流管 / L-4233）"
+                  data-tt-body="南北幹線。雨水・汚水合流区間。マンホール 14基。"
+                  data-tt-meta="管径:φ600mm,延長:980m,所管:伊丹市上下水道局"
+                  data-tt-warning="持出禁止：道路占用・掘削申請なしの工事は法令違反。事故・破損時は072-784-XXXX（24h）。" />
+            <path d="M 980 30 L 990 310 L 1000 700 L 1000 980"
+                  fill="none" stroke="var(--layer-sewer)" stroke-width="4"
+                  stroke-dasharray="12 6" class="flow-line"
+                  data-tt-icon="plumbing" data-tt-color="sewer"
+                  data-tt-title="公共下水道（汚水管 / L-4418）"
+                  data-tt-body="東部幹線。住宅地区を縦断。"
+                  data-tt-meta="管径:φ500mm,材質:陶管,設置:1998年"
+                  data-tt-warning="持出禁止：閲覧用データのため、業者向け台帳とは別管理。実工事は窓口で正本確認のこと。" />
+            <path d="M 300 690 L 700 680 L 1050 700 L 1460 690"
+                  fill="none" stroke="var(--layer-sewer)" stroke-width="3"
+                  stroke-dasharray="12 6" class="flow-line"
+                  data-tt-icon="plumbing" data-tt-color="sewer"
+                  data-tt-title="公共下水道（汚水管支線 / L-4521）"
+                  data-tt-body="東西支線。複数の取付管あり。"
+                  data-tt-meta="管径:φ300mm,延長:1160m"
+                  data-tt-warning="持出禁止：占用申請なしの掘削・計測は禁止。" />
+          </g>
+
+          <!-- 側溝 -->
+          <g class="layer-ditch">
+            <polyline points="150,200 420,195 680,210 960,200 1250,205 1560,200"
+                      fill="none" stroke="var(--layer-ditch)" stroke-width="2.5" stroke-dasharray="6 3" opacity="0.85"
+                      data-tt-icon="water_drop" data-tt-color="ditch"
+                      data-tt-title="道路側溝（U型 / D-1102）"
+                      data-tt-body="現場打ちU型側溝 W=300×H=300。蓋掛けあり。"
+                      data-tt-meta="種別:U型,規格:300x300,延長:1410m"
+                      data-tt-warning="持出禁止：許可なき清掃・グレーチング取外しは禁止。豪雨時の越流注意区間。" />
+            <polyline points="150,800 420,790 680,810 960,795 1250,805 1560,800"
+                      fill="none" stroke="var(--layer-ditch)" stroke-width="2.5" stroke-dasharray="6 3" opacity="0.85"
+                      data-tt-icon="water_drop" data-tt-color="ditch"
+                      data-tt-title="道路側溝（U型 / D-1305）"
+                      data-tt-body="蓋付U型側溝。雨水排水路に接続。"
+                      data-tt-meta="種別:U型,規格:300x300,清掃頻度:年2回"
+                      data-tt-warning="持出禁止：油・有害物質の流入は厳禁。違反時は罰則対象。" />
+            <polyline points="250,30 260,500 280,990"
+                      fill="none" stroke="var(--layer-ditch)" stroke-width="2.5" stroke-dasharray="6 3" opacity="0.85"
+                      data-tt-icon="water_drop" data-tt-color="ditch"
+                      data-tt-title="道路側溝（L型 / D-1408）"
+                      data-tt-body="アスカーブ＋L型側溝。生活道路。"
+                      data-tt-meta="種別:L型,延長:960m"
+                      data-tt-warning="持出禁止：自治会清掃以外の作業は事前申請が必要。" />
+            <polyline points="1340,30 1350,500 1360,990"
+                      fill="none" stroke="var(--layer-ditch)" stroke-width="2.5" stroke-dasharray="6 3" opacity="0.85"
+                      data-tt-icon="water_drop" data-tt-color="ditch"
+                      data-tt-title="道路側溝（U型 / D-1511）"
+                      data-tt-body="蓋付U型。緊急輸送道路沿い。"
+                      data-tt-meta="種別:U型,規格:240x240"
+                      data-tt-warning="持出禁止：占用申請なしの蓋取外し・物資搬入は禁止。" />
+          </g>
+
+          <!-- マンホール -->
+          <g class="layer-manhole">
+            <g class="mh-point" transform="translate(450, 320)"
+               data-tt-icon="disc_full" data-tt-color="sewer"
+               data-tt-title="マンホール MH-1123"
+               data-tt-body="汚水管接続。蓋種別：T-25対応。"
+               data-tt-meta="種別:汚水,径:600,深度:3.2m">
+              <circle r="6" fill="var(--md-sys-color-surface)" stroke="var(--layer-sewer)" stroke-width="2.5" />
+              <circle r="2" fill="var(--layer-sewer)" />
+            </g>
+            <g class="mh-point" transform="translate(720, 340)"
+               data-tt-icon="disc_full" data-tt-color="sewer"
+               data-tt-title="マンホール MH-1204"
+               data-tt-body="合流管接続。蓋種別：T-25対応。"
+               data-tt-meta="種別:合流,径:600,深度:2.8m">
+              <circle r="6" fill="var(--md-sys-color-surface)" stroke="var(--layer-sewer)" stroke-width="2.5" />
+              <circle r="2" fill="var(--layer-sewer)" />
+            </g>
+            <g class="mh-point" transform="translate(1000, 330)"
+               data-tt-icon="disc_full" data-tt-color="sewer"
+               data-tt-title="マンホール MH-1308"
+               data-tt-body="汚水管接続。"
+               data-tt-meta="種別:汚水,径:500,深度:2.5m">
+              <circle r="6" fill="var(--md-sys-color-surface)" stroke="var(--layer-sewer)" stroke-width="2.5" />
+              <circle r="2" fill="var(--layer-sewer)" />
+            </g>
+            <g class="mh-point" transform="translate(1050, 700)"
+               data-tt-icon="disc_full" data-tt-color="sewer"
+               data-tt-title="マンホール MH-1422"
+               data-tt-body="支線接続。"
+               data-tt-meta="種別:汚水,径:300">
+              <circle r="6" fill="var(--md-sys-color-surface)" stroke="var(--layer-sewer)" stroke-width="2.5" />
+              <circle r="2" fill="var(--layer-sewer)" />
+            </g>
+            <g class="mh-point" transform="translate(700, 680)"
+               data-tt-icon="disc_full" data-tt-color="sewer"
+               data-tt-title="マンホール MH-1515"
+               data-tt-body="支線接続。要注意：前回点検で蓋ガタつき報告あり。"
+               data-tt-meta="種別:汚水,径:500,前回:2024-11-02">
+              <circle r="6" fill="var(--md-sys-color-surface)" stroke="var(--layer-sewer)" stroke-width="2.5" />
+              <circle r="2" fill="var(--layer-sewer)" />
+            </g>
+          </g>
+
+          <!-- 施設ポイント -->
+          <g class="layer-facilities">
+            <!-- 環境クリーンセンター -->
+            <g class="point" transform="translate(820, 420)"
+               data-tt-icon="location_city" data-tt-color="facility"
+               data-tt-title="環境クリーンセンター"
+               data-tt-body="可燃ごみ・粗大ごみ・資源物の中間処理施設。許可業者搬入口は南側。"
+               data-tt-meta="業務時間:7:00-17:00,担当:環境課">
+              <circle r="11" fill="var(--md-sys-color-surface)" stroke="var(--layer-facility)" stroke-width="3.5" />
+              <circle r="4" fill="var(--layer-facility)" />
+            </g>
+
+            <g class="point" transform="translate(320, 250)"
+               data-tt-icon="recycling" data-tt-color="facility"
+               data-tt-title="北部資源回収ステーション"
+               data-tt-body="資源物常設回収拠点。委託業者 月曜午前巡回。"
+               data-tt-meta="業務時間:24h,対応:資源物">
+              <circle r="10" fill="var(--md-sys-color-surface)" stroke="var(--layer-facility)" stroke-width="3" />
+              <circle r="3.5" fill="var(--layer-facility)" />
+            </g>
+            <g class="point" transform="translate(1180, 260)"
+               data-tt-icon="delete" data-tt-color="facility"
+               data-tt-title="リサイクルプラザ"
+               data-tt-body="粗大ごみ受入・小型家電回収。委託業者搬入は東口。"
+               data-tt-meta="業務時間:9:00-17:00,休:月曜">
+              <circle r="10" fill="var(--md-sys-color-surface)" stroke="var(--layer-facility)" stroke-width="3" />
+              <circle r="3.5" fill="var(--layer-facility)" />
+            </g>
+            <g class="point" transform="translate(560, 610)"
+               data-tt-icon="recycling" data-tt-color="facility"
+               data-tt-title="南部資源収集ステーション"
+               data-tt-body="古紙・布類・古着の回収拠点。"
+               data-tt-meta="業務時間:8:00-18:00,対応:古紙・布類">
+              <circle r="10" fill="var(--md-sys-color-surface)" stroke="var(--layer-facility)" stroke-width="3" />
+              <circle r="3.5" fill="var(--layer-facility)" />
+            </g>
+            <g class="point" transform="translate(1300, 620)"
+               data-tt-icon="local_shipping" data-tt-color="facility"
+               data-tt-title="東部中継ストックヤード"
+               data-tt-body="資源物の中継積替施設。事業者向け。巡回時はゲート守衛へ連絡。"
+               data-tt-meta="業務時間:7:00-15:00,対象:許可業者のみ">
+              <circle r="10" fill="var(--md-sys-color-surface)" stroke="var(--layer-facility)" stroke-width="3" />
+              <circle r="3.5" fill="var(--layer-facility)" />
+            </g>
+          </g>
+
+          <!-- 案件ピン（ステータス別） -->
+          <g class="layer-cases">
+            <!-- CASE-0142 進行中（現在選択中） -->
+            <g class="case-pin case-pin-progress case-pin-selected" transform="translate(820, 420)"
+               data-case-id="CASE-0142"
+               data-tt-icon="assignment" data-tt-color="case-progress"
+               data-tt-title="CASE-0142: 環境クリーンセンター 外周側溝 清掃点検"
+               data-tt-body="担当: つばめ建設 / 09:00着手 / 進捗 60%"
+               data-tt-meta="種別:側溝清掃,優先:中,開始:09:00">
+              <circle class="pin-pulse" r="32" fill="var(--case-progress)" opacity="0.18" />
+              <circle class="pin-pulse pin-pulse-2" r="22" fill="var(--case-progress)" opacity="0.3" />
+              <circle r="18" fill="var(--case-progress)" />
+              <circle r="14" fill="var(--md-sys-color-surface)" />
+              <text x="0" y="5" text-anchor="middle" font-size="14" font-weight="700" fill="var(--case-progress)">142</text>
+            </g>
+
+            <!-- CASE-0138 未着手 -->
+            <g class="case-pin case-pin-new" transform="translate(320, 250)"
+               data-case-id="CASE-0138"
+               data-tt-icon="assignment" data-tt-color="case-new"
+               data-tt-title="CASE-0138: 北部資源回収ST マンホール点検"
+               data-tt-body="担当: つばめ建設 / 予定 10:30 / 優先度 高"
+               data-tt-meta="種別:下水道点検,予定:10:30">
+              <circle r="18" fill="var(--case-new)" />
+              <circle r="14" fill="var(--md-sys-color-surface)" />
+              <text x="0" y="5" text-anchor="middle" font-size="14" font-weight="700" fill="var(--case-new)">138</text>
+            </g>
+
+            <!-- CASE-0145 未着手 -->
+            <g class="case-pin case-pin-new" transform="translate(1300, 620)"
+               data-case-id="CASE-0145"
+               data-tt-icon="assignment" data-tt-color="case-new"
+               data-tt-title="CASE-0145: 東部中継ストックヤード 設備巡回"
+               data-tt-body="担当: つばめ建設 / 予定 13:00"
+               data-tt-meta="種別:施設巡回,予定:13:00">
+              <circle r="18" fill="var(--case-new)" />
+              <circle r="14" fill="var(--md-sys-color-surface)" />
+              <text x="0" y="5" text-anchor="middle" font-size="14" font-weight="700" fill="var(--case-new)">145</text>
+            </g>
+
+            <!-- CASE-0140 完了 -->
+            <g class="case-pin case-pin-done" transform="translate(560, 790)"
+               data-case-id="CASE-0140"
+               data-tt-icon="task_alt" data-tt-color="case-done"
+               data-tt-title="CASE-0140: 南部 U字溝 破損箇所補修"
+               data-tt-body="担当: つばめ建設 / 08:40 完了 / 写真3枚"
+               data-tt-meta="種別:側溝補修,完了:08:40,記録:有">
+              <circle r="18" fill="var(--case-done)" />
+              <circle r="14" fill="var(--md-sys-color-surface)" />
+              <g transform="translate(0,1)">
+                <path d="M -6 0 L -2 4 L 7 -5" fill="none" stroke="var(--case-done)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+              </g>
+            </g>
+
+            <!-- CASE-0141 要再訪 -->
+            <g class="case-pin case-pin-revisit" transform="translate(1060, 540)"
+               data-case-id="CASE-0141"
+               data-tt-icon="error" data-tt-color="case-revisit"
+               data-tt-title="CASE-0141: 桜台 マンホール蓋 段差"
+               data-tt-body="担当: つばめ建設 / 要資材・再訪 / 前回 04-03"
+               data-tt-meta="種別:補修,状態:要再訪,前回:2026-04-03">
+              <circle r="18" fill="var(--case-revisit)" />
+              <circle r="14" fill="var(--md-sys-color-surface)" />
+              <text x="0" y="6" text-anchor="middle" font-size="17" font-weight="900" fill="var(--case-revisit)">!</text>
+            </g>
+          </g>
+
+          <!-- 現在地マーカー -->
+          <g class="current-location" transform="translate(720, 510)">
+            <circle r="30" fill="var(--md-sys-color-primary)" opacity="0.12" class="loc-pulse" />
+            <circle r="18" fill="var(--md-sys-color-primary)" opacity="0.22" class="loc-pulse loc-pulse-2" />
+            <circle r="9" fill="var(--md-sys-color-primary)" stroke="var(--md-sys-color-surface)" stroke-width="3" />
+          </g>
+        </svg>
+
+        <!-- フローティング検索バー -->
+        <div class="map-search-wrap">
+          <div class="search-bar map-search-bar" role="search">
+            <button class="icon-btn" aria-label="メニュー" data-action="open-drawer">
+              <span class="material-symbols-rounded">menu</span>
+            </button>
+            <input type="search" id="map-search" placeholder="案件ID・住所・管理ID（MH-1123等）" aria-label="地図検索" />
+            <button class="icon-btn" aria-label="音声入力">
+              <span class="material-symbols-rounded">mic</span>
+            </button>
+            <button class="icon-btn" aria-label="QRスキャン">
+              <span class="material-symbols-rounded">qr_code_scanner</span>
+            </button>
+          </div>
+
+          <!-- 検索候補 -->
+          <div class="map-suggest" role="listbox" aria-label="検索候補">
+            <div class="map-suggest-header">最近の案件</div>
+            <button class="map-suggest-item" role="option" type="button">
+              <span class="suggest-icon" style="color: var(--case-progress);">
+                <span class="material-symbols-rounded">assignment</span>
+              </span>
+              <div class="suggest-text">
+                <div class="suggest-title">CASE-0142 · 外周側溝 清掃点検</div>
+                <div class="suggest-sub">東有岡5丁目 · 進行中 · 60%</div>
+              </div>
+              <span class="material-symbols-rounded suggest-arrow">north_east</span>
+            </button>
+            <button class="map-suggest-item" role="option" type="button">
+              <span class="suggest-icon" style="color: var(--layer-sewer);">
+                <span class="material-symbols-rounded">disc_full</span>
+              </span>
+              <div class="suggest-text">
+                <div class="suggest-title">MH-1515 · マンホール</div>
+                <div class="suggest-sub">池尻8丁目 · 前回点検 2024-11-02</div>
+              </div>
+              <span class="material-symbols-rounded suggest-arrow">north_east</span>
+            </button>
+            <button class="map-suggest-item" role="option" type="button">
+              <span class="suggest-icon" style="color: var(--layer-facility);">
+                <span class="material-symbols-rounded">location_city</span>
+              </span>
+              <div class="suggest-text">
+                <div class="suggest-title">東部中継ストックヤード</div>
+                <div class="suggest-sub">東野1丁目 · 本日巡回予定</div>
+              </div>
+              <span class="material-symbols-rounded suggest-arrow">north_east</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- モード切替トグル（閲覧 / 記録）+ オフラインインジケータ -->
+        <div class="map-mode-bar" role="group" aria-label="モード切替">
+          <div class="map-mode-toggle" role="tablist" aria-label="操作モード">
+            <button class="mode-btn active" role="tab" aria-selected="true" type="button" data-mode="view">
+              <span class="material-symbols-rounded">visibility</span>
+              閲覧
+            </button>
+            <button class="mode-btn" role="tab" aria-selected="false" type="button" data-mode="record">
+              <span class="material-symbols-rounded">edit_note</span>
+              記録
+            </button>
+          </div>
+          <div class="map-sync-chip" role="status" aria-live="polite" title="同期済み">
+            <span class="material-symbols-rounded">cloud_done</span>
+            <span class="sync-text">同期済み · 2分前</span>
+          </div>
+        </div>
+
+        <!-- ズームコントロール -->
+        <div class="map-controls map-controls-zoom" role="group" aria-label="ズームコントロール">
+          <button class="map-ctrl-btn" type="button" aria-label="拡大">
+            <span class="material-symbols-rounded">add</span>
+          </button>
+          <div class="map-ctrl-divider"></div>
+          <button class="map-ctrl-btn" type="button" aria-label="縮小">
+            <span class="material-symbols-rounded">remove</span>
+          </button>
+        </div>
+
+        <!-- 現在地ボタン（タブレット向け大きめ） -->
+        <button class="map-ctrl-btn map-ctrl-float map-ctrl-locate" type="button" aria-label="現在地を表示" style="--float-bottom: 228px;">
+          <span class="material-symbols-rounded">my_location</span>
+        </button>
+
+        <!-- 方位コンパス -->
+        <button class="map-compass" type="button" aria-label="北を上に" style="--float-bottom: 296px;">
+          <svg viewBox="0 0 48 48" width="32" height="32" aria-hidden="true">
+            <circle cx="24" cy="24" r="22" fill="var(--md-sys-color-surface)" stroke="var(--md-sys-color-outline-variant)" stroke-width="1.5" />
+            <polygon points="24,6 18,24 24,20 30,24" fill="var(--md-sys-color-error)" />
+            <polygon points="24,42 18,24 24,28 30,24" fill="var(--md-sys-color-on-surface-variant)" />
+            <text x="24" y="14" text-anchor="middle" font-size="8" font-weight="700" fill="var(--md-sys-color-on-surface)">N</text>
+          </svg>
+        </button>
+
+        <!-- 計測ツール -->
+        <button class="map-ctrl-btn map-ctrl-float" type="button" aria-label="距離計測" style="--float-bottom: 160px;">
+          <span class="material-symbols-rounded">straighten</span>
+        </button>
+
+        <!-- スケールバー -->
+        <div class="map-scale" aria-label="スケール">
+          <div class="map-scale-bar"></div>
+          <div class="map-scale-label">500 m</div>
+        </div>
+
+        <!-- マップツールチップ -->
+        <div class="map-tooltip" id="mapTooltip" role="tooltip" aria-hidden="true">
+          <div class="map-tooltip-header">
+            <span class="map-tooltip-icon"><span class="material-symbols-rounded" data-tt-slot="icon">info</span></span>
+            <span class="map-tooltip-title" data-tt-slot="title"></span>
+          </div>
+          <div class="map-tooltip-body" data-tt-slot="body"></div>
+          <div class="map-tooltip-meta" data-tt-slot="meta"></div>
+          <div class="map-tooltip-warning" data-tt-slot="warning" hidden>
+            <span class="material-symbols-rounded">block</span>
+            <span data-tt-slot="warning-text"></span>
+          </div>
+        </div>
+
+        <!-- 属性表示 -->
+        <div class="map-attribution">
+          © 国土地理院ベクトルタイル · 伊丹市 環境インフラ台帳
+        </div>
+
+        <!-- FAB: ここで記録（タブレット向け大きめ） -->
+        <button class="fab fab-extended map-fab" type="button" aria-label="ここで記録する">
+          <span class="material-symbols-rounded">add_a_photo</span>
+          <span>ここで記録</span>
+        </button>
+
+        <!-- モバイル用タブ -->
+        <div class="map-mobile-tabs" role="tablist" aria-label="地図パネル切替">
+          <button class="map-tab active" role="tab" aria-selected="true" type="button" data-tab="cases">
+            <span class="material-symbols-rounded">assignment</span>
+            <span>案件</span>
+          </button>
+          <button class="map-tab" role="tab" aria-selected="false" type="button" data-tab="layers">
+            <span class="material-symbols-rounded">layers</span>
+            <span>レイヤ</span>
+          </button>
+          <button class="map-tab" role="tab" aria-selected="false" type="button" data-tab="legend">
+            <span class="material-symbols-rounded">info</span>
+            <span>凡例</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ========== 右：案件詳細パネル ========== -->
+      <aside class="map-detail open" aria-label="選択案件の詳細">
+        <div class="detail-header">
+          <div class="detail-hero">
+            <div class="detail-hero-bg" aria-hidden="true">
+              <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                <defs>
+                  <linearGradient id="dh" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="var(--case-progress)" stop-opacity="0.92" />
+                    <stop offset="1" stop-color="var(--md-sys-color-primary)" stop-opacity="0.85" />
+                  </linearGradient>
+                  <pattern id="dhp" width="24" height="24" patternUnits="userSpaceOnUse">
+                    <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#ffffff" stroke-width="0.6" opacity="0.25" />
+                  </pattern>
+                </defs>
+                <rect width="400" height="180" fill="url(#dh)" />
+                <rect width="400" height="180" fill="url(#dhp)" />
+                <circle cx="320" cy="60" r="40" fill="#ffffff" opacity="0.1" />
+                <circle cx="80" cy="140" r="30" fill="#ffffff" opacity="0.08" />
+              </svg>
+            </div>
+            <button class="detail-close icon-btn" type="button" aria-label="詳細を閉じる">
+              <span class="material-symbols-rounded">close</span>
+            </button>
+            <button class="detail-fav icon-btn" type="button" aria-label="ピン留め">
+              <span class="material-symbols-rounded">push_pin</span>
+            </button>
+            <span class="detail-chip chip chip-assist">
+              <span class="material-symbols-rounded" style="color: var(--case-progress);">assignment</span>
+              進行中 · CASE-0142
+            </span>
+          </div>
+
+          <div class="detail-title-block">
+            <h2 class="detail-title">環境クリーンセンター 外周側溝 清掃点検</h2>
+            <p class="detail-sub">伊丹市 東有岡5丁目 · 管理ID: D-1102 / L-4102</p>
+            <div class="detail-status-row">
+              <span class="case-badge case-badge-progress">
+                <span class="case-dot case-dot-progress"></span>進行中
+              </span>
+              <span class="detail-progress-label">進捗 60%</span>
+              <div class="detail-progress-bar"><span style="width: 60%;"></span></div>
+            </div>
+            <div class="detail-assignee">
+              <span class="avatar-initial">KT</span>
+              <div>
+                <div class="assignee-name">株式会社 つばめ建設</div>
+                <div class="assignee-role">委託業者 · 現場担当 髙橋</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-actions">
+          <button class="detail-action-btn detail-action-primary" type="button" onclick="location.href='./inspect.html'">
+            <span class="detail-action-icon">
+              <span class="material-symbols-rounded">add_a_photo</span>
+            </span>
+            <span class="detail-action-label">記録する</span>
+          </button>
+          <button class="detail-action-btn" type="button">
+            <span class="detail-action-icon">
+              <span class="material-symbols-rounded">navigation</span>
+            </span>
+            <span class="detail-action-label">ナビ</span>
+          </button>
+          <button class="detail-action-btn" type="button">
+            <span class="detail-action-icon">
+              <span class="material-symbols-rounded">call</span>
+            </span>
+            <span class="detail-action-label">担当に電話</span>
+          </button>
+          <button class="detail-action-btn" type="button">
+            <span class="detail-action-icon">
+              <span class="material-symbols-rounded">history</span>
+            </span>
+            <span class="detail-action-label">履歴</span>
+          </button>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="detail-body">
+
+          <!-- 業務向け警告バナー -->
+          <div class="detail-warning-card">
+            <span class="material-symbols-rounded">gpp_maybe</span>
+            <div>
+              <div class="detail-warning-title">占用・持出に関する注意</div>
+              <div class="detail-warning-body">本台帳データの第三者提供・転載は不可。工事・掘削前に埋設物照会窓口（072-784-XXXX）へ連絡。</div>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <span class="material-symbols-rounded detail-row-icon">location_on</span>
+            <div class="detail-row-content">
+              <div class="detail-row-label">住所</div>
+              <div class="detail-row-value">〒664-0845 兵庫県伊丹市東有岡5丁目133 周辺</div>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <span class="material-symbols-rounded detail-row-icon">layers</span>
+            <div class="detail-row-content">
+              <div class="detail-row-label">対象インフラ</div>
+              <div class="detail-row-value">道路側溝（U型 300×300）／延長 140m ／下水道接続 MH-1204</div>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <span class="material-symbols-rounded detail-row-icon">schedule</span>
+            <div class="detail-row-content">
+              <div class="detail-row-label">予定・開始時刻</div>
+              <div class="detail-row-value">2026-04-10（木）09:00 着手 / 11:30 終了予定</div>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <span class="material-symbols-rounded detail-row-icon">checklist</span>
+            <div class="detail-row-content">
+              <div class="detail-row-label">作業項目</div>
+              <div class="detail-row-value">堆積物除去・グレーチング点検・写真記録（前後2枚以上）</div>
+            </div>
+          </div>
+
+          <!-- 点検履歴 -->
+          <div class="detail-section">
+            <h3 class="detail-section-title">点検・記録履歴</h3>
+            <ul class="detail-history" role="list">
+              <li class="history-item history-item-current">
+                <span class="history-dot"></span>
+                <div class="history-content">
+                  <div class="history-head">
+                    <strong>現場着手</strong>
+                    <span>今日 09:04</span>
+                  </div>
+                  <div class="history-body">つばめ建設・髙橋 / 写真1枚</div>
+                </div>
+              </li>
+              <li class="history-item">
+                <span class="history-dot"></span>
+                <div class="history-content">
+                  <div class="history-head">
+                    <strong>案件割当</strong>
+                    <span>今日 07:30</span>
+                  </div>
+                  <div class="history-body">伊丹市 環境課 · 定期巡回</div>
+                </div>
+              </li>
+              <li class="history-item">
+                <span class="history-dot"></span>
+                <div class="history-content">
+                  <div class="history-head">
+                    <strong>前回点検</strong>
+                    <span>2025-11-12</span>
+                  </div>
+                  <div class="history-body">異常なし / 堆積 軽微</div>
+                </div>
+              </li>
+              <li class="history-item">
+                <span class="history-dot"></span>
+                <div class="history-content">
+                  <div class="history-head">
+                    <strong>補修履歴</strong>
+                    <span>2024-06-22</span>
+                  </div>
+                  <div class="history-body">グレーチング 部分交換（南側 6m）</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 関連案件 -->
+          <div class="detail-section">
+            <h3 class="detail-section-title">この付近の関連案件</h3>
+            <ul class="detail-nearby" role="list">
+              <li class="nearby-item">
+                <span class="nearby-dot" style="background: var(--case-new);"></span>
+                <div class="nearby-text">
+                  <div class="nearby-name">CASE-0138 · 北部 マンホール点検</div>
+                  <div class="nearby-meta">1.4 km · 未着手 · 10:30予定</div>
+                </div>
+                <span class="material-symbols-rounded nearby-arrow">chevron_right</span>
+              </li>
+              <li class="nearby-item">
+                <span class="nearby-dot" style="background: var(--case-revisit);"></span>
+                <div class="nearby-text">
+                  <div class="nearby-name">CASE-0141 · 桜台 蓋段差</div>
+                  <div class="nearby-meta">0.9 km · 要再訪 · 資材手配中</div>
+                </div>
+                <span class="material-symbols-rounded nearby-arrow">chevron_right</span>
+              </li>
+              <li class="nearby-item">
+                <span class="nearby-dot" style="background: var(--case-done);"></span>
+                <div class="nearby-text">
+                  <div class="nearby-name">CASE-0140 · 南部 U字溝 補修</div>
+                  <div class="nearby-meta">2.1 km · 完了 · 08:40</div>
+                </div>
+                <span class="material-symbols-rounded nearby-arrow">chevron_right</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- モバイル用 Bottom Sheet -->
+    <div class="map-bottom-sheet" aria-hidden="true">
+      <div class="sheet-handle" role="button" aria-label="シートを開閉"></div>
+      <div class="sheet-content">
+        <h3 class="sheet-title">CASE-0142 · 外周側溝 清掃点検</h3>
+        <p class="sheet-sub">進行中 · 進捗 60% · 東有岡5丁目</p>
+        <div class="sheet-actions">
+          <button class="btn btn-filled btn-sm" onclick="location.href='./inspect.html'">
+            <span class="material-symbols-rounded">add_a_photo</span>
+            記録する
+          </button>
+          <button class="btn btn-tonal btn-sm">
+            <span class="material-symbols-rounded">info</span>
+            詳細
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 共通フッター -->
+  <div data-include="partials/footer.html"></div>
+
+  <script src="js/include.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // 地図ページ専用インタラクション
+    document.addEventListener('DOMContentLoaded', function () {
+      var body = document.body;
+      var detail = document.querySelector('.map-detail');
+      var closeBtn = document.querySelector('.detail-close');
+
+      // 詳細パネル閉じる
+      if (closeBtn && detail) {
+        closeBtn.addEventListener('click', function () {
+          detail.classList.remove('open');
+        });
+      }
+
+      // モード切替（閲覧 / 記録）
+      var modeBtns = document.querySelectorAll('.mode-btn');
+      modeBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          modeBtns.forEach(function (b) {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+          var mode = btn.getAttribute('data-mode');
+          body.setAttribute('data-map-mode', mode);
+          if (window.ICM && window.ICM.showSnackbar) {
+            window.ICM.showSnackbar(mode === 'record' ? '記録モードに切替。地図をタップして記録位置を選びます' : '閲覧モードに切替');
+          }
+        });
+      });
+
+      // モバイルタブ
+      var tabs = document.querySelectorAll('.map-tab');
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          tabs.forEach(function (t) {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+        });
+      });
+
+      // ベースマップ切替
+      var basemaps = document.querySelectorAll('.basemap-tile');
+      basemaps.forEach(function (tile) {
+        tile.addEventListener('click', function () {
+          basemaps.forEach(function (t) {
+            t.classList.remove('active');
+            t.setAttribute('aria-pressed', 'false');
+          });
+          tile.classList.add('active');
+          tile.setAttribute('aria-pressed', 'true');
+        });
+      });
+
+      // 案件ステータスタブ
+      var statusTabs = document.querySelectorAll('.case-status-tab');
+      var caseCards = document.querySelectorAll('.case-card');
+      statusTabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          statusTabs.forEach(function (t) {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+          var status = tab.getAttribute('data-status');
+          caseCards.forEach(function (c) {
+            var cs = c.getAttribute('data-status');
+            c.style.display = (status === 'all' || cs === status) ? '' : 'none';
+          });
+        });
+      });
+
+      // 案件カードクリック → 対応ピンを選択状態に + 詳細開く
+      caseCards.forEach(function (card) {
+        card.addEventListener('click', function () {
+          caseCards.forEach(function (c) { c.classList.remove('case-card-selected'); });
+          card.classList.add('case-card-selected');
+          var id = card.getAttribute('data-case-id');
+          document.querySelectorAll('.case-pin').forEach(function (p) {
+            p.classList.remove('case-pin-selected');
+            if (p.getAttribute('data-case-id') === id) {
+              p.classList.add('case-pin-selected');
+            }
+          });
+          if (detail) detail.classList.add('open');
+        });
+      });
+
+      // 地図上の案件ピンクリック → 対応カードを選択 + 詳細開く
+      var casePins = document.querySelectorAll('.case-pin');
+      casePins.forEach(function (pin) {
+        pin.style.cursor = 'pointer';
+        pin.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var id = pin.getAttribute('data-case-id');
+          casePins.forEach(function (p) { p.classList.remove('case-pin-selected'); });
+          pin.classList.add('case-pin-selected');
+          caseCards.forEach(function (c) {
+            c.classList.toggle('case-card-selected', c.getAttribute('data-case-id') === id);
+          });
+          if (detail) detail.classList.add('open');
+        });
+      });
+
+      // 施設・マンホールクリック → 詳細パネルを開く（簡易）
+      var otherPoints = document.querySelectorAll('.layer-facilities .point, .layer-manhole .mh-point');
+      otherPoints.forEach(function (p) {
+        p.style.cursor = 'pointer';
+        p.addEventListener('click', function () {
+          if (detail) detail.classList.add('open');
+        });
+      });
+
+      // レイヤスイッチで Snackbar
+      var switches = document.querySelectorAll('.layer-item .switch input');
+      switches.forEach(function (s) {
+        s.addEventListener('change', function () {
+          var name = s.closest('.layer-item').querySelector('.layer-name').textContent;
+          if (window.ICM && window.ICM.showSnackbar) {
+            window.ICM.showSnackbar((s.checked ? '表示' : '非表示') + ': ' + name);
+          }
+        });
+      });
+
+      // FAB: ここで記録 → inspect.html へ
+      var fab = document.querySelector('.map-fab');
+      if (fab) {
+        fab.addEventListener('click', function () {
+          location.href = './inspect.html';
+        });
+      }
+
+      // 同期ステータスのトグル（デモ用）
+      var syncChip = document.querySelector('.map-sync-chip');
+      if (syncChip) {
+        syncChip.addEventListener('click', function () {
+          syncChip.classList.add('syncing');
+          syncChip.querySelector('.sync-text').textContent = '同期中…';
+          setTimeout(function () {
+            syncChip.classList.remove('syncing');
+            syncChip.querySelector('.sync-text').textContent = '同期済み · たった今';
+            if (window.ICM && window.ICM.showSnackbar) {
+              window.ICM.showSnackbar('記録 3件を同期しました');
+            }
+          }, 1600);
+        });
+      }
+
+      // ============ Map Tooltip ============
+      var tooltip = document.getElementById('mapTooltip');
+      var canvas = document.querySelector('.map-canvas');
+      var svg = document.querySelector('.map-svg');
+      if (tooltip && canvas && svg) {
+        var ttIcon    = tooltip.querySelector('[data-tt-slot="icon"]');
+        var ttTitle   = tooltip.querySelector('[data-tt-slot="title"]');
+        var ttBody    = tooltip.querySelector('[data-tt-slot="body"]');
+        var ttMeta    = tooltip.querySelector('[data-tt-slot="meta"]');
+        var ttWarn    = tooltip.querySelector('[data-tt-slot="warning"]');
+        var ttWarnTxt = tooltip.querySelector('[data-tt-slot="warning-text"]');
+
+        var COLOR_MAP = {
+          sewer:         'var(--layer-sewer)',
+          ditch:         'var(--layer-ditch)',
+          facility:      'var(--layer-facility)',
+          shelter:       'var(--layer-shelter)',
+          'case-new':      'var(--case-new)',
+          'case-progress': 'var(--case-progress)',
+          'case-done':     'var(--case-done)',
+          'case-revisit':  'var(--case-revisit)'
+        };
+
+        var currentEl = null;
+        var hideTimer = null;
+        var HIDE_DELAY = 140;
+
+        function escapeHtml(s) {
+          return String(s).replace(/[&<>"']/g, function (c) {
+            return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]);
+          });
+        }
+
+        function fillTooltip(el) {
+          var icon  = el.getAttribute('data-tt-icon')  || 'info';
+          var color = el.getAttribute('data-tt-color') || '';
+          var title = el.getAttribute('data-tt-title') || '';
+          var body  = el.getAttribute('data-tt-body')  || '';
+          var meta  = el.getAttribute('data-tt-meta')  || '';
+          var warn  = el.getAttribute('data-tt-warning') || '';
+
+          ttIcon.textContent = icon;
+          ttTitle.textContent = title;
+          ttBody.textContent = body;
+          ttBody.hidden = !body;
+
+          if (color && COLOR_MAP[color]) {
+            tooltip.style.setProperty('--tt-color', COLOR_MAP[color]);
+          } else {
+            tooltip.style.removeProperty('--tt-color');
+          }
+
+          ttMeta.innerHTML = '';
+          if (meta) {
+            meta.split(',').forEach(function (pair) {
+              var kv = pair.split(':');
+              if (kv.length < 2) return;
+              var item = document.createElement('span');
+              item.className = 'map-tooltip-meta-item';
+              item.innerHTML = '<span class="material-symbols-rounded">label</span>' +
+                               escapeHtml(kv[0].trim()) + ': ' + escapeHtml(kv.slice(1).join(':').trim());
+              ttMeta.appendChild(item);
+            });
+            ttMeta.hidden = false;
+          } else {
+            ttMeta.hidden = true;
+          }
+
+          if (warn) {
+            ttWarnTxt.textContent = warn;
+            ttWarn.hidden = false;
+          } else {
+            ttWarn.hidden = true;
+          }
+        }
+
+        function positionTooltip(clientX, clientY) {
+          var rect = canvas.getBoundingClientRect();
+          var x = clientX - rect.left;
+          var y = clientY - rect.top;
+          var ttW = tooltip.offsetWidth  || 240;
+          var ttH = tooltip.offsetHeight || 80;
+          var pad = 12;
+          if (x < ttW / 2 + pad) x = ttW / 2 + pad;
+          if (x > rect.width - ttW / 2 - pad) x = rect.width - ttW / 2 - pad;
+          if (y < ttH + pad + 16) y = ttH + pad + 16;
+          tooltip.style.left = x + 'px';
+          tooltip.style.top  = y + 'px';
+        }
+
+        function cancelHide() {
+          if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+        }
+
+        function showFor(el, clientX, clientY) {
+          cancelHide();
+          if (currentEl === el) {
+            positionTooltip(clientX, clientY);
+            return;
+          }
+          currentEl = el;
+          fillTooltip(el);
+          tooltip.setAttribute('aria-hidden', 'false');
+          tooltip.style.display = 'block';
+          void tooltip.offsetWidth;
+          positionTooltip(clientX, clientY);
+          tooltip.classList.add('show');
+        }
+
+        function scheduleHide() {
+          if (hideTimer) return;
+          hideTimer = setTimeout(function () {
+            hideTimer = null;
+            currentEl = null;
+            tooltip.classList.remove('show');
+            tooltip.setAttribute('aria-hidden', 'true');
+            setTimeout(function () {
+              if (!tooltip.classList.contains('show')) tooltip.style.display = '';
+            }, 240);
+          }, HIDE_DELAY);
+        }
+
+        svg.addEventListener('pointermove', function (e) {
+          var el = e.target.closest && e.target.closest('[data-tt-title]');
+          if (el) {
+            showFor(el, e.clientX, e.clientY);
+          } else if (currentEl) {
+            scheduleHide();
+          }
+        });
+
+        svg.addEventListener('pointerleave', function () {
+          scheduleHide();
+        });
+      }
+    });
+  </script>
+</body>
+</html>

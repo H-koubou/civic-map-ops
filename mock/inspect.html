@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>現場記録 | Civic Map Ops</title>
+  <meta name="description" content="タブレットから現場のインフラ点検・補修を記録。写真・チェックリスト・メモ・位置情報を一括入力。" />
+  <meta name="theme-color" content="#006781" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/page-map.css" />
+  <link rel="stylesheet" href="css/page-inspect.css" />
+</head>
+<body data-page="inspect" class="page page-inspect">
+  <a href="#main" class="skip-link">本文へスキップ</a>
+
+  <!-- 共通ヘッダー -->
+  <div data-include="partials/header.html"></div>
+
+  <main id="main" class="inspect-main">
+    <div class="container inspect-container">
+
+      <!-- ========== ページヘッダ ========== -->
+      <header class="inspect-head">
+        <a href="./map.html" class="inspect-back">
+          <span class="material-symbols-rounded">arrow_back</span>
+          地図に戻る
+        </a>
+        <div class="inspect-head-center">
+          <div class="inspect-case-chip">
+            <span class="case-dot case-dot-progress"></span>
+            進行中 · CASE-0142
+          </div>
+          <h1 class="inspect-title">環境クリーンセンター 外周側溝 清掃点検</h1>
+          <div class="inspect-head-meta">
+            <span><span class="material-symbols-rounded">place</span>東有岡5丁目</span>
+            <span><span class="material-symbols-rounded">layers</span>D-1102 / L-4102</span>
+            <span><span class="material-symbols-rounded">schedule</span>09:00 着手</span>
+          </div>
+        </div>
+        <div class="inspect-head-actions">
+          <button class="btn btn-text" type="button">
+            <span class="material-symbols-rounded">save</span>
+            下書き保存
+          </button>
+          <button class="btn btn-filled" type="button">
+            <span class="material-symbols-rounded">cloud_upload</span>
+            記録を保存
+          </button>
+        </div>
+      </header>
+
+      <!-- ========== 進捗ステッパー ========== -->
+      <section class="inspect-stepper" aria-label="入力進捗">
+        <div class="step-item step-done">
+          <div class="step-circle"><span class="material-symbols-rounded">check</span></div>
+          <div class="step-label">案件選択</div>
+        </div>
+        <div class="step-line step-line-done"></div>
+        <div class="step-item step-done">
+          <div class="step-circle"><span class="material-symbols-rounded">check</span></div>
+          <div class="step-label">位置確認</div>
+        </div>
+        <div class="step-line step-line-active"></div>
+        <div class="step-item step-active">
+          <div class="step-circle">3</div>
+          <div class="step-label">記録入力</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-item">
+          <div class="step-circle">4</div>
+          <div class="step-label">確認・送信</div>
+        </div>
+      </section>
+
+      <!-- ========== 2カラム：フォーム + サイドパネル ========== -->
+      <div class="inspect-grid">
+
+        <!-- 左：入力フォーム -->
+        <div class="inspect-form">
+
+          <!-- 写真セクション -->
+          <section class="inspect-section">
+            <div class="inspect-section-head">
+              <h2 class="inspect-section-title">
+                <span class="material-symbols-rounded">photo_camera</span>
+                現場写真
+                <span class="required-mark">必須</span>
+              </h2>
+              <span class="inspect-section-hint">前後2枚以上を推奨</span>
+            </div>
+
+            <div class="photo-grid">
+              <div class="photo-slot photo-slot-filled" data-label="着手前">
+                <div class="photo-placeholder photo-before" aria-label="着手前 写真1">
+                  <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <linearGradient id="pg1" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stop-color="#6b7a72" />
+                        <stop offset="1" stop-color="#4a5853" />
+                      </linearGradient>
+                    </defs>
+                    <rect width="200" height="150" fill="url(#pg1)" />
+                    <rect x="20" y="90" width="160" height="40" fill="#5c6863" opacity="0.8" />
+                    <path d="M20 110 Q60 100 100 112 T180 108" stroke="#8a9892" stroke-width="3" fill="none" />
+                    <circle cx="40" cy="60" r="12" fill="#a8b4af" opacity="0.3" />
+                  </svg>
+                </div>
+                <div class="photo-overlay">
+                  <span class="photo-tag">着手前</span>
+                  <button class="photo-remove" type="button" aria-label="削除">
+                    <span class="material-symbols-rounded">close</span>
+                  </button>
+                </div>
+                <div class="photo-meta">
+                  09:04 · GPS 34.783, 135.400
+                </div>
+              </div>
+
+              <div class="photo-slot photo-slot-filled">
+                <div class="photo-placeholder photo-during" aria-label="作業中 写真2">
+                  <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <linearGradient id="pg2" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stop-color="#7a8a7c" />
+                        <stop offset="1" stop-color="#556b58" />
+                      </linearGradient>
+                    </defs>
+                    <rect width="200" height="150" fill="url(#pg2)" />
+                    <rect x="10" y="80" width="180" height="50" fill="#4e5b4f" opacity="0.7" />
+                    <rect x="70" y="50" width="60" height="90" fill="#d4a455" opacity="0.85" />
+                    <circle cx="100" cy="40" r="8" fill="#ffffff" opacity="0.5" />
+                  </svg>
+                </div>
+                <div class="photo-overlay">
+                  <span class="photo-tag">作業中</span>
+                  <button class="photo-remove" type="button" aria-label="削除">
+                    <span class="material-symbols-rounded">close</span>
+                  </button>
+                </div>
+                <div class="photo-meta">
+                  09:48 · GPS 34.783, 135.400
+                </div>
+              </div>
+
+              <button class="photo-slot photo-slot-empty" type="button">
+                <span class="material-symbols-rounded">add_a_photo</span>
+                <span class="photo-slot-label">写真を追加</span>
+                <span class="photo-slot-sub">カメラ / ライブラリ</span>
+              </button>
+
+              <button class="photo-slot photo-slot-empty" type="button">
+                <span class="material-symbols-rounded">add</span>
+                <span class="photo-slot-label">もっと追加</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- 状況チェックリスト -->
+          <section class="inspect-section">
+            <div class="inspect-section-head">
+              <h2 class="inspect-section-title">
+                <span class="material-symbols-rounded">checklist</span>
+                作業チェックリスト
+              </h2>
+              <span class="inspect-section-hint">3 / 5 完了</span>
+            </div>
+
+            <ul class="checklist" role="list">
+              <li class="checklist-item checklist-item-done">
+                <label>
+                  <input type="checkbox" checked />
+                  <span class="checklist-marker"><span class="material-symbols-rounded">check</span></span>
+                  <div class="checklist-body">
+                    <div class="checklist-text">堆積物除去</div>
+                    <div class="checklist-sub">目視で堆積物を確認・除去</div>
+                  </div>
+                </label>
+              </li>
+              <li class="checklist-item checklist-item-done">
+                <label>
+                  <input type="checkbox" checked />
+                  <span class="checklist-marker"><span class="material-symbols-rounded">check</span></span>
+                  <div class="checklist-body">
+                    <div class="checklist-text">グレーチング外観点検</div>
+                    <div class="checklist-sub">変形・破損・固定状態を確認</div>
+                  </div>
+                </label>
+              </li>
+              <li class="checklist-item checklist-item-done">
+                <label>
+                  <input type="checkbox" checked />
+                  <span class="checklist-marker"><span class="material-symbols-rounded">check</span></span>
+                  <div class="checklist-body">
+                    <div class="checklist-text">側壁クラック確認</div>
+                    <div class="checklist-sub">0.3mm以上のひび割れを記録</div>
+                  </div>
+                </label>
+              </li>
+              <li class="checklist-item">
+                <label>
+                  <input type="checkbox" />
+                  <span class="checklist-marker"><span class="material-symbols-rounded">check</span></span>
+                  <div class="checklist-body">
+                    <div class="checklist-text">排水状況の確認</div>
+                    <div class="checklist-sub">バケツテストで流下確認</div>
+                  </div>
+                </label>
+              </li>
+              <li class="checklist-item">
+                <label>
+                  <input type="checkbox" />
+                  <span class="checklist-marker"><span class="material-symbols-rounded">check</span></span>
+                  <div class="checklist-body">
+                    <div class="checklist-text">完了写真撮影</div>
+                    <div class="checklist-sub">着手前と同アングルで撮影</div>
+                  </div>
+                </label>
+              </li>
+            </ul>
+          </section>
+
+          <!-- 状態評価 -->
+          <section class="inspect-section">
+            <div class="inspect-section-head">
+              <h2 class="inspect-section-title">
+                <span class="material-symbols-rounded">grade</span>
+                状態評価
+              </h2>
+            </div>
+
+            <div class="rating-group" role="radiogroup" aria-label="施設状態">
+              <label class="rating-option rating-option-good">
+                <input type="radio" name="rating" value="good" />
+                <span class="rating-icon"><span class="material-symbols-rounded">check_circle</span></span>
+                <span class="rating-label">良好</span>
+                <span class="rating-sub">異常なし</span>
+              </label>
+              <label class="rating-option rating-option-ok rating-option-selected">
+                <input type="radio" name="rating" value="ok" checked />
+                <span class="rating-icon"><span class="material-symbols-rounded">info</span></span>
+                <span class="rating-label">軽微</span>
+                <span class="rating-sub">経過観察</span>
+              </label>
+              <label class="rating-option rating-option-warn">
+                <input type="radio" name="rating" value="warn" />
+                <span class="rating-icon"><span class="material-symbols-rounded">warning</span></span>
+                <span class="rating-label">要対応</span>
+                <span class="rating-sub">次回補修</span>
+              </label>
+              <label class="rating-option rating-option-bad">
+                <input type="radio" name="rating" value="bad" />
+                <span class="rating-icon"><span class="material-symbols-rounded">error</span></span>
+                <span class="rating-label">要緊急</span>
+                <span class="rating-sub">即時対応</span>
+              </label>
+            </div>
+          </section>
+
+          <!-- 現場メモ -->
+          <section class="inspect-section">
+            <div class="inspect-section-head">
+              <h2 class="inspect-section-title">
+                <span class="material-symbols-rounded">edit_note</span>
+                現場メモ
+              </h2>
+              <button class="btn btn-text btn-sm" type="button">
+                <span class="material-symbols-rounded">mic</span>
+                音声入力
+              </button>
+            </div>
+
+            <div class="inspect-memo-wrap">
+              <textarea class="inspect-memo" rows="5" placeholder="現場で気づいた点、次回の引継ぎ事項、業者さんへの指示など…">外周側溝の北西部分に堆積物が多く、清掃に想定より時間がかかった。
+グレーチング2枚に軽微な変形あり。次回点検時に交換要否を再評価する必要あり。
+下流のマンホール MH-1204 にわずかな水たまり — 要観察。</textarea>
+              <div class="inspect-memo-foot">
+                <div class="inspect-memo-chips">
+                  <button class="chip chip-assist chip-sm" type="button">+ 堆積多</button>
+                  <button class="chip chip-assist chip-sm" type="button">+ 軽微な変形</button>
+                  <button class="chip chip-assist chip-sm" type="button">+ 次回再評価</button>
+                  <button class="chip chip-assist chip-sm" type="button">+ 下流観察</button>
+                </div>
+                <div class="inspect-memo-count">132 / 500</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 測定値 -->
+          <section class="inspect-section">
+            <div class="inspect-section-head">
+              <h2 class="inspect-section-title">
+                <span class="material-symbols-rounded">straighten</span>
+                測定・数値記録
+              </h2>
+            </div>
+
+            <div class="measure-grid">
+              <div class="field field-outlined">
+                <input type="number" id="m-depth" value="0.32" step="0.01" placeholder=" " />
+                <label for="m-depth">堆積深さ (m)</label>
+              </div>
+              <div class="field field-outlined">
+                <input type="number" id="m-length" value="140" step="1" placeholder=" " />
+                <label for="m-length">清掃延長 (m)</label>
+              </div>
+              <div class="field field-outlined">
+                <input type="number" id="m-volume" value="0.5" step="0.1" placeholder=" " />
+                <label for="m-volume">堆積物量 (m³)</label>
+              </div>
+              <div class="field field-outlined">
+                <input type="number" id="m-crack" value="0" step="1" placeholder=" " />
+                <label for="m-crack">クラック数 (箇所)</label>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- 右：サイドパネル（位置情報・メタ） -->
+        <aside class="inspect-side">
+
+          <!-- 位置情報カード -->
+          <section class="inspect-side-card">
+            <h3 class="inspect-side-title">
+              <span class="material-symbols-rounded">my_location</span>
+              記録位置
+            </h3>
+            <div class="inspect-mini-map">
+              <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern id="imGrid" width="24" height="24" patternUnits="userSpaceOnUse">
+                    <path d="M 24 0 L 0 0 0 24" fill="none" stroke="var(--md-sys-color-outline-variant)" stroke-width="0.5" opacity="0.7" />
+                  </pattern>
+                </defs>
+                <rect width="320" height="200" fill="url(#imGrid)" />
+                <path d="M 0 100 Q 160 90 320 110" stroke="var(--md-sys-color-outline-variant)" stroke-width="6" fill="none" />
+                <polyline points="20,80 140,85 180,82 300,90" stroke="var(--layer-ditch)" stroke-width="3" fill="none" stroke-dasharray="6 3" />
+                <g transform="translate(160, 100)">
+                  <circle r="24" fill="var(--case-progress)" opacity="0.18" class="pulse" />
+                  <circle r="16" fill="var(--case-progress)" opacity="0.3" />
+                  <circle r="10" fill="var(--case-progress)" />
+                  <circle r="6" fill="var(--md-sys-color-surface)" />
+                </g>
+                <g transform="translate(160, 140)">
+                  <circle r="10" fill="var(--md-sys-color-primary)" opacity="0.18" class="loc-pulse" />
+                  <circle r="5" fill="var(--md-sys-color-primary)" stroke="var(--md-sys-color-surface)" stroke-width="1.5" />
+                </g>
+              </svg>
+            </div>
+            <dl class="inspect-loc-info">
+              <div>
+                <dt>緯度</dt><dd>34.78312</dd>
+              </div>
+              <div>
+                <dt>経度</dt><dd>135.39987</dd>
+              </div>
+              <div>
+                <dt>精度</dt><dd>± 3.2 m</dd>
+              </div>
+              <div>
+                <dt>取得</dt><dd>09:04:12</dd>
+              </div>
+            </dl>
+            <button class="btn btn-tonal btn-sm inspect-loc-btn" type="button">
+              <span class="material-symbols-rounded">gps_fixed</span>
+              位置を再取得
+            </button>
+          </section>
+
+          <!-- 対象インフラ -->
+          <section class="inspect-side-card">
+            <h3 class="inspect-side-title">
+              <span class="material-symbols-rounded">layers</span>
+              対象インフラ
+            </h3>
+            <ul class="inspect-target-list" role="list">
+              <li>
+                <span class="layer-dot" style="--dot: var(--layer-ditch);"></span>
+                <div>
+                  <div class="inspect-target-name">D-1102 道路側溝</div>
+                  <div class="inspect-target-sub">U型 300×300 / 延長 140m</div>
+                </div>
+              </li>
+              <li>
+                <span class="layer-dot" style="--dot: var(--layer-sewer);"></span>
+                <div>
+                  <div class="inspect-target-name">L-4102 汚水管</div>
+                  <div class="inspect-target-sub">φ800 / 幹線 / MH-1204接続</div>
+                </div>
+              </li>
+              <li>
+                <span class="layer-dot" style="--dot: var(--layer-facility);"></span>
+                <div>
+                  <div class="inspect-target-name">F-0102 環境クリーンセンター</div>
+                  <div class="inspect-target-sub">外周点検対象施設</div>
+                </div>
+              </li>
+            </ul>
+          </section>
+
+          <!-- 同期ステータス -->
+          <section class="inspect-side-card inspect-side-sync">
+            <h3 class="inspect-side-title">
+              <span class="material-symbols-rounded">cloud_sync</span>
+              下書きステータス
+            </h3>
+            <div class="inspect-sync-state">
+              <span class="inspect-sync-dot inspect-sync-dot-local"></span>
+              <span>ローカル保存済み</span>
+            </div>
+            <div class="inspect-sync-meta">
+              この記録はオフラインで保存されています。
+              送信ボタンで市のサーバーに同期されます。
+            </div>
+            <ul class="inspect-sync-items" role="list">
+              <li><span class="material-symbols-rounded">check</span>写真 2枚 · 1.8 MB</li>
+              <li><span class="material-symbols-rounded">check</span>チェックリスト 3/5</li>
+              <li><span class="material-symbols-rounded">check</span>メモ 132字</li>
+              <li><span class="material-symbols-rounded">check</span>測定値 4項目</li>
+              <li><span class="material-symbols-rounded">check</span>GPS位置</li>
+            </ul>
+          </section>
+
+        </aside>
+      </div>
+
+      <!-- ========== 固定アクションバー ========== -->
+      <footer class="inspect-action-bar">
+        <div class="inspect-action-left">
+          <button class="btn btn-text" type="button">
+            <span class="material-symbols-rounded">delete</span>
+            下書きを破棄
+          </button>
+        </div>
+        <div class="inspect-action-right">
+          <button class="btn btn-outlined btn-lg" type="button">
+            <span class="material-symbols-rounded">save</span>
+            下書き保存
+          </button>
+          <button class="btn btn-filled btn-lg" type="button">
+            <span class="material-symbols-rounded">cloud_upload</span>
+            記録を保存して送信
+          </button>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- 共通フッター -->
+  <div data-include="partials/footer.html"></div>
+
+  <script src="js/include.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

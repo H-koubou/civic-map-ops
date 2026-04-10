@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>案件一覧 | Civic Map Ops</title>
+  <meta name="description" content="現場案件の一覧・絞り込み・検索。ステータス・担当・種別・期日で管理可能。" />
+  <meta name="theme-color" content="#006781" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/page-map.css" />
+  <link rel="stylesheet" href="css/page-tasks.css" />
+</head>
+<body data-page="tasks" class="page page-tasks">
+  <a href="#main" class="skip-link">本文へスキップ</a>
+
+  <!-- 共通ヘッダー -->
+  <div data-include="partials/header.html"></div>
+
+  <main id="main" class="tasks-main">
+    <div class="container tasks-container">
+
+      <!-- ========== ページヘッダ ========== -->
+      <header class="tasks-page-head">
+        <div class="tasks-page-title-block">
+          <div class="tasks-breadcrumb">
+            <a href="./index.html">ダッシュボード</a>
+            <span class="material-symbols-rounded">chevron_right</span>
+            <span>案件一覧</span>
+          </div>
+          <h1 class="tasks-title">
+            <span class="material-symbols-rounded">assignment</span>
+            案件一覧
+          </h1>
+          <p class="tasks-sub">
+            本日 <strong>12件</strong> / 今週 <strong>47件</strong> / 要対応 <strong>3件</strong> / 担当: つばめ建設
+          </p>
+        </div>
+        <div class="tasks-page-actions">
+          <button class="btn btn-text" type="button">
+            <span class="material-symbols-rounded">download</span>
+            CSV出力
+          </button>
+          <button class="btn btn-filled" type="button">
+            <span class="material-symbols-rounded">add</span>
+            新規案件
+          </button>
+        </div>
+      </header>
+
+      <!-- ========== フィルターバー ========== -->
+      <section class="tasks-filterbar">
+        <div class="tasks-search">
+          <span class="material-symbols-rounded">search</span>
+          <input type="search" placeholder="案件ID、タイトル、住所、管理IDで検索…" aria-label="検索" />
+          <kbd>/</kbd>
+        </div>
+
+        <div class="tasks-filter-chips">
+          <button class="filter-chip filter-chip-active" type="button">
+            <span class="material-symbols-rounded">today</span>
+            本日
+          </button>
+          <button class="filter-chip" type="button">
+            今週
+          </button>
+          <button class="filter-chip" type="button">
+            保留中
+          </button>
+          <button class="filter-chip" type="button">
+            自分担当のみ
+          </button>
+          <span class="filter-divider"></span>
+          <button class="filter-chip filter-chip-dropdown" type="button">
+            ステータス: <strong>すべて</strong>
+            <span class="material-symbols-rounded">arrow_drop_down</span>
+          </button>
+          <button class="filter-chip filter-chip-dropdown" type="button">
+            種別: <strong>すべて</strong>
+            <span class="material-symbols-rounded">arrow_drop_down</span>
+          </button>
+          <button class="filter-chip filter-chip-dropdown" type="button">
+            優先度: <strong>すべて</strong>
+            <span class="material-symbols-rounded">arrow_drop_down</span>
+          </button>
+        </div>
+
+        <div class="tasks-view-toggle" role="group" aria-label="表示切替">
+          <button class="view-btn view-btn-active" type="button" data-view="table" aria-label="テーブル表示">
+            <span class="material-symbols-rounded">table_rows</span>
+          </button>
+          <button class="view-btn" type="button" data-view="grid" aria-label="カード表示">
+            <span class="material-symbols-rounded">grid_view</span>
+          </button>
+          <button class="view-btn" type="button" data-view="map" aria-label="マップ連携">
+            <span class="material-symbols-rounded">map</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ========== サマリーチップ ========== -->
+      <section class="tasks-status-summary">
+        <button class="status-pill-lg status-pill-all status-pill-active" type="button">
+          すべて <span>12</span>
+        </button>
+        <button class="status-pill-lg status-pill-new" type="button">
+          <span class="case-dot case-dot-new"></span>未着手 <span>5</span>
+        </button>
+        <button class="status-pill-lg status-pill-progress" type="button">
+          <span class="case-dot case-dot-progress"></span>進行中 <span>3</span>
+        </button>
+        <button class="status-pill-lg status-pill-done" type="button">
+          <span class="case-dot case-dot-done"></span>完了 <span>4</span>
+        </button>
+        <button class="status-pill-lg status-pill-revisit" type="button">
+          <span class="case-dot case-dot-revisit"></span>要再訪 <span>2</span>
+        </button>
+      </section>
+
+      <!-- ========== テーブル ========== -->
+      <section class="tasks-table-wrap">
+        <table class="tasks-table" aria-label="案件一覧">
+          <colgroup>
+            <col style="width: 40px;" />
+            <col style="width: 120px;" />
+            <col />
+            <col style="width: 130px;" />
+            <col style="width: 140px;" />
+            <col style="width: 120px;" />
+            <col style="width: 120px;" />
+            <col style="width: 120px;" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th><input type="checkbox" aria-label="全選択" /></th>
+              <th>案件ID</th>
+              <th>
+                <button class="th-sort" type="button">
+                  タイトル / 住所
+                  <span class="material-symbols-rounded">unfold_more</span>
+                </button>
+              </th>
+              <th>ステータス</th>
+              <th>種別</th>
+              <th>
+                <button class="th-sort th-sort-active" type="button">
+                  予定時刻
+                  <span class="material-symbols-rounded">arrow_upward</span>
+                </button>
+              </th>
+              <th>担当</th>
+              <th class="th-actions">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr class="task-row task-row-priority">
+              <td><input type="checkbox" /></td>
+              <td>
+                <span class="case-id">CASE-0138</span>
+                <span class="task-priority" title="優先度高"><span class="material-symbols-rounded">priority_high</span></span>
+              </td>
+              <td class="task-title-cell">
+                <div class="task-title-text">北部資源回収ST マンホール点検</div>
+                <div class="task-addr">北本町3丁目 / MH-1123〜MH-1125</div>
+              </td>
+              <td>
+                <span class="case-badge case-badge-new">
+                  <span class="case-dot case-dot-new"></span>未着手
+                </span>
+              </td>
+              <td>
+                <span class="case-tag case-tag-sewer">下水道</span>
+                <span class="case-tag">点検</span>
+              </td>
+              <td class="task-time-cell">
+                <div class="task-date">2026-04-10</div>
+                <div class="task-time">10:30</div>
+              </td>
+              <td>
+                <div class="task-assignee">
+                  <span class="avatar-initial avatar-sm">KT</span>
+                  <span>つばめ建設</span>
+                </div>
+              </td>
+              <td class="task-actions">
+                <a href="./map.html" class="icon-btn icon-btn-sm" aria-label="地図">
+                  <span class="material-symbols-rounded">map</span>
+                </a>
+                <a href="./inspect.html" class="icon-btn icon-btn-sm" aria-label="記録">
+                  <span class="material-symbols-rounded">add_a_photo</span>
+                </a>
+                <button class="icon-btn icon-btn-sm" type="button" aria-label="その他">
+                  <span class="material-symbols-rounded">more_vert</span>
+                </button>
+              </td>
+            </tr>
+
+            <tr class="task-row task-row-selected">
+              <td><input type="checkbox" checked /></td>
+              <td>
+                <span class="case-id">CASE-0142</span>
+              </td>
+              <td class="task-title-cell">
+                <div class="task-title-text">環境クリーンセンター 外周側溝 清掃点検</div>
+                <div class="task-addr">東有岡5丁目 / D-1102 / L-4102</div>
+              </td>
+              <td>
+                <span class="case-badge case-badge-progress">
+                  <span class="case-dot case-dot-progress"></span>進行中
+                </span>
+                <div class="task-progress">
+                  <div class="task-progress-bar"><span style="width: 60%;"></span></div>
+                  <span class="task-progress-label">60%</span>
+                </div>
+              </td>
+              <td>
+                <span class="case-tag case-tag-ditch">側溝</span>
+                <span class="case-tag">清掃</span>
+              </td>
+              <td class="task-time-cell">
+                <div class="task-date">2026-04-10</div>
+                <div class="task-time">09:00 — 11:30</div>
+              </td>
+              <td>
+                <div class="task-assignee">
+                  <span class="avatar-initial avatar-sm">KT</span>
+                  <span>つばめ建設</span>
+                </div>
+              </td>
+              <td class="task-actions">
+                <a href="./map.html" class="icon-btn icon-btn-sm" aria-label="地図">
+                  <span class="material-symbols-rounded">map</span>
+                </a>
+                <a href="./inspect.html" class="icon-btn icon-btn-sm" aria-label="記録">
+                  <span class="material-symbols-rounded">add_a_photo</span>
+                </a>
+                <button class="icon-btn icon-btn-sm" type="button" aria-label="その他">
+                  <span class="material-symbols-rounded">more_vert</span>
+                </button>
+              </td>
+            </tr>
+
+            <tr class="task-row">
+              <td><input type="checkbox" /></td>
+              <td>
+                <span class="case-id">CASE-0145</span>
+              </td>
+              <td class="task-title-cell">
+                <div class="task-title-text">東部中継ストックヤード 設備巡回</div>
+                <div class="task-addr">東野1丁目 / 施設ID: F-0234</div>
+              </td>
+              <td>
+                <span class="case-badge case-badge-new">
+                  <span class="case-dot case-dot-new"></span>未着手
+                </span>
+              </td>
+              <td>
+                <span class="case-tag case-tag-facility">施設</span>
+                <span class="case-tag">巡回</span>
+              </td>
+              <td class="task-time-cell">
+                <div class="task-date">2026-04-10</div>
+                <div class="task-time">13:00</div>
+              </td>
+              <td>
+                <div class="task-assignee">
+                  <span class="avatar-initial avatar-sm">KT</span>
+                  <span>つばめ建設</span>
+                </div>
+              </td>
+              <td class="task-actions">
+                <a href="./map.html" class="icon-btn icon-btn-sm" aria-label="地図">
+                  <span class="material-symbols-rounded">map</span>
+                </a>
+                <a href="./inspect.html" class="icon-btn icon-btn-sm" aria-label="記録">
+                  <span class="material-symbols-rounded">add_a_photo</span>
+                </a>
+                <button class="icon-btn icon-btn-sm" type="button" aria-label="その他">
+                  <span class="material-symbols-rounded">more_vert</span>
+                </button>
+              </td>
+            </tr>
+
+            <tr class="task-row task-row-overdue">
+              <td><input type="checkbox" /></td>
+              <td>
+                <span class="case-id">CASE-0141</span>
+                <span class="task-priority task-priority-critical" title="期日超過"><span class="material-symbols-rounded">error</span></span>
+              </td>
+              <td class="task-title-cell">
+                <div class="task-title-text">桜台 マンホール蓋 段差補修</div>
+                <div class="task-addr">桜ケ丘7丁目 / MH-1422</div>
+              </td>
+              <td>
+                <span class="case-badge case-badge-revisit">
+                  <span class="case-dot case-dot-revisit"></span>要再訪
+                </span>
+                <div class="task-hint">資材手配中</div>
+              </td>
+              <td>
+                <span class="case-tag case-tag-sewer">下水道</span>
+                <span class="case-tag">補修</span>
+              </td>
+              <td class="task-time-cell">
+                <div class="task-date task-date-overdue">2026-04-03</div>
+                <div class="task-time">7日超過</div>
+              </td>
+              <td>
+                <div class="task-assignee">
+                  <span class="avatar-initial avatar-sm">KT</span>
+                  <span>つばめ建設</span>
+                </div>
+              </td>
+              <td class="task-actions">
+                <a href="./map.html" class="icon-btn icon-btn-sm" aria-label="地図">
+                  <span class="material-symbols-rounded">map</span>
+                </a>
+                <a href="./inspect.html" class="icon-btn icon-btn-sm" aria-label="記録">
+                  <span class="material-symbols-rounded">add_a_photo</span>
+                </a>
+                <button class="icon-btn icon-btn-sm" type="button" aria-label="その他">
+                  <span class="material-symbols-rounded">more_vert</span>
+                </button>
+              </td>
+            </tr>
+
+            <tr class="task-row task-row-done">
+              <td><input type="checkbox" /></td>
+              <td>
+                <span class="case-id">CASE-0140</span>
+              </td>
+              <td class="task-title-cell">
+                <div class="task-title-text">南部 U字溝 破損箇所補修</div>
+                <div class="task-addr">池尻8丁目 / D-1305</div>
+              </td>
+              <td>
+                <span class="case-badge case-badge-done">
+                  <span class="case-dot case-dot-done"></span>完了
+                </span>
+                <div class="task-hint">写真3枚 · 承認済み</div>
+              </td>
+              <td>
+                <span class="case-tag case-tag-ditch">側溝</span>
+                <span class="case-tag">補修</span>
+              </td>
+              <td class="task-time-cell">
+                <div class="task-date">2026-04-10</div>
+                <div class="task-time">08:40 完了</div>
+              </td>
+              <td>
+                <div class="task-assignee">
+                  <span class="avatar-initial avatar-sm">KT</span>
+                  <span>つばめ建設</span>
+                </div>
+              </td>
+              <td class="task-actions">
+                <a href="./map.html" class="icon-btn icon-btn-sm" aria-label="地図">
+                  <span class="material-symbols-rounded">map</span>
+                </a>
+                <button class="icon-btn icon-btn-sm" type="button" aria-label="記録を見る">
+                  <span class="material-symbols-rounded">photo_library</span>
+                </button>
+                <button class="icon-btn icon-btn-sm" type="button" aria-label="その他">
+                  <span class="material-symbols-rounded">more_vert</span>
+                </button>
+              </td>
+            </tr>
+
+            <tr class="task-row">
+              <td><input type="checkbox" /></td>
+              <td>
+                <span class="case-id">CASE-0146</span>
+              </td>
+              <td class="task-title-cell">
+                <div class="task-title-text">野間 雨水管 流量調査</div>
+                <div class="task-addr">野間5丁目 / L-4521</div>
+              </td>
+              <td>
+                <span class="case-badge case-badge-new">
+                  <span class="case-dot case-dot-new"></span>未着手
+                </span>
+              </td>
+              <td>
+                <span class="case-tag case-tag-sewer">下水道</span>
+                <span class="case-tag">調査</span>
+              </td>
+              <td class="task-time-cell">
+                <div class="task-date">2026-04-10</div>
+                <div class="task-time">14:30</div>
+              </td>
+              <td>
+                <div class="task-assignee">
+                  <span class="avatar-initial avatar-sm">YM</span>
+                  <span>ヤマダ工業</span>
+                </div>
+              </td>
+              <td class="task-actions">
+                <a href="./map.html" class="icon-btn icon-btn-sm" aria-label="地図">
+                  <span class="material-symbols-rounded">map</span>
+                </a>
+                <a href="./inspect.html" class="icon-btn icon-btn-sm" aria-label="記録">
+                  <span class="material-symbols-rounded">add_a_photo</span>
+                </a>
+                <button class="icon-btn icon-btn-sm" type="button" aria-label="その他">
+                  <span class="material-symbols-rounded">more_vert</span>
+                </button>
+              </td>
+            </tr>
+
+            <tr class="task-row task-row-done">
+              <td><input type="checkbox" /></td>
+              <td>
+                <span class="case-id">CASE-0135</span>
+              </td>
+              <td class="task-title-cell">
+                <div class="task-title-text">西部 道路側溝 定期清掃</div>
+                <div class="task-addr">荒牧2丁目 / D-1408</div>
+              </td>
+              <td>
+                <span class="case-badge case-badge-done">
+                  <span class="case-dot case-dot-done"></span>完了
+                </span>
+                <div class="task-hint">写真4枚 · 0.3m³回収</div>
+              </td>
+              <td>
+                <span class="case-tag case-tag-ditch">側溝</span>
+                <span class="case-tag">清掃</span>
+              </td>
+              <td class="task-time-cell">
+                <div class="task-date">2026-04-09</div>
+                <div class="task-time">14:30 完了</div>
+              </td>
+              <td>
+                <div class="task-assignee">
+                  <span class="avatar-initial avatar-sm">KT</span>
+                  <span>つばめ建設</span>
+                </div>
+              </td>
+              <td class="task-actions">
+                <a href="./map.html" class="icon-btn icon-btn-sm" aria-label="地図">
+                  <span class="material-symbols-rounded">map</span>
+                </a>
+                <button class="icon-btn icon-btn-sm" type="button" aria-label="記録を見る">
+                  <span class="material-symbols-rounded">photo_library</span>
+                </button>
+                <button class="icon-btn icon-btn-sm" type="button" aria-label="その他">
+                  <span class="material-symbols-rounded">more_vert</span>
+                </button>
+              </td>
+            </tr>
+
+            <tr class="task-row">
+              <td><input type="checkbox" /></td>
+              <td>
+                <span class="case-id">CASE-0133</span>
+                <span class="task-priority" title="優先度高"><span class="material-symbols-rounded">priority_high</span></span>
+              </td>
+              <td class="task-title-cell">
+                <div class="task-title-text">中央公園 グレーチング 交換</div>
+                <div class="task-addr">千僧5丁目 / D-1511</div>
+              </td>
+              <td>
+                <span class="case-badge case-badge-revisit">
+                  <span class="case-dot case-dot-revisit"></span>要再訪
+                </span>
+                <div class="task-hint">資材手配中</div>
+              </td>
+              <td>
+                <span class="case-tag case-tag-ditch">側溝</span>
+                <span class="case-tag">交換</span>
+              </td>
+              <td class="task-time-cell">
+                <div class="task-date">2026-04-11</div>
+                <div class="task-time">09:00</div>
+              </td>
+              <td>
+                <div class="task-assignee">
+                  <span class="avatar-initial avatar-sm">KT</span>
+                  <span>つばめ建設</span>
+                </div>
+              </td>
+              <td class="task-actions">
+                <a href="./map.html" class="icon-btn icon-btn-sm" aria-label="地図">
+                  <span class="material-symbols-rounded">map</span>
+                </a>
+                <a href="./inspect.html" class="icon-btn icon-btn-sm" aria-label="記録">
+                  <span class="material-symbols-rounded">add_a_photo</span>
+                </a>
+                <button class="icon-btn icon-btn-sm" type="button" aria-label="その他">
+                  <span class="material-symbols-rounded">more_vert</span>
+                </button>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ========== ページネーション ========== -->
+      <footer class="tasks-footer">
+        <div class="tasks-footer-info">
+          <span>1–8 / 12件 表示</span>
+          <span class="tasks-footer-dot">·</span>
+          <span>1件選択中</span>
+        </div>
+        <div class="tasks-footer-actions">
+          <button class="btn btn-text btn-sm" type="button" disabled>
+            <span class="material-symbols-rounded">chevron_left</span>
+            前へ
+          </button>
+          <div class="tasks-page-numbers">
+            <button class="tasks-page-num tasks-page-num-active" type="button">1</button>
+            <button class="tasks-page-num" type="button">2</button>
+          </div>
+          <button class="btn btn-text btn-sm" type="button">
+            次へ
+            <span class="material-symbols-rounded">chevron_right</span>
+          </button>
+        </div>
+        <div class="tasks-footer-pagesize">
+          <label for="page-size">表示件数:</label>
+          <select id="page-size">
+            <option>8</option>
+            <option selected>20</option>
+            <option>50</option>
+            <option>100</option>
+          </select>
+        </div>
+      </footer>
+
+      <!-- ========== 選択バー（スティッキー） ========== -->
+      <div class="tasks-selection-bar" aria-hidden="false">
+        <div class="tasks-selection-info">
+          <span class="material-symbols-rounded">check_circle</span>
+          <strong>1件</strong> 選択中
+        </div>
+        <div class="tasks-selection-actions">
+          <button class="btn btn-text btn-sm" type="button">
+            <span class="material-symbols-rounded">group</span>
+            担当変更
+          </button>
+          <button class="btn btn-text btn-sm" type="button">
+            <span class="material-symbols-rounded">label</span>
+            タグ
+          </button>
+          <button class="btn btn-text btn-sm" type="button">
+            <span class="material-symbols-rounded">download</span>
+            エクスポート
+          </button>
+          <button class="btn btn-tonal btn-sm" type="button">
+            <span class="material-symbols-rounded">close</span>
+            選択解除
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 共通フッター -->
+  <div data-include="partials/footer.html"></div>
+
+  <script src="js/include.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
