@@ -34,12 +34,61 @@
   position: relative;
   flex: 1 1 auto;
   display: grid;
-  grid-template-columns: 320px 1fr 380px;
+  grid-template-columns: 320px 1fr;
   grid-template-rows: 100%;
   min-height: 0;
   height: 100%;
   overflow: hidden;
   background: var(--md-sys-color-surface);
+}
+
+/* ============ MapLibre GL JS キャンバス ============ */
+#map.map-gl {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--md-sys-color-surface-container-low);
+}
+
+/* サイドバー下部の出典ノート */
+.map-sidebar-note {
+  margin: 0;
+  font: var(--md-sys-typescale-body-small);
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: 1.7;
+}
+.map-sidebar-note a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+}
+.map-sidebar-note a:hover {
+  text-decoration: underline;
+}
+
+/* MapLibre デフォルトUIの見た目を調整 */
+.maplibregl-canvas:focus { outline: none; }
+.maplibregl-ctrl-attrib {
+  background: color-mix(in srgb, var(--md-sys-color-surface) 85%, transparent) !important;
+  backdrop-filter: blur(6px);
+  border-radius: var(--md-sys-shape-corner-small) !important;
+  font: var(--md-sys-typescale-label-small);
+  color: var(--md-sys-color-on-surface-variant) !important;
+  padding: 2px 8px !important;
+}
+.maplibregl-ctrl-attrib a {
+  color: var(--md-sys-color-primary) !important;
+}
+.maplibregl-ctrl-bottom-right {
+  bottom: 80px !important;
+  right: 12px !important;
+}
+.maplibregl-popup-content {
+  border-radius: var(--md-sys-shape-corner-medium) !important;
+  padding: var(--space-3) var(--space-4) !important;
+  box-shadow: var(--md-sys-elevation-3) !important;
+  background: var(--md-sys-color-surface-container-lowest) !important;
+  color: var(--md-sys-color-on-surface) !important;
 }
 .map-shell > * { min-height: 0; min-width: 0; }
 
