@@ -22,7 +22,7 @@
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/page-map.css" />
 </head>
-<body data-page="map" class="page page-map">
+<body data-page="map" class="page page-map" data-map-mode="view">
   <a href="#main" class="skip-link">本文へスキップ</a>
 
   <!-- 共通ヘッダー -->
@@ -184,6 +184,26 @@
 
         <!-- 実際の地図（MapLibre GL JS） -->
         <div id="map" class="map-gl"></div>
+
+        <!-- モード切替トグル（閲覧 / 記録） -->
+        <div class="map-mode-bar" role="group" aria-label="モード切替">
+          <div class="map-mode-toggle" role="tablist" aria-label="操作モード">
+            <button class="mode-btn active" role="tab" aria-selected="true" type="button" data-mode="view">
+              <span class="material-symbols-rounded">visibility</span>
+              閲覧
+            </button>
+            <button class="mode-btn" role="tab" aria-selected="false" type="button" data-mode="record">
+              <span class="material-symbols-rounded">edit_location</span>
+              記録
+            </button>
+          </div>
+        </div>
+
+        <!-- 記録モード時のヒント -->
+        <div class="map-record-hint" role="status" aria-live="polite">
+          <span class="material-symbols-rounded">touch_app</span>
+          地図をタップして記録する地点を選択
+        </div>
 
         <!-- フローティング検索バー -->
         <div class="map-search-wrap">
@@ -371,6 +391,113 @@
           tab.classList.add('active');
           tab.setAttribute('aria-selected', 'true');
         });
+      });
+
+      // ============ 記録モード：タップで地点選択 → inspect.html ============
+      var body = document.body;
+      var modeBtns = document.querySelectorAll('.mode-btn');
+      var recordMarker = null;
+      var recordPopup = null;
+
+      function setMode(mode) {
+        modeBtns.forEach(function (b) {
+          var isActive = b.getAttribute('data-mode') === mode;
+          b.classList.toggle('active', isActive);
+          b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+        body.setAttribute('data-map-mode', mode);
+        map.getCanvas().style.cursor = (mode === 'record') ? 'crosshair' : '';
+
+        // 記録モードを抜けたらマーカーを削除
+        if (mode !== 'record') {
+          if (recordMarker) { recordMarker.remove(); recordMarker = null; }
+          if (recordPopup)  { recordPopup.remove();  recordPopup  = null; }
+        }
+
+        if (window.ICM && window.ICM.showSnackbar) {
+          window.ICM.showSnackbar(
+            mode === 'record'
+              ? '記録モード：地図をタップして記録する地点を選択'
+              : '閲覧モードに切替'
+          );
+        }
+      }
+
+      modeBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          setMode(btn.getAttribute('data-mode'));
+        });
+      });
+
+      // HTML要素ベースのドロップピン
+      function createRecordPinElement() {
+        var el = document.createElement('div');
+        el.className = 'record-pin';
+        el.innerHTML =
+          '<span class="record-pin-pulse"></span>' +
+          '<span class="record-pin-body">' +
+            '<span class="material-symbols-rounded">edit_location</span>' +
+          '</span>';
+        return el;
+      }
+
+      function buildPopupHTML(lngLat) {
+        var lng = lngLat.lng.toFixed(5);
+        var lat = lngLat.lat.toFixed(5);
+        return (
+          '<div class="record-popup">' +
+            '<div class="record-popup-title">' +
+              '<span class="material-symbols-rounded">edit_location</span>' +
+              'この地点を記録' +
+            '</div>' +
+            '<div class="record-popup-coords">' +
+              '<span>緯度 ' + lat + '</span>' +
+              '<span>経度 ' + lng + '</span>' +
+            '</div>' +
+            '<div class="record-popup-actions">' +
+              '<button type="button" class="record-popup-cancel">キャンセル</button>' +
+              '<a href="./inspect.html?lat=' + lat + '&lng=' + lng + '" class="record-popup-go">' +
+                '<span class="material-symbols-rounded">add_a_photo</span>記録する' +
+              '</a>' +
+            '</div>' +
+          '</div>'
+        );
+      }
+
+      map.on('click', function (e) {
+        if (body.getAttribute('data-map-mode') !== 'record') return;
+
+        // 既存のマーカー・ポップアップを片付ける
+        if (recordMarker) { recordMarker.remove(); recordMarker = null; }
+        if (recordPopup)  { recordPopup.remove();  recordPopup  = null; }
+
+        // 新しいピンを配置
+        var el = createRecordPinElement();
+        recordMarker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
+          .setLngLat(e.lngLat)
+          .addTo(map);
+
+        // ポップアップ
+        recordPopup = new maplibregl.Popup({
+          offset: 42,
+          closeButton: false,
+          closeOnClick: false,
+          className: 'record-popup-wrap'
+        })
+          .setLngLat(e.lngLat)
+          .setHTML(buildPopupHTML(e.lngLat))
+          .addTo(map);
+
+        // キャンセルボタン
+        setTimeout(function () {
+          var cancelBtn = document.querySelector('.record-popup-cancel');
+          if (cancelBtn) {
+            cancelBtn.addEventListener('click', function () {
+              if (recordMarker) { recordMarker.remove(); recordMarker = null; }
+              if (recordPopup)  { recordPopup.remove();  recordPopup  = null; }
+            });
+          }
+        }, 0);
       });
 
     });
