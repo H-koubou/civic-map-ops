@@ -387,6 +387,386 @@ body[data-map-mode="record"] .map-canvas::after {
   font-size: 16px;
 }
 
+/* ============================================================
+   サイドバーのサブセクション見出し + 警告チップ
+   ============================================================ */
+.map-sidebar-subheading {
+  margin: var(--space-4) 0 var(--space-2);
+  padding: 0 var(--space-3);
+  font: var(--md-sys-typescale-label-small);
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.map-sidebar-subheading:first-of-type {
+  margin-top: var(--space-2);
+}
+.map-sidebar-subheading::before {
+  content: '';
+  flex: 0 0 16px;
+  height: 2px;
+  background: var(--md-sys-color-outline-variant);
+  border-radius: 2px;
+}
+.map-sidebar-subheading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--md-sys-color-outline-variant);
+}
+
+.layer-warn-chip {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: var(--md-sys-shape-corner-full);
+  background: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
+  font: var(--md-sys-typescale-label-small);
+  font-weight: 700;
+  vertical-align: middle;
+}
+.layer-item-private {
+  border-left: 3px solid var(--md-sys-color-error);
+  padding-left: calc(var(--space-3) - 3px);
+}
+.layer-item-private:hover {
+  background: color-mix(in srgb, var(--md-sys-color-error) 6%, transparent);
+}
+
+/* 凡例の変種 */
+.legend-list.legend-compact .legend-row {
+  gap: var(--space-2);
+  padding: 2px var(--space-2);
+}
+.legend-list.legend-compact .legend-swatch {
+  width: 14px;
+  height: 14px;
+}
+.legend-list.legend-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px var(--space-2);
+}
+.legend-swatch.legend-line-thick {
+  height: 5px !important;
+}
+.legend-swatch.legend-line-dash {
+  background: repeating-linear-gradient(
+    to right,
+    var(--c) 0 6px,
+    transparent 6px 9px
+  ) !important;
+  height: 4px !important;
+}
+
+/* ============================================================
+   ごみステーションピン
+   ============================================================ */
+.gs-pin {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.gs-pin-dot {
+  position: relative;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--gs-color, var(--md-sys-color-primary));
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3),
+              0 0 0 1px rgba(0, 0, 0, 0.08);
+  transition: transform 140ms var(--md-sys-motion-easing-standard);
+}
+.gs-pin:hover .gs-pin-dot {
+  transform: scale(1.15);
+}
+/* ルート符番バッジ（既定は非表示、自動符番で .visible 付与） */
+.gs-pin-num {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  z-index: 2;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--md-sys-shape-corner-full);
+  background: var(--layer-route);
+  color: #ffffff;
+  font: var(--md-sys-typescale-label-small);
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35),
+              0 0 0 2px #ffffff;
+  display: none;
+  animation: gs-num-pop 320ms var(--md-sys-motion-easing-emphasized-decelerate);
+}
+.gs-pin-num.visible {
+  display: block;
+}
+@keyframes gs-num-pop {
+  0%   { transform: scale(0.2); opacity: 0; }
+  60%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+/* ============================================================
+   ごみステーション ポップアップ（双方向スレッドUI）
+   ============================================================ */
+.gs-popup-wrap .maplibregl-popup-content {
+  padding: 0 !important;
+  border-radius: var(--md-sys-shape-corner-large) !important;
+  box-shadow: var(--md-sys-elevation-3) !important;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  overflow: hidden;
+  min-width: 280px;
+}
+.gs-popup {
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-family: "Noto Sans JP", "Roboto", sans-serif;
+  max-height: 420px;
+}
+.gs-popup-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  justify-content: space-between;
+}
+.gs-popup-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: var(--md-sys-shape-corner-full);
+  font: var(--md-sys-typescale-label-small);
+  font-weight: 700;
+  color: #ffffff;
+}
+.gs-popup-id {
+  font: var(--md-sys-typescale-label-small);
+  font-family: "Roboto Mono", ui-monospace, monospace;
+  color: var(--md-sys-color-on-surface-variant);
+}
+.gs-popup-title {
+  font: var(--md-sys-typescale-title-small);
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+  line-height: 1.4;
+}
+.gs-popup-meta {
+  display: flex;
+  gap: var(--space-3);
+  font: var(--md-sys-typescale-label-small);
+  color: var(--md-sys-color-on-surface-variant);
+}
+.gs-popup-meta .material-symbols-rounded { font-size: 14px; vertical-align: -2px; margin-right: 2px; }
+
+.gs-popup-thread {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background: var(--md-sys-color-surface-container-low);
+  border-radius: var(--md-sys-shape-corner-medium);
+  max-height: 200px;
+  overflow-y: auto;
+}
+.gs-popup-thread-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: var(--md-sys-typescale-label-small);
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface-variant);
+  padding: 0 4px;
+}
+.gs-popup-thread-head .material-symbols-rounded { font-size: 16px; }
+
+.gs-msg {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--md-sys-shape-corner-medium);
+  background: var(--md-sys-color-surface-container-lowest);
+  border-left: 3px solid var(--md-sys-color-outline-variant);
+}
+.gs-msg-citizen { border-left-color: #2e7d32; }
+.gs-msg-city    { border-left-color: #006781; }
+.gs-msg-vendor  { border-left-color: #f59e0b; }
+
+.gs-msg-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: 2px;
+}
+.gs-msg-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font: var(--md-sys-typescale-label-small);
+  font-weight: 700;
+}
+.gs-msg-citizen .gs-msg-role { color: #2e7d32; }
+.gs-msg-city    .gs-msg-role { color: #006781; }
+.gs-msg-vendor  .gs-msg-role { color: #92400e; }
+.gs-msg-role .material-symbols-rounded { font-size: 14px; }
+.gs-msg-name {
+  font: var(--md-sys-typescale-label-small);
+  color: var(--md-sys-color-on-surface);
+}
+.gs-msg-time {
+  font: var(--md-sys-typescale-label-small);
+  color: var(--md-sys-color-on-surface-variant);
+  margin-left: auto;
+  font-family: "Roboto Mono", ui-monospace, monospace;
+}
+.gs-msg-text {
+  font: var(--md-sys-typescale-body-small);
+  color: var(--md-sys-color-on-surface);
+  line-height: 1.5;
+}
+.gs-msg-empty {
+  font: var(--md-sys-typescale-body-small);
+  color: var(--md-sys-color-on-surface-variant);
+  text-align: center;
+  padding: var(--space-2);
+}
+
+.gs-popup-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+.gs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 36px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface-container-lowest);
+  border-radius: var(--md-sys-shape-corner-full);
+  font: var(--md-sys-typescale-label-small);
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  cursor: pointer;
+  transition: all 160ms var(--md-sys-motion-easing-standard);
+}
+.gs-btn .material-symbols-rounded { font-size: 16px; }
+.gs-btn-citizen { color: #2e7d32; border-color: #a5d6a7; }
+.gs-btn-city    { color: #006781; border-color: #b9eaff; }
+.gs-btn-vendor  { color: #92400e; border-color: #fed7aa; }
+.gs-btn:hover   { background: var(--md-sys-color-surface-container-low); }
+
+/* ============================================================
+   ルートモード UI
+   ============================================================ */
+.map-route-hint {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: none;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-large);
+  box-shadow: var(--md-sys-elevation-3);
+  max-width: 520px;
+  width: calc(100% - 32px);
+}
+body[data-map-mode="route"] .map-route-hint {
+  display: flex;
+}
+body[data-map-mode="route"] .map-record-hint {
+  display: none;
+}
+.map-route-hint-text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font: var(--md-sys-typescale-title-small);
+  color: var(--md-sys-color-on-surface);
+}
+.map-route-hint-text .material-symbols-rounded {
+  color: var(--layer-route);
+  font-variation-settings: 'FILL' 1;
+}
+.route-point-count {
+  margin-left: auto;
+  padding: 2px 10px;
+  background: var(--layer-route);
+  color: #ffffff;
+  border-radius: var(--md-sys-shape-corner-full);
+  font: var(--md-sys-typescale-label-small);
+  font-weight: 700;
+}
+.map-route-hint-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+.route-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 40px;
+  border-radius: var(--md-sys-shape-corner-full);
+  font: var(--md-sys-typescale-label-large);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 160ms var(--md-sys-motion-easing-standard);
+  border: 1px solid var(--md-sys-color-outline);
+  background: var(--md-sys-color-surface-container-lowest);
+  color: var(--md-sys-color-on-surface-variant);
+}
+.route-btn .material-symbols-rounded { font-size: 18px; }
+.route-btn-clear:hover { background: var(--md-sys-color-error-container); color: var(--md-sys-color-on-error-container); border-color: transparent; }
+.route-btn-undo:hover  { background: var(--md-sys-color-surface-container-high); }
+.route-btn-done {
+  background: var(--layer-route);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: var(--md-sys-elevation-1);
+}
+.route-btn-done:hover {
+  background: color-mix(in srgb, var(--layer-route) 85%, black);
+  box-shadow: var(--md-sys-elevation-2);
+}
+
+/* ルート頂点マーカー */
+.route-vertex {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid var(--layer-route);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  display: grid;
+  place-items: center;
+  font: var(--md-sys-typescale-label-small);
+  font-weight: 700;
+  color: var(--layer-route);
+  cursor: pointer;
+}
+
 /* サイドバー下部の出典ノート */
 .map-sidebar-note {
   margin: 0;
