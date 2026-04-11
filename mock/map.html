@@ -56,14 +56,14 @@
               レイヤ
             </h2>
 
-            <!-- 道路分類 -->
-            <h3 class="map-sidebar-subheading">道路分類</h3>
+            <!-- 道路分類: OSM 由来の実データ -->
+            <h3 class="map-sidebar-subheading">道路分類 <span class="layer-source-chip">OSM</span></h3>
             <ul class="layer-list" role="list">
               <li class="layer-item">
                 <span class="layer-dot" style="--dot: var(--layer-road-kokudo);"></span>
                 <div class="layer-text">
-                  <div class="layer-name">国道</div>
-                  <div class="layer-meta">国道171号線 等</div>
+                  <div class="layer-name">国道・高速</div>
+                  <div class="layer-meta">trunk / motorway · <span data-road-count="kokudo">読込中…</span></div>
                 </div>
                 <label class="switch" aria-label="国道レイヤ">
                   <input type="checkbox" data-layer="road-kokudo" checked />
@@ -74,7 +74,7 @@
                 <span class="layer-dot" style="--dot: var(--layer-road-kendo);"></span>
                 <div class="layer-text">
                   <div class="layer-name">県道</div>
-                  <div class="layer-meta">県道13号線 等</div>
+                  <div class="layer-meta">primary / secondary · <span data-road-count="kendo">読込中…</span></div>
                 </div>
                 <label class="switch" aria-label="県道レイヤ">
                   <input type="checkbox" data-layer="road-kendo" checked />
@@ -85,7 +85,7 @@
                 <span class="layer-dot" style="--dot: var(--layer-road-shido);"></span>
                 <div class="layer-text">
                   <div class="layer-name">市道</div>
-                  <div class="layer-meta">認定市道 · 1,842路線</div>
+                  <div class="layer-meta">tertiary / residential · <span data-road-count="shido">読込中…</span></div>
                 </div>
                 <label class="switch" aria-label="市道レイヤ">
                   <input type="checkbox" data-layer="road-shido" checked />
@@ -96,7 +96,7 @@
                 <span class="layer-dot" style="--dot: var(--layer-road-private);"></span>
                 <div class="layer-text">
                   <div class="layer-name">私道 <span class="layer-warn-chip">公道外</span></div>
-                  <div class="layer-meta">事故処理区分が異なります</div>
+                  <div class="layer-meta">事故処理区分が異なります · <span data-road-count="private">読込中…</span></div>
                 </div>
                 <label class="switch" aria-label="私道レイヤ">
                   <input type="checkbox" data-layer="road-private" checked />
@@ -105,14 +105,18 @@
               </li>
             </ul>
 
-            <!-- 台帳 -->
-            <h3 class="map-sidebar-subheading">上下水道・施設台帳</h3>
+            <!-- 台帳: 未登録（市のインフラ台帳取込後に表示） -->
+            <h3 class="map-sidebar-subheading">上下水道・施設台帳 <span class="layer-source-chip layer-source-chip-pending">未登録</span></h3>
+            <p class="map-sidebar-empty">
+              本プロダクトで <strong>現場オペレーターが入力</strong> したデータが台帳として蓄積されます。
+              既存の紙・Excel台帳を取込むことで初期ロード可。
+            </p>
             <ul class="layer-list" role="list">
               <li class="layer-item">
                 <span class="layer-dot" style="--dot: var(--layer-sewer);"></span>
                 <div class="layer-text">
                   <div class="layer-name">下水道管</div>
-                  <div class="layer-meta">汚水・合流管 · 3,240本</div>
+                  <div class="layer-meta">汚水・合流管 · <span class="layer-count-empty">0本</span></div>
                 </div>
                 <label class="switch" aria-label="下水道管レイヤ">
                   <input type="checkbox" data-layer="sewer" checked />
@@ -123,7 +127,7 @@
                 <span class="layer-dot" style="--dot: var(--layer-ditch);"></span>
                 <div class="layer-text">
                   <div class="layer-name">側溝・排水路</div>
-                  <div class="layer-meta">U型・L型 · 延長 88km</div>
+                  <div class="layer-meta">U型・L型 · <span class="layer-count-empty">0本</span></div>
                 </div>
                 <label class="switch" aria-label="側溝レイヤ">
                   <input type="checkbox" data-layer="ditch" checked />
@@ -134,7 +138,7 @@
                 <span class="layer-dot" style="--dot: var(--layer-sewer);"></span>
                 <div class="layer-text">
                   <div class="layer-name">マンホール・弁室</div>
-                  <div class="layer-meta">1,812基</div>
+                  <div class="layer-meta"><span class="layer-count-empty">0基</span></div>
                 </div>
                 <label class="switch" aria-label="マンホールレイヤ">
                   <input type="checkbox" data-layer="manhole" checked />
@@ -145,7 +149,7 @@
                 <span class="layer-dot" style="--dot: var(--layer-facility);"></span>
                 <div class="layer-text">
                   <div class="layer-name">処理施設・資源拠点</div>
-                  <div class="layer-meta">12拠点</div>
+                  <div class="layer-meta"><span class="layer-count-empty">0拠点</span></div>
                 </div>
                 <label class="switch" aria-label="処理施設レイヤ">
                   <input type="checkbox" data-layer="facility" checked />
@@ -154,14 +158,17 @@
               </li>
             </ul>
 
-            <!-- ごみステーション -->
-            <h3 class="map-sidebar-subheading">ごみステーション</h3>
+            <!-- ごみステーション: 7分類 + 双方向通信 -->
+            <h3 class="map-sidebar-subheading">ごみステーション <span class="layer-source-chip layer-source-chip-demo">デモ</span></h3>
+            <p class="map-sidebar-empty">
+              家庭ごみ〜死獣まで 7 種別。ピンをタップすると<strong>市民⇄市役所⇄業者</strong>の通報スレッドが開きます。
+            </p>
             <ul class="layer-list" role="list">
               <li class="layer-item">
                 <span class="layer-dot" style="--dot: var(--layer-gs-home);"></span>
                 <div class="layer-text">
                   <div class="layer-name">家庭ごみ</div>
-                  <div class="layer-meta">可燃・不燃 · 1,254拠点</div>
+                  <div class="layer-meta">可燃・不燃 · <span data-gs-count="gs-home">—</span></div>
                 </div>
                 <label class="switch" aria-label="家庭ごみレイヤ">
                   <input type="checkbox" data-layer="gs-home" checked />
@@ -172,7 +179,7 @@
                 <span class="layer-dot" style="--dot: var(--layer-gs-bulky);"></span>
                 <div class="layer-text">
                   <div class="layer-name">粗大ごみ</div>
-                  <div class="layer-meta">予約回収 · 指定拠点</div>
+                  <div class="layer-meta">予約回収 · <span data-gs-count="gs-bulky">—</span></div>
                 </div>
                 <label class="switch" aria-label="粗大ごみレイヤ">
                   <input type="checkbox" data-layer="gs-bulky" checked />
@@ -183,7 +190,7 @@
                 <span class="layer-dot" style="--dot: var(--layer-gs-recycle);"></span>
                 <div class="layer-text">
                   <div class="layer-name">資源物</div>
-                  <div class="layer-meta">びん・缶・PET</div>
+                  <div class="layer-meta">びん・缶・PET · <span data-gs-count="gs-recycle">—</span></div>
                 </div>
                 <label class="switch" aria-label="資源物レイヤ">
                   <input type="checkbox" data-layer="gs-recycle" checked />
@@ -194,7 +201,7 @@
                 <span class="layer-dot" style="--dot: var(--layer-gs-sludge);"></span>
                 <div class="layer-text">
                   <div class="layer-name">側溝汚泥</div>
-                  <div class="layer-meta">清掃時一時集積</div>
+                  <div class="layer-meta">清掃時一時集積 · <span data-gs-count="gs-sludge">—</span></div>
                 </div>
                 <label class="switch" aria-label="側溝汚泥レイヤ">
                   <input type="checkbox" data-layer="gs-sludge" checked />
@@ -205,7 +212,7 @@
                 <span class="layer-dot" style="--dot: var(--layer-gs-illegal);"></span>
                 <div class="layer-text">
                   <div class="layer-name">不法投棄</div>
-                  <div class="layer-meta">通報地点・再発監視</div>
+                  <div class="layer-meta">通報地点・再発監視 · <span data-gs-count="gs-illegal">—</span></div>
                 </div>
                 <label class="switch" aria-label="不法投棄レイヤ">
                   <input type="checkbox" data-layer="gs-illegal" checked />
@@ -216,7 +223,7 @@
                 <span class="layer-dot" style="--dot: var(--layer-gs-dead-wd);"></span>
                 <div class="layer-text">
                   <div class="layer-name">死獣（平日）</div>
-                  <div class="layer-meta">環境クリーンC 回収</div>
+                  <div class="layer-meta">環境クリーンC 回収 · <span data-gs-count="gs-dead-wd">—</span></div>
                 </div>
                 <label class="switch" aria-label="死獣平日レイヤ">
                   <input type="checkbox" data-layer="gs-dead-wd" checked />
@@ -227,7 +234,7 @@
                 <span class="layer-dot" style="--dot: var(--layer-gs-dead-we);"></span>
                 <div class="layer-text">
                   <div class="layer-name">死獣（土日）</div>
-                  <div class="layer-meta">委託業者 直行</div>
+                  <div class="layer-meta">委託業者 直行 · <span data-gs-count="gs-dead-we">—</span></div>
                 </div>
                 <label class="switch" aria-label="死獣土日レイヤ">
                   <input type="checkbox" data-layer="gs-dead-we" checked />
@@ -243,7 +250,7 @@
                 <span class="layer-dot" style="--dot: var(--md-sys-color-primary);"></span>
                 <div class="layer-text">
                   <div class="layer-name">記録済み点検</div>
-                  <div class="layer-meta">直近7日 · 6件</div>
+                  <div class="layer-meta">現場記録モードで追加</div>
                 </div>
                 <label class="switch" aria-label="記録済み点検レイヤ">
                   <input type="checkbox" data-layer="records" checked />
@@ -367,7 +374,8 @@
           <div class="map-sidebar-section">
             <p class="map-sidebar-note">
               地図タイル: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">国土地理院</a><br />
-              台帳データ: 伊丹市（サンプル）
+              道路: © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a> (ODbL)<br />
+              台帳データ（下水道・側溝・ごみ拠点）: 各自治体との連携で投入
             </p>
           </div>
 
@@ -380,7 +388,7 @@
         <!-- 実際の地図（MapLibre GL JS） -->
         <div id="map" class="map-gl"></div>
 
-        <!-- モード切替トグル（閲覧 / 記録 / ルート） -->
+        <!-- モード切替トグル（閲覧 / 記録 / ルート / トレース） -->
         <div class="map-mode-bar" role="group" aria-label="モード切替">
           <div class="map-mode-toggle" role="tablist" aria-label="操作モード">
             <button class="mode-btn active" role="tab" aria-selected="true" type="button" data-mode="view">
@@ -394,6 +402,10 @@
             <button class="mode-btn" role="tab" aria-selected="false" type="button" data-mode="route">
               <span class="material-symbols-rounded">route</span>
               ルート
+            </button>
+            <button class="mode-btn" role="tab" aria-selected="false" type="button" data-mode="trace">
+              <span class="material-symbols-rounded">gesture</span>
+              トレース
             </button>
           </div>
         </div>
@@ -420,6 +432,40 @@
             </button>
             <button type="button" class="route-btn route-btn-done" data-action="route-done">
               <span class="material-symbols-rounded">check</span>完了・自動符番
+            </button>
+          </div>
+        </div>
+
+        <!-- トレースモード時のヒント + 道路区分ピッカー + 操作ボタン -->
+        <div class="map-trace-hint" role="region" aria-label="トレース操作">
+          <div class="map-trace-hint-head">
+            <span class="material-symbols-rounded">gesture</span>
+            <strong>道路区分を選択してトレース開始</strong>
+            <span class="route-point-count" id="trace-pt-count">0点</span>
+          </div>
+          <div class="trace-class-picker" role="radiogroup" aria-label="道路区分">
+            <button type="button" class="trace-class-btn trace-class-kokudo active" data-trace-class="kokudo" aria-pressed="true">
+              <span class="trace-class-swatch" style="--c: var(--layer-road-kokudo);"></span>国道
+            </button>
+            <button type="button" class="trace-class-btn trace-class-kendo" data-trace-class="kendo" aria-pressed="false">
+              <span class="trace-class-swatch" style="--c: var(--layer-road-kendo);"></span>県道
+            </button>
+            <button type="button" class="trace-class-btn trace-class-shido" data-trace-class="shido" aria-pressed="false">
+              <span class="trace-class-swatch" style="--c: var(--layer-road-shido);"></span>市道
+            </button>
+            <button type="button" class="trace-class-btn trace-class-private" data-trace-class="private" aria-pressed="false">
+              <span class="trace-class-swatch" style="--c: var(--layer-road-private);"></span>私道
+            </button>
+          </div>
+          <div class="map-trace-hint-actions">
+            <button type="button" class="route-btn route-btn-clear" data-action="trace-clear">
+              <span class="material-symbols-rounded">delete</span>クリア
+            </button>
+            <button type="button" class="route-btn route-btn-undo" data-action="trace-undo">
+              <span class="material-symbols-rounded">undo</span>戻す
+            </button>
+            <button type="button" class="route-btn route-btn-done" data-action="trace-save">
+              <span class="material-symbols-rounded">check</span>保存
             </button>
           </div>
         </div>
@@ -557,213 +603,140 @@
       map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
 
       // ============================================================
-      // サンプルインフラGeoJSON（伊丹市役所〜JR伊丹駅周辺）
-      // 実装フェーズではPMTiles/GeoJSONに置き換える想定
+      // インフラ台帳（下水道管・側溝・マンホール・施設）
+      // 本モック時点では「未登録」状態をデフォルトとする。
+      // 本プロダクトの価値 = これらの台帳を現場でデジタル化すること。
+      // 実装フェーズでは API / PMTiles から読み込む。
       // ============================================================
       var INFRA = {
-        // 下水道幹線（cyan: --layer-sewer）
-        sewer: {
-          type: 'FeatureCollection',
-          features: [
-            { type: 'Feature', properties: { name: '中央汚水幹線' }, geometry: { type: 'LineString', coordinates: [
-              [135.3920, 34.7805], [135.3960, 34.7812], [135.4000, 34.7818],
-              [135.4040, 34.7822], [135.4080, 34.7828], [135.4120, 34.7835]
-            ] } },
-            { type: 'Feature', properties: { name: '南北合流管' }, geometry: { type: 'LineString', coordinates: [
-              [135.4002, 34.7760], [135.4002, 34.7800], [135.4002, 34.7840], [135.4002, 34.7880]
-            ] } },
-            { type: 'Feature', properties: { name: '東西分枝A' }, geometry: { type: 'LineString', coordinates: [
-              [135.3950, 34.7860], [135.3990, 34.7862], [135.4030, 34.7864], [135.4070, 34.7866]
-            ] } },
-            { type: 'Feature', properties: { name: '東西分枝B' }, geometry: { type: 'LineString', coordinates: [
-              [135.3950, 34.7770], [135.3990, 34.7768], [135.4030, 34.7766], [135.4070, 34.7764]
-            ] } }
-          ]
-        },
-        // 側溝（green: --layer-ditch）
-        ditch: {
-          type: 'FeatureCollection',
-          features: [
-            { type: 'Feature', properties: { name: '市道1号北側' }, geometry: { type: 'LineString', coordinates: [
-              [135.3960, 34.7840], [135.3980, 34.7842], [135.4000, 34.7844], [135.4020, 34.7846]
-            ] } },
-            { type: 'Feature', properties: { name: '市道1号南側' }, geometry: { type: 'LineString', coordinates: [
-              [135.3960, 34.7836], [135.3980, 34.7838], [135.4000, 34.7840], [135.4020, 34.7842]
-            ] } },
-            { type: 'Feature', properties: { name: '東有岡U型' }, geometry: { type: 'LineString', coordinates: [
-              [135.4060, 34.7795], [135.4080, 34.7800], [135.4100, 34.7805], [135.4120, 34.7808]
-            ] } },
-            { type: 'Feature', properties: { name: '昆陽L型' }, geometry: { type: 'LineString', coordinates: [
-              [135.3900, 34.7790], [135.3920, 34.7788], [135.3940, 34.7785], [135.3960, 34.7783]
-            ] } },
-            { type: 'Feature', properties: { name: '中野西排水路' }, geometry: { type: 'LineString', coordinates: [
-              [135.4045, 34.7895], [135.4048, 34.7870], [135.4050, 34.7845], [135.4052, 34.7820]
-            ] } },
-            { type: 'Feature', properties: { name: '荒牧排水路' }, geometry: { type: 'LineString', coordinates: [
-              [135.3980, 34.7900], [135.3982, 34.7878], [135.3984, 34.7856], [135.3986, 34.7834]
-            ] } }
-          ]
-        },
-        // マンホール（cyan dot: --layer-sewer）
-        manhole: {
-          type: 'FeatureCollection',
-          features: [
-            { type: 'Feature', properties: { id: 'MH-1001' }, geometry: { type: 'Point', coordinates: [135.3960, 34.7812] } },
-            { type: 'Feature', properties: { id: 'MH-1002' }, geometry: { type: 'Point', coordinates: [135.4000, 34.7818] } },
-            { type: 'Feature', properties: { id: 'MH-1003' }, geometry: { type: 'Point', coordinates: [135.4040, 34.7822] } },
-            { type: 'Feature', properties: { id: 'MH-1004' }, geometry: { type: 'Point', coordinates: [135.4080, 34.7828] } },
-            { type: 'Feature', properties: { id: 'MH-1005' }, geometry: { type: 'Point', coordinates: [135.4002, 34.7800] } },
-            { type: 'Feature', properties: { id: 'MH-1006' }, geometry: { type: 'Point', coordinates: [135.4002, 34.7840] } },
-            { type: 'Feature', properties: { id: 'MH-1007' }, geometry: { type: 'Point', coordinates: [135.3990, 34.7862] } },
-            { type: 'Feature', properties: { id: 'MH-1008' }, geometry: { type: 'Point', coordinates: [135.4030, 34.7864] } },
-            { type: 'Feature', properties: { id: 'MH-1009' }, geometry: { type: 'Point', coordinates: [135.3990, 34.7768] } },
-            { type: 'Feature', properties: { id: 'MH-1010' }, geometry: { type: 'Point', coordinates: [135.4030, 34.7766] } }
-          ]
-        },
-        // 処理施設（purple: --layer-facility）
-        facility: {
-          type: 'FeatureCollection',
-          features: [
-            { type: 'Feature', properties: { name: '伊丹市環境クリーンセンター' }, geometry: { type: 'Point', coordinates: [135.4225, 34.7690] } },
-            { type: 'Feature', properties: { name: '北部リサイクルセンター' }, geometry: { type: 'Point', coordinates: [135.3980, 34.7920] } },
-            { type: 'Feature', properties: { name: '中央ポンプ所' }, geometry: { type: 'Point', coordinates: [135.4105, 34.7845] } }
-          ]
-        }
+        sewer:    { type: 'FeatureCollection', features: [] },
+        ditch:    { type: 'FeatureCollection', features: [] },
+        manhole:  { type: 'FeatureCollection', features: [] },
+        facility: { type: 'FeatureCollection', features: [] }
       };
 
       // ============================================================
       // 道路分類（国道・県道・市道・私道）
-      // 伊丹市内の主要道路をサンプルデータで表現
+      // 初期は空 → DOMContentLoaded 後に OSM 由来 GeoJSON (data/osm/*)
+      // を fetch() で読み込み setData する。
+      // データ出典: © OpenStreetMap contributors (ODbL)
       // ============================================================
       var ROADS = {
-        kokudo: {
-          type: 'FeatureCollection',
+        kokudo:  { type: 'FeatureCollection', features: [] },
+        kendo:   { type: 'FeatureCollection', features: [] },
+        shido:   { type: 'FeatureCollection', features: [] },
+        private: { type: 'FeatureCollection', features: [] }
+      };
+
+      // OSM 道路 GeoJSON の相対パス（mock/ → ../data/osm/）
+      var ROAD_DATA_URLS = {
+        kokudo:  '../data/osm/roads-kokudo.geojson',
+        kendo:   '../data/osm/roads-kendo.geojson',
+        shido:   '../data/osm/roads-shido.geojson',
+        private: '../data/osm/roads-private.geojson'
+      };
+
+      // ============================================================
+      // トレースモード: 現場担当者が OSM に載っていない
+      //   私有通路 / 未記載の裏路地 / 新設道路 / 別口の側溝ライン
+      // を手でなぞって追加記録する。localStorage に永続化。
+      // 本番では PostGIS / REST API に POST する想定。
+      // ============================================================
+      var TRACE_STORAGE_KEY = 'civic_map_ops/traced_roads/v1';
+      var TRACED_ROADS = {
+        kokudo:  { type: 'FeatureCollection', features: [] },
+        kendo:   { type: 'FeatureCollection', features: [] },
+        shido:   { type: 'FeatureCollection', features: [] },
+        private: { type: 'FeatureCollection', features: [] }
+      };
+      try {
+        var _saved = localStorage.getItem(TRACE_STORAGE_KEY);
+        if (_saved) {
+          var parsed = JSON.parse(_saved);
+          ['kokudo','kendo','shido','private'].forEach(function (k) {
+            if (parsed && parsed[k] && Array.isArray(parsed[k].features)) {
+              TRACED_ROADS[k] = parsed[k];
+            }
+          });
+        }
+      } catch (err) { /* 壊れていたら無視して空で進む */ }
+
+      // ============================================================
+      // ごみステーション 7 分類
+      // 【デモ】プレフィックス付きのサンプルデータで「市民⇄市役所⇄業者」の
+      // 双方向通信フローとTSPルート最適化を検証する。
+      // 実データは各自治体との台帳連携で投入する想定。
+      // ※すべて OSM の道路沿いに配置（中央〜東有岡〜北野〜荒牧〜昆陽 方面）
+      // ============================================================
+      var SAMPLE_THREAD_ILLEGAL = [
+        { from: 'citizen', name: '山本さん', time: '2026-04-09 08:12', text: '昆陽池公園北口のフェンス際にテレビ2台と布団が捨てられています。子どもが登下校で通るので危ないです…。' },
+        { from: 'city',    name: '環境クリーンC・田中', time: '2026-04-09 09:45', text: 'ご連絡ありがとうございます。本日中に業者手配します。回収完了まで近づかないようお願いします。' },
+        { from: 'vendor',  name: '昆陽清掃(株)・佐藤', time: '2026-04-09 14:20', text: '現地到着、写真3枚記録済み。家電はリサイクル券なし、不法投棄として回収しました。' }
+      ];
+      var SAMPLE_THREAD_DEAD = [
+        { from: 'citizen', name: '通行人', time: '2026-04-10 06:55', text: '猪名川河川敷(中央2丁目)で中型犬のような死骸を見つけました。首輪なし。' },
+        { from: 'city',    name: '環境クリーンC・岡田', time: '2026-04-10 07:30', text: '平日なので当センターで回収します。9時までに現着予定。' }
+      ];
+      var SAMPLE_THREAD_SLUDGE = [
+        { from: 'city',   name: '上下水道局・松本', time: '2026-04-08 11:00', text: '千僧1丁目 側溝清掃で発生した汚泥の一時集積場所です。木曜日収集。' },
+        { from: 'vendor', name: '伊丹管路(株)・中村', time: '2026-04-09 16:30', text: '既に8割ほど埋まりました。明日朝一で引き上げます。' }
+      ];
+
+      var GARBAGE_STATIONS = {
+        'gs-home': {
+          color: '#f59e0b', label: '家庭ごみ',
           features: [
-            { type: 'Feature', properties: { name: '国道171号線' }, geometry: { type: 'LineString', coordinates: [
-              [135.345, 34.7690], [135.370, 34.7700], [135.395, 34.7710], [135.420, 34.7720],
-              [135.445, 34.7730], [135.470, 34.7740]
-            ] } }
+            { id: 'GS-H-001', name: '【デモ】中央2丁目 家庭ごみ集積所', lng: 135.4012, lat: 34.7815, schedule: '火・金 8:30', thread: [] },
+            { id: 'GS-H-002', name: '【デモ】東有岡3丁目 集積所',       lng: 135.4138, lat: 34.7902, schedule: '月・木 8:30', thread: [] },
+            { id: 'GS-H-003', name: '【デモ】北野1丁目 集積所',         lng: 135.4118, lat: 34.8042, schedule: '火・金 8:30', thread: [] },
+            { id: 'GS-H-004', name: '【デモ】昆陽2丁目 集積所',         lng: 135.3895, lat: 34.7855, schedule: '月・木 8:30', thread: [] },
+            { id: 'GS-H-005', name: '【デモ】南野3丁目 集積所',         lng: 135.3968, lat: 34.7768, schedule: '火・金 8:30', thread: [] }
           ]
         },
-        kendo: {
-          type: 'FeatureCollection',
+        'gs-bulky': {
+          color: '#92400e', label: '粗大ごみ',
           features: [
-            { type: 'Feature', properties: { name: '県道13号線(尼崎池田線)' }, geometry: { type: 'LineString', coordinates: [
-              [135.4120, 34.7420], [135.4118, 34.7600], [135.4115, 34.7780], [135.4112, 34.7960], [135.4110, 34.8140]
-            ] } },
-            { type: 'Feature', properties: { name: '県道335号線' }, geometry: { type: 'LineString', coordinates: [
-              [135.365, 34.7900], [135.390, 34.7905], [135.415, 34.7910], [135.440, 34.7915], [135.465, 34.7920]
-            ] } }
+            { id: 'GS-B-001', name: '【デモ】千僧1丁目 粗大ごみ予約回収', lng: 135.3815, lat: 34.7880, schedule: '第2水曜 要予約', thread: [] },
+            { id: 'GS-B-002', name: '【デモ】荒牧2丁目 粗大ごみ予約回収', lng: 135.3942, lat: 34.8095, schedule: '第4水曜 要予約', thread: [] }
           ]
         },
-        shido: {
-          type: 'FeatureCollection',
+        'gs-recycle': {
+          color: '#2563eb', label: '資源物',
           features: [
-            { type: 'Feature', properties: { name: '市道中央1号線' }, geometry: { type: 'LineString', coordinates: [
-              [135.3920, 34.7780], [135.3960, 34.7783], [135.4000, 34.7786], [135.4040, 34.7789], [135.4080, 34.7792]
-            ] } },
-            { type: 'Feature', properties: { name: '市道中央2号線' }, geometry: { type: 'LineString', coordinates: [
-              [135.3920, 34.7820], [135.3960, 34.7823], [135.4000, 34.7826], [135.4040, 34.7829], [135.4080, 34.7832]
-            ] } },
-            { type: 'Feature', properties: { name: '市道中央3号線' }, geometry: { type: 'LineString', coordinates: [
-              [135.3920, 34.7860], [135.3960, 34.7863], [135.4000, 34.7866], [135.4040, 34.7869], [135.4080, 34.7872]
-            ] } },
-            { type: 'Feature', properties: { name: '市道北1号線' }, geometry: { type: 'LineString', coordinates: [
-              [135.3960, 34.7900], [135.4000, 34.7903], [135.4040, 34.7906], [135.4080, 34.7909]
-            ] } },
-            { type: 'Feature', properties: { name: '市道南北1号線' }, geometry: { type: 'LineString', coordinates: [
-              [135.3980, 34.7760], [135.3980, 34.7800], [135.3980, 34.7840], [135.3980, 34.7880], [135.3980, 34.7920]
-            ] } },
-            { type: 'Feature', properties: { name: '市道南北2号線' }, geometry: { type: 'LineString', coordinates: [
-              [135.4020, 34.7760], [135.4020, 34.7800], [135.4020, 34.7840], [135.4020, 34.7880], [135.4020, 34.7920]
-            ] } },
-            { type: 'Feature', properties: { name: '市道南北3号線' }, geometry: { type: 'LineString', coordinates: [
-              [135.4060, 34.7760], [135.4060, 34.7800], [135.4060, 34.7840], [135.4060, 34.7880]
-            ] } }
+            { id: 'GS-R-001', name: '【デモ】西台1丁目 資源物拠点',     lng: 135.4052, lat: 34.7798, schedule: '土 9:00', thread: [] },
+            { id: 'GS-R-002', name: '【デモ】東有岡5丁目 資源物拠点',   lng: 135.4202, lat: 34.7892, schedule: '土 9:00', thread: [] },
+            { id: 'GS-R-003', name: '【デモ】昆陽南4丁目 資源物拠点',   lng: 135.3865, lat: 34.7742, schedule: '土 9:00', thread: [] }
           ]
         },
-        private: {
-          type: 'FeatureCollection',
+        'gs-sludge': {
+          color: '#065f46', label: '側溝汚泥',
           features: [
-            // 既知の事故地点（サンプル）: MH-P-001
-            { type: 'Feature', properties: { name: '東有岡3丁目 私道', accident: true }, geometry: { type: 'LineString', coordinates: [
-              [135.4040, 34.7829], [135.4042, 34.7833], [135.4044, 34.7837]
-            ] } },
-            { type: 'Feature', properties: { name: '北野2丁目 私道' }, geometry: { type: 'LineString', coordinates: [
-              [135.3960, 34.7863], [135.3962, 34.7867], [135.3964, 34.7871]
-            ] } },
-            { type: 'Feature', properties: { name: '荒牧南1丁目 私道' }, geometry: { type: 'LineString', coordinates: [
-              [135.4000, 34.7786], [135.4002, 34.7782], [135.4004, 34.7778]
-            ] } },
-            { type: 'Feature', properties: { name: '昆陽池4丁目 私道' }, geometry: { type: 'LineString', coordinates: [
-              [135.3930, 34.7823], [135.3926, 34.7821], [135.3922, 34.7819]
-            ] } }
+            { id: 'GS-S-001', name: '【デモ】千僧1丁目 側溝清掃汚泥仮置場', lng: 135.3805, lat: 34.7868, schedule: '清掃時一時集積', thread: SAMPLE_THREAD_SLUDGE }
+          ]
+        },
+        'gs-illegal': {
+          color: '#991b1b', label: '不法投棄',
+          features: [
+            { id: 'GS-I-001', name: '【デモ】昆陽池公園北 家電不法投棄通報',   lng: 135.3892, lat: 34.7928, schedule: '通報日 2026-04-09', thread: SAMPLE_THREAD_ILLEGAL },
+            { id: 'GS-I-002', name: '【デモ】東有岡 山際 粗大ごみ放置',        lng: 135.4185, lat: 34.7955, schedule: '通報日 2026-04-05', thread: [] }
+          ]
+        },
+        'gs-dead-wd': {
+          color: '#db2777', label: '死獣(平日)',
+          features: [
+            { id: 'GS-DW-001', name: '【デモ】猪名川河川敷 中央2丁目付近', lng: 135.4078, lat: 34.7832, schedule: '平日 環境クリーンC回収', thread: SAMPLE_THREAD_DEAD }
+          ]
+        },
+        'gs-dead-we': {
+          color: '#7c3aed', label: '死獣(土日)',
+          features: [
+            { id: 'GS-DE-001', name: '【デモ】荒牧南1丁目 路肩', lng: 135.3985, lat: 34.8018, schedule: '土日 委託業者直行', thread: [] }
           ]
         }
       };
 
-      // ============================================================
-      // ごみステーション7分類
-      // ============================================================
-      // 双方向コミュニケーションのサンプルメッセージ
-      var SAMPLE_THREAD_1 = [
-        { from: 'citizen', name: '住民(東有岡)',    time: '2026-04-08 07:42', text: 'カラスに荒らされます。ネットを新しくしてほしい' },
-        { from: 'city',    name: '環境クリーンC',    time: '2026-04-08 14:10', text: '確認しました。4/15に新品ネットを設置予定です' },
-        { from: 'vendor',  name: '〇〇運輸',        time: '2026-04-09 06:55', text: '本日収集時、ネット破損を現場確認' }
-      ];
-      var SAMPLE_THREAD_2 = [
-        { from: 'citizen', name: '住民(北野)',      time: '2026-04-07 09:10', text: 'テレビが不法投棄されています。至急対応を' },
-        { from: 'city',    name: '環境保全課',      time: '2026-04-07 11:30', text: '業者に回収指示を出しました（案件#2489）' }
-      ];
-      var SAMPLE_THREAD_3 = [];
-
-      var GARBAGE_STATIONS = {
-        'gs-home':    { color: '#f59e0b', label: '家庭ごみ', features: [
-          { id: 'GS-0342', name: '東有岡3丁目',  lng: 135.4038, lat: 34.7828, schedule: '火・金 8:00',  thread: SAMPLE_THREAD_1 },
-          { id: 'GS-0356', name: '北野2丁目',    lng: 135.3962, lat: 34.7865, schedule: '月・木 8:00',  thread: [] },
-          { id: 'GS-0367', name: '荒牧南1丁目',  lng: 135.4001, lat: 34.7790, schedule: '火・金 8:00',  thread: [] },
-          { id: 'GS-0378', name: '昆陽池4丁目',  lng: 135.3928, lat: 34.7820, schedule: '月・木 8:00',  thread: [] },
-          { id: 'GS-0389', name: '中央5丁目',    lng: 135.4002, lat: 34.7826, schedule: '火・金 8:00',  thread: [] },
-          { id: 'GS-0402', name: '西台3丁目',    lng: 135.4062, lat: 34.7810, schedule: '月・木 8:00',  thread: [] },
-          { id: 'GS-0414', name: '千僧1丁目',    lng: 135.3968, lat: 34.7925, schedule: '火・金 8:00',  thread: [] },
-          { id: 'GS-0427', name: '船原2丁目',    lng: 135.4075, lat: 34.7880, schedule: '月・木 8:00',  thread: [] }
-        ]},
-        'gs-bulky':   { color: '#92400e', label: '粗大ごみ', features: [
-          { id: 'GS-B-01', name: '東有岡集積所',  lng: 135.4050, lat: 34.7825, schedule: '予約回収',  thread: [] },
-          { id: 'GS-B-02', name: '昆陽集積所',    lng: 135.3925, lat: 34.7810, schedule: '予約回収',  thread: [] }
-        ]},
-        'gs-recycle': { color: '#2563eb', label: '資源物', features: [
-          { id: 'GS-R-11', name: '東有岡びん缶',  lng: 135.4042, lat: 34.7835, schedule: '毎週水', thread: [] },
-          { id: 'GS-R-12', name: '北野びん缶',    lng: 135.3965, lat: 34.7872, schedule: '毎週水', thread: [] },
-          { id: 'GS-R-13', name: '荒牧びん缶',    lng: 135.4005, lat: 34.7785, schedule: '毎週水', thread: [] },
-          { id: 'GS-R-14', name: '中央PET',      lng: 135.4008, lat: 34.7830, schedule: '毎週水', thread: [] }
-        ]},
-        'gs-sludge':  { color: '#065f46', label: '側溝汚泥', features: [
-          { id: 'GS-S-01', name: '中央5丁目 側溝',  lng: 135.4015, lat: 34.7842, schedule: '清掃時',  thread: [] },
-          { id: 'GS-S-02', name: '東有岡 側溝',    lng: 135.4068, lat: 34.7800, schedule: '清掃時',  thread: [] }
-        ]},
-        'gs-illegal': { color: '#991b1b', label: '不法投棄', features: [
-          { id: 'IL-042',  name: '北野裏 （TV）',  lng: 135.3955, lat: 34.7880, schedule: '常時監視', thread: SAMPLE_THREAD_2 },
-          { id: 'IL-043',  name: '昆陽池公園北',  lng: 135.3910, lat: 34.7830, schedule: '常時監視', thread: [] }
-        ]},
-        'gs-dead-wd': { color: '#db2777', label: '死獣(平日)', features: [
-          { id: 'DA-WD-01', name: '市道中央2号 歩道', lng: 135.3998, lat: 34.7826, schedule: '平日8-17', thread: [] },
-          { id: 'DA-WD-02', name: '県道13号 路肩',   lng: 135.4115, lat: 34.7830, schedule: '平日8-17', thread: [] }
-        ]},
-        'gs-dead-we': { color: '#7c3aed', label: '死獣(土日)', features: [
-          { id: 'DA-WE-01', name: '国道171号 側道',  lng: 135.3980, lat: 34.7720, schedule: '土日業者直行', thread: [] }
-        ]}
-      };
-
-      // サンプル記録済み点検（6件）
-      var PAST_RECORDS = [
-        { id: 'REC-2501', title: 'MH-1002 定期点検', type: '下水道', status: 'done',     date: '2026-04-08', inspector: '田中', lng: 135.4000, lat: 34.7818, note: '異常なし。蓋の摩耗なし。' },
-        { id: 'REC-2498', title: '東有岡U型 清掃', type: '側溝',   status: 'done',     date: '2026-04-07', inspector: '佐藤', lng: 135.4088, lat: 34.7801, note: '土砂堆積 30%、清掃完了。' },
-        { id: 'REC-2495', title: '中央ポンプ所 目視点検', type: '施設', status: 'done', date: '2026-04-06', inspector: '山田', lng: 135.4105, lat: 34.7845, note: '稼働異常なし。油量OK。' },
-        { id: 'REC-2492', title: 'MH-1005 補修依頼', type: '下水道', status: 'revisit', date: '2026-04-05', inspector: '田中', lng: 135.4002, lat: 34.7800, note: '鉄蓋にひび、要交換（次回手配）' },
-        { id: 'REC-2489', title: '昆陽L型 詰まり調査', type: '側溝', status: 'progress', date: '2026-04-04', inspector: '佐藤', lng: 135.3920, lat: 34.7788, note: '枯葉による部分閉塞、経過観察中' },
-        { id: 'REC-2486', title: '北部RC 月例巡視', type: '施設',   status: 'done',     date: '2026-04-03', inspector: '山田', lng: 135.3980, lat: 34.7920, note: '特記事項なし' }
-      ];
+      // 記録済み点検: 未登録状態（現場オペレーターが入力していく）
+      var PAST_RECORDS = [];
       var pastMarkers = [];
       var pastLayerVisible = true;
 
@@ -772,79 +745,193 @@
       // ============================================================
       function addInfrastructureLayers() {
         // --- 道路分類 ---
-        // 国道（casing + main）
+        // 淡色地図（pale）でも埋もれないよう、全レイヤに濃色 casing + 太めの line を使用。
+        // 各クラスに完全に異なる色相を割当てて「どのクラスか」を即座に判別可能にする。
+        var w = function (z1, w1, z2, w2) {
+          return ['interpolate', ['linear'], ['zoom'], z1, w1, z2, w2];
+        };
+        var CASING_DARK = '#0b1220';    // すべての道路の共通 casing（ほぼ黒）
+
+        // ===== 国道・高速 =====  色: 鮮やかなマゼンタ (#c026d3)
         if (!map.getSource('road-kokudo-src')) {
           map.addSource('road-kokudo-src', { type: 'geojson', data: ROADS.kokudo });
         }
         if (!map.getLayer('road-kokudo-casing')) {
           map.addLayer({
             id: 'road-kokudo-casing', type: 'line', source: 'road-kokudo-src',
-            paint: { 'line-color': '#7f1d1d', 'line-width': 10, 'line-opacity': 0.9 },
+            paint: { 'line-color': CASING_DARK, 'line-width': w(11, 5, 17, 16), 'line-opacity': 0.95 },
             layout: { 'line-cap': 'round', 'line-join': 'round' }
           });
         }
         if (!map.getLayer('road-kokudo-line')) {
           map.addLayer({
             id: 'road-kokudo-line', type: 'line', source: 'road-kokudo-src',
-            paint: { 'line-color': '#e11d48', 'line-width': 6, 'line-opacity': 1 },
+            paint: { 'line-color': '#d946ef', 'line-width': w(11, 3, 17, 12), 'line-opacity': 1 },
             layout: { 'line-cap': 'round', 'line-join': 'round' }
           });
         }
 
-        // 県道
+        // ===== 県道 =====  色: エレクトリックシアン (#06b6d4)（pale地図に無い色相）
         if (!map.getSource('road-kendo-src')) {
           map.addSource('road-kendo-src', { type: 'geojson', data: ROADS.kendo });
         }
         if (!map.getLayer('road-kendo-casing')) {
           map.addLayer({
             id: 'road-kendo-casing', type: 'line', source: 'road-kendo-src',
-            paint: { 'line-color': '#78350f', 'line-width': 8, 'line-opacity': 0.85 },
+            paint: { 'line-color': CASING_DARK, 'line-width': w(11, 3.5, 17, 12), 'line-opacity': 0.9 },
             layout: { 'line-cap': 'round', 'line-join': 'round' }
           });
         }
         if (!map.getLayer('road-kendo-line')) {
           map.addLayer({
             id: 'road-kendo-line', type: 'line', source: 'road-kendo-src',
-            paint: { 'line-color': '#f59e0b', 'line-width': 5, 'line-opacity': 1 },
+            paint: { 'line-color': '#06b6d4', 'line-width': w(11, 2, 17, 8), 'line-opacity': 1 },
             layout: { 'line-cap': 'round', 'line-join': 'round' }
           });
         }
 
-        // 市道
+        // ===== 市道 =====  色: ライム (#65a30d)（緑で明確に区別）
         if (!map.getSource('road-shido-src')) {
           map.addSource('road-shido-src', { type: 'geojson', data: ROADS.shido });
+        }
+        if (!map.getLayer('road-shido-casing')) {
+          map.addLayer({
+            id: 'road-shido-casing', type: 'line', source: 'road-shido-src',
+            minzoom: 12,
+            paint: {
+              'line-color': CASING_DARK,
+              'line-width': w(12, 1.6, 17, 6),
+              'line-opacity': ['interpolate', ['linear'], ['zoom'], 12, 0.45, 15, 0.85, 17, 0.95]
+            },
+            layout: { 'line-cap': 'round', 'line-join': 'round' }
+          });
         }
         if (!map.getLayer('road-shido-line')) {
           map.addLayer({
             id: 'road-shido-line', type: 'line', source: 'road-shido-src',
-            paint: { 'line-color': '#64748b', 'line-width': 3, 'line-opacity': 0.85 },
+            minzoom: 12,
+            paint: {
+              'line-color': '#84cc16',
+              'line-width': w(12, 0.8, 17, 4),
+              'line-opacity': ['interpolate', ['linear'], ['zoom'], 12, 0.55, 15, 0.95, 17, 1]
+            },
             layout: { 'line-cap': 'round', 'line-join': 'round' }
           });
         }
 
-        // 私道（警告表現：赤の破線 + グロー）
+        // ===== 私道 =====  色: 警告赤 + 破線 + グロー
         if (!map.getSource('road-private-src')) {
           map.addSource('road-private-src', { type: 'geojson', data: ROADS.private });
         }
         if (!map.getLayer('road-private-glow')) {
           map.addLayer({
             id: 'road-private-glow', type: 'line', source: 'road-private-src',
-            paint: { 'line-color': '#dc2626', 'line-width': 10, 'line-opacity': 0.2, 'line-blur': 4 },
+            minzoom: 13,
+            paint: { 'line-color': '#dc2626', 'line-width': w(13, 5, 17, 14), 'line-opacity': 0.22, 'line-blur': 4 },
+            layout: { 'line-cap': 'round', 'line-join': 'round' }
+          });
+        }
+        if (!map.getLayer('road-private-casing')) {
+          map.addLayer({
+            id: 'road-private-casing', type: 'line', source: 'road-private-src',
+            minzoom: 13,
+            paint: { 'line-color': CASING_DARK, 'line-width': w(13, 2.4, 17, 7), 'line-opacity': 0.9 },
             layout: { 'line-cap': 'round', 'line-join': 'round' }
           });
         }
         if (!map.getLayer('road-private-line')) {
           map.addLayer({
             id: 'road-private-line', type: 'line', source: 'road-private-src',
+            minzoom: 13,
             paint: {
-              'line-color': '#dc2626',
-              'line-width': 4,
+              'line-color': '#ef4444',
+              'line-width': w(13, 1.6, 17, 5),
               'line-opacity': 1,
               'line-dasharray': [2, 1.5]
             },
             layout: { 'line-cap': 'butt', 'line-join': 'round' }
           });
         }
+
+        // ===== トレースで追加した道路（OSM の上に重ねる。保存済みデータを復元） =====
+        // 色は各分類の本線と同じだが、明るい「トレース成分」を示すハッチを持つ
+        // casing を少し太く + 白い点線のオーバーレイで「手入力」と視覚的に区別する。
+        var TRACE_PALETTE = {
+          kokudo:  '#d946ef',
+          kendo:   '#06b6d4',
+          shido:   '#84cc16',
+          private: '#ef4444'
+        };
+        // 作業中の trace 線プレビュー（保存前）
+        if (!map.getSource('trace-preview-src')) {
+          map.addSource('trace-preview-src', {
+            type: 'geojson',
+            data: { type: 'FeatureCollection', features: [] }
+          });
+        }
+        if (!map.getLayer('trace-preview-casing')) {
+          map.addLayer({
+            id: 'trace-preview-casing', type: 'line', source: 'trace-preview-src',
+            paint: { 'line-color': '#0b1220', 'line-width': 10, 'line-opacity': 0.9 },
+            layout: { 'line-cap': 'round', 'line-join': 'round' }
+          });
+        }
+        if (!map.getLayer('trace-preview-line')) {
+          map.addLayer({
+            id: 'trace-preview-line', type: 'line', source: 'trace-preview-src',
+            paint: {
+              'line-color': ['coalesce', ['get', 'color'], '#d946ef'],
+              'line-width': 6,
+              'line-opacity': 1,
+              'line-dasharray': [1.4, 1.2]
+            },
+            layout: { 'line-cap': 'round', 'line-join': 'round' }
+          });
+        }
+
+        ['kokudo','kendo','shido','private'].forEach(function (k) {
+          var srcId   = 'traced-road-' + k + '-src';
+          var casing  = 'traced-road-' + k + '-casing';
+          var lineId  = 'traced-road-' + k + '-line';
+          var overlay = 'traced-road-' + k + '-overlay';
+          if (!map.getSource(srcId)) {
+            map.addSource(srcId, { type: 'geojson', data: TRACED_ROADS[k] });
+          }
+          if (!map.getLayer(casing)) {
+            map.addLayer({
+              id: casing, type: 'line', source: srcId,
+              paint: {
+                'line-color': '#0b1220',
+                'line-width': w(12, 5, 17, 14),
+                'line-opacity': 0.95
+              },
+              layout: { 'line-cap': 'round', 'line-join': 'round' }
+            });
+          }
+          if (!map.getLayer(lineId)) {
+            map.addLayer({
+              id: lineId, type: 'line', source: srcId,
+              paint: {
+                'line-color': TRACE_PALETTE[k],
+                'line-width': w(12, 3, 17, 10),
+                'line-opacity': 1
+              },
+              layout: { 'line-cap': 'round', 'line-join': 'round' }
+            });
+          }
+          if (!map.getLayer(overlay)) {
+            map.addLayer({
+              id: overlay, type: 'line', source: srcId,
+              paint: {
+                'line-color': '#ffffff',
+                'line-width': w(12, 1.2, 17, 3.2),
+                'line-opacity': 0.9,
+                'line-dasharray': [1, 2]
+              },
+              layout: { 'line-cap': 'butt', 'line-join': 'round' }
+            });
+          }
+        });
 
         // --- 下水道 ---
         if (!map.getSource('sewer-src')) {
@@ -935,11 +1022,24 @@
       }
 
       // レイヤキー → MapLibreレイヤID 配列
+      // road-* のトグルは OSM 実線と trace 手入力線の両方を同時に制御する
       var MAPLIBRE_LAYER_MAP = {
-        'road-kokudo':  ['road-kokudo-casing', 'road-kokudo-line'],
-        'road-kendo':   ['road-kendo-casing', 'road-kendo-line'],
-        'road-shido':   ['road-shido-line'],
-        'road-private': ['road-private-glow', 'road-private-line'],
+        'road-kokudo': [
+          'road-kokudo-casing', 'road-kokudo-line',
+          'traced-road-kokudo-casing', 'traced-road-kokudo-line', 'traced-road-kokudo-overlay'
+        ],
+        'road-kendo':  [
+          'road-kendo-casing', 'road-kendo-line',
+          'traced-road-kendo-casing', 'traced-road-kendo-line', 'traced-road-kendo-overlay'
+        ],
+        'road-shido':  [
+          'road-shido-casing', 'road-shido-line',
+          'traced-road-shido-casing', 'traced-road-shido-line', 'traced-road-shido-overlay'
+        ],
+        'road-private': [
+          'road-private-glow', 'road-private-casing', 'road-private-line',
+          'traced-road-private-casing', 'traced-road-private-line', 'traced-road-private-overlay'
+        ],
         sewer:    ['sewer-line'],
         ditch:    ['ditch-line'],
         manhole:  ['manhole-circle'],
@@ -1095,6 +1195,14 @@
         Object.keys(GARBAGE_STATIONS).forEach(function (key) {
           var category = GARBAGE_STATIONS[key];
           garbageMarkers[key] = [];
+          // サイドバーの拠点数表示
+          var countEl = document.querySelector('[data-gs-count="' + key + '"]');
+          if (countEl) {
+            var n = category.features.length;
+            countEl.textContent = n > 0 ? n + '拠点' : '0拠点';
+            if (n === 0) countEl.classList.add('layer-count-empty');
+            else countEl.classList.remove('layer-count-empty');
+          }
           category.features.forEach(function (rec) {
             var el = createGarbagePinElement(category);
 
@@ -1239,10 +1347,21 @@
       }
 
       // ============================================================
-      // ルート自動符番: ルート線に沿ってごみステーションを順番に番号付け
-      // 表示中のごみレイヤのみ対象、閾値 THRESHOLD_M 以内の地点を採用
+      // ルート TSP 最適化
+      // 仕様:
+      //  1. ユーザーが打った waypoint（≧1点）を「立ち寄り候補の回廊」として解釈
+      //  2. 可視中のごみステーション全件を候補にする
+      //     - 1点だけ打った場合は「その地点 1km 以内」を回廊とみなす
+      //     - 2点以上の場合は線分から CORRIDOR_M 以内のステーションを対象
+      //  3. 開始点 = 最初の waypoint
+      //     greedy nearest-neighbor で全候補を訪問順に並べ替え (TSP 近似)
+      //  4. 最終 waypoint が1個しか無い場合は終点指定なし。
+      //     複数の場合は最後の waypoint を終点として固定
+      //  5. ルートラインを [start, station1, station2, ..., stationN, end?]
+      //     に再描画し、ステーションに 1..N の番号を振る
       // ============================================================
-      var NUMBER_THRESHOLD_M = 120; // メートル
+      var CORRIDOR_M      = 450;   // 線分から何m以内を回廊とみなすか
+      var SINGLE_RADIUS_M = 1200;  // 1点指定時の採用半径
 
       function haversine(a, b) {
         // a, b: [lng, lat]
@@ -1257,76 +1376,163 @@
         return 2 * R * Math.asin(Math.sqrt(h));
       }
 
-      // ルート線の t（0..totalLen）上における最近接点の累積距離を返す
-      function projectOntoRoute(point, routeCoords) {
-        if (routeCoords.length < 2) return { t: Infinity, d: Infinity };
-        var best = { t: Infinity, d: Infinity };
-        var acc = 0;
-        for (var i = 0; i < routeCoords.length - 1; i++) {
-          var A = routeCoords[i];
-          var B = routeCoords[i + 1];
-          var seg = haversine(A, B);
-          // 線分A-Bへの射影パラメータ u∈[0,1] を経緯度の線形近似で計算
-          var ax = A[0], ay = A[1], bx = B[0], by = B[1], px = point[0], py = point[1];
-          var dx = bx - ax, dy = by - ay;
-          var lenSq = dx*dx + dy*dy;
-          var u = lenSq > 0 ? ((px - ax) * dx + (py - ay) * dy) / lenSq : 0;
-          u = Math.max(0, Math.min(1, u));
-          var cx = ax + u * dx, cy = ay + u * dy;
-          var d = haversine([cx, cy], point);
-          if (d < best.d) {
-            best.d = d;
-            best.t = acc + u * seg;
-          }
-          acc += seg;
+      // 線分A-Bへ点pを射影した距離（メートル）
+      function distanceToSegment(p, A, B) {
+        var ax = A[0], ay = A[1], bx = B[0], by = B[1], px = p[0], py = p[1];
+        var dx = bx - ax, dy = by - ay;
+        var lenSq = dx*dx + dy*dy;
+        var u = lenSq > 0 ? ((px - ax) * dx + (py - ay) * dy) / lenSq : 0;
+        u = Math.max(0, Math.min(1, u));
+        var cx = ax + u * dx, cy = ay + u * dy;
+        return haversine([cx, cy], p);
+      }
+
+      // 折れ線全体への最短距離
+      function distanceToPolyline(p, coords) {
+        if (coords.length === 0) return Infinity;
+        if (coords.length === 1) return haversine(p, coords[0]);
+        var best = Infinity;
+        for (var i = 0; i < coords.length - 1; i++) {
+          var d = distanceToSegment(p, coords[i], coords[i+1]);
+          if (d < best) best = d;
         }
         return best;
       }
 
-      function autoNumberAlongRoute() {
+      // greedy nearest-neighbor TSP
+      // start: 始点座標, stops: 候補配列 [{lng,lat,rec,marker}], end?: 終点座標
+      function nearestNeighborTSP(start, stops, end) {
+        var ordered = [];
+        var remaining = stops.slice();
+        var cursor = start;
+        while (remaining.length) {
+          var bestIdx = 0;
+          var bestD = Infinity;
+          for (var i = 0; i < remaining.length; i++) {
+            var s = remaining[i];
+            var d = haversine(cursor, [s.lng, s.lat]);
+            if (d < bestD) { bestD = d; bestIdx = i; }
+          }
+          var next = remaining.splice(bestIdx, 1)[0];
+          ordered.push(next);
+          cursor = [next.lng, next.lat];
+        }
+        // 末尾が指定されている場合は最後が終点に最も近くなるよう 2-opt 風に調整
+        if (end && ordered.length >= 2) {
+          // 末尾を終点に最も近いステーションに swap（簡易版）
+          var lastDists = ordered.map(function (o) { return haversine([o.lng, o.lat], end); });
+          var minIdx = 0;
+          for (var j = 1; j < lastDists.length; j++) {
+            if (lastDists[j] < lastDists[minIdx]) minIdx = j;
+          }
+          if (minIdx !== ordered.length - 1) {
+            var tmp = ordered[minIdx];
+            ordered[minIdx] = ordered[ordered.length - 1];
+            ordered[ordered.length - 1] = tmp;
+          }
+        }
+        return ordered;
+      }
+
+      function optimizeRouteWithTSP() {
         clearNumberedMarkers();
-        if (routePoints.length < 2) {
+
+        if (routePoints.length < 1) {
           if (window.ICM && window.ICM.showSnackbar) {
-            window.ICM.showSnackbar('ルートを2点以上設定してください');
+            window.ICM.showSnackbar('ルートモードで開始点をタップしてください');
           }
           return;
         }
 
-        // 表示中のごみカテゴリのマーカーをすべて対象に
+        // 表示中のごみステーションを候補化
         var candidates = [];
         Object.keys(garbageMarkers).forEach(function (key) {
           var cb = document.querySelector('.layer-item .switch input[data-layer="' + key + '"]');
-          if (cb && !cb.checked) return; // 非表示カテゴリは除外
+          if (cb && !cb.checked) return;
           garbageMarkers[key].forEach(function (m) {
-            candidates.push({ marker: m, rec: m._gsRec });
+            candidates.push({
+              marker: m,
+              rec: m._gsRec,
+              lng: m._gsRec.lng,
+              lat: m._gsRec.lat
+            });
           });
         });
 
-        // ルートに対する射影を計算
-        var hits = [];
-        candidates.forEach(function (c) {
-          var p = projectOntoRoute([c.rec.lng, c.rec.lat], routePoints);
-          if (p.d <= NUMBER_THRESHOLD_M) {
-            hits.push({ marker: c.marker, rec: c.rec, t: p.t, d: p.d });
+        if (candidates.length === 0) {
+          if (window.ICM && window.ICM.showSnackbar) {
+            window.ICM.showSnackbar('候補となるごみステーションがありません');
           }
-        });
+          return;
+        }
 
-        // ルート開始点からの順に並べる
-        hits.sort(function (a, b) { return a.t - b.t; });
+        // 回廊内に絞り込み
+        var inCorridor;
+        if (routePoints.length === 1) {
+          inCorridor = candidates.filter(function (c) {
+            return haversine(routePoints[0], [c.lng, c.lat]) <= SINGLE_RADIUS_M;
+          });
+        } else {
+          inCorridor = candidates.filter(function (c) {
+            return distanceToPolyline([c.lng, c.lat], routePoints) <= CORRIDOR_M;
+          });
+        }
 
-        // 符番
-        hits.forEach(function (h, i) {
-          var num = h.marker.getElement().querySelector('.gs-pin-num');
+        if (inCorridor.length === 0) {
+          if (window.ICM && window.ICM.showSnackbar) {
+            window.ICM.showSnackbar('回廊内にステーションが見つかりません（もう少し広く引いてください）');
+          }
+          return;
+        }
+
+        // 開始点 / 終点
+        var start = routePoints[0];
+        var end   = routePoints.length >= 2 ? routePoints[routePoints.length - 1] : null;
+
+        // TSP 近似で並べ替え
+        var ordered = nearestNeighborTSP(start, inCorridor, end);
+
+        // ルート線を [start, ...stations, end?] に置換
+        var newRoute = [start];
+        ordered.forEach(function (o) { newRoute.push([o.lng, o.lat]); });
+        if (end) newRoute.push(end);
+        routePoints = newRoute;
+        updateRouteSource();
+        updateRouteCount();
+
+        // 頂点マーカー（数字つき）を再生成
+        clearRouteVertexMarkers();
+        // start / end は小さな●、中間はごみピン側に番号を載せるのでここは白丸のみ
+        // ステーション以外（start/end）も視認できるよう白丸で
+        var startEl = document.createElement('div');
+        startEl.className = 'route-vertex route-vertex-start';
+        startEl.textContent = 'S';
+        routeVertexMarkers.push(new maplibregl.Marker({ element: startEl, anchor: 'center' })
+          .setLngLat(start).addTo(map));
+
+        if (end) {
+          var endEl = document.createElement('div');
+          endEl.className = 'route-vertex route-vertex-end';
+          endEl.textContent = 'G';
+          routeVertexMarkers.push(new maplibregl.Marker({ element: endEl, anchor: 'center' })
+            .setLngLat(end).addTo(map));
+        }
+
+        // ごみピン側に 1..N を符番
+        ordered.forEach(function (o, i) {
+          var num = o.marker.getElement().querySelector('.gs-pin-num');
           if (num) {
             num.textContent = String(i + 1);
             num.classList.add('visible');
             num.style.display = '';
           }
-          routeNumberedMarkers.push(h.rec.id);
+          routeNumberedMarkers.push(o.rec.id);
         });
 
         if (window.ICM && window.ICM.showSnackbar) {
-          window.ICM.showSnackbar('ルート上の' + hits.length + '件を自動符番しました');
+          window.ICM.showSnackbar(
+            '最適化: ' + ordered.length + '拠点をTSPで並べ替えました'
+          );
         }
       }
 
@@ -1335,6 +1541,12 @@
         addInfrastructureLayers();
         ensureRouteLayer();
         updateRouteSource();
+        // トレース・保存済み道路を再適用（basemap 切替時）
+        ['kokudo','kendo','shido','private'].forEach(function (k) {
+          var src = map.getSource('traced-road-' + k + '-src');
+          if (src) src.setData(TRACED_ROADS[k]);
+        });
+        updateTracePreview();
       });
 
       // 初回ロード後に記録済み点検 + ごみステーションマーカーを配置
@@ -1342,6 +1554,153 @@
         addPastRecordMarkers();
         setPastMarkersVisible(pastLayerVisible);
         addGarbageMarkers();
+        loadOsmRoads();
+      });
+
+      // ============================================================
+      // OSM 由来の道路 GeoJSON を fetch して ROADS に注入する
+      // fetch 完了後に各ソースの data を差し替え → MapLibre が再描画
+      // ============================================================
+      function loadOsmRoads() {
+        // キャッシュバスタ: 再生成した GeoJSON をブラウザキャッシュに引っ張られず反映
+        var cb = '?v=' + (window.ICM_OSM_BUILD || '20260411');
+        Object.keys(ROAD_DATA_URLS).forEach(function (key) {
+          var url = ROAD_DATA_URLS[key] + cb;
+          fetch(url, { cache: 'no-cache' })
+            .then(function (res) {
+              if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + url);
+              return res.json();
+            })
+            .then(function (fc) {
+              ROADS[key] = fc;
+              var src = map.getSource('road-' + key + '-src');
+              if (src) src.setData(fc);
+              // サイドバーのフィーチャ数表示を更新
+              var countEl = document.querySelector('[data-road-count="' + key + '"]');
+              if (countEl) countEl.textContent = fc.features.length.toLocaleString() + '本';
+            })
+            .catch(function (err) {
+              console.warn('[OSM road load] failed:', key, err.message);
+              var countEl = document.querySelector('[data-road-count="' + key + '"]');
+              if (countEl) countEl.textContent = '読込失敗';
+            });
+        });
+      }
+
+      // ============================================================
+      // トレースモード state
+      // ============================================================
+      var traceClass        = 'kokudo';   // 現在選択中の道路区分
+      var tracePoints       = [];         // [[lng,lat], ...]
+      var traceVertexMarkers = [];
+
+      var TRACE_PREVIEW_COLOR = {
+        kokudo: '#d946ef', kendo: '#06b6d4', shido: '#84cc16', private: '#ef4444'
+      };
+
+      function saveTracedRoadsToStorage() {
+        try {
+          localStorage.setItem(TRACE_STORAGE_KEY, JSON.stringify(TRACED_ROADS));
+        } catch (err) {
+          console.warn('[trace] failed to persist:', err.message);
+        }
+      }
+
+      function updateTracePreview() {
+        var src = map.getSource('trace-preview-src');
+        if (!src) return;
+        if (tracePoints.length < 2) {
+          src.setData({ type: 'FeatureCollection', features: [] });
+          return;
+        }
+        src.setData({
+          type: 'FeatureCollection',
+          features: [{
+            type: 'Feature',
+            properties: { color: TRACE_PREVIEW_COLOR[traceClass] || '#d946ef' },
+            geometry: { type: 'LineString', coordinates: tracePoints }
+          }]
+        });
+      }
+
+      function updateTraceCount() {
+        var el = document.getElementById('trace-pt-count');
+        if (el) el.textContent = tracePoints.length + '点';
+      }
+
+      function addTraceVertexMarker(lngLat, index) {
+        var el = document.createElement('div');
+        el.className = 'trace-vertex trace-vertex-' + traceClass;
+        el.textContent = String(index + 1);
+        var m = new maplibregl.Marker({ element: el, anchor: 'center' })
+          .setLngLat(lngLat)
+          .addTo(map);
+        traceVertexMarkers.push(m);
+      }
+
+      function clearTraceVertexMarkers() {
+        traceVertexMarkers.forEach(function (m) { m.remove(); });
+        traceVertexMarkers = [];
+      }
+
+      function clearTrace() {
+        tracePoints = [];
+        clearTraceVertexMarkers();
+        updateTraceCount();
+        updateTracePreview();
+      }
+
+      function undoTracePoint() {
+        if (!tracePoints.length) return;
+        tracePoints.pop();
+        var last = traceVertexMarkers.pop();
+        if (last) last.remove();
+        updateTraceCount();
+        updateTracePreview();
+      }
+
+      function saveTrace() {
+        if (tracePoints.length < 2) {
+          if (window.ICM && window.ICM.showSnackbar) {
+            window.ICM.showSnackbar('2点以上で保存できます');
+          }
+          return;
+        }
+        var id = 'trace-' + Date.now();
+        TRACED_ROADS[traceClass].features.push({
+          type: 'Feature',
+          properties: {
+            id: id,
+            class: traceClass,
+            source: 'trace',
+            createdAt: new Date().toISOString()
+          },
+          geometry: { type: 'LineString', coordinates: tracePoints.slice() }
+        });
+        var src = map.getSource('traced-road-' + traceClass + '-src');
+        if (src) src.setData(TRACED_ROADS[traceClass]);
+        saveTracedRoadsToStorage();
+        clearTrace();
+        if (window.ICM && window.ICM.showSnackbar) {
+          var label = { kokudo: '国道', kendo: '県道', shido: '市道', private: '私道' }[traceClass];
+          window.ICM.showSnackbar(label + ' として保存しました（端末に記録）');
+        }
+      }
+
+      function setTraceClass(cls) {
+        traceClass = cls;
+        document.querySelectorAll('.trace-class-btn').forEach(function (b) {
+          var active = b.getAttribute('data-trace-class') === cls;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+        updateTracePreview();
+      }
+
+      document.querySelectorAll('.trace-class-btn').forEach(function (b) {
+        b.addEventListener('click', function () {
+          setTraceClass(b.getAttribute('data-trace-class'));
+        });
       });
 
       // ============ カスタムコントロール ============
@@ -1354,7 +1713,10 @@
           if (action === 'reset-bearing') map.easeTo({ bearing: 0, pitch: 0 });
           if (action === 'route-clear') clearRoute();
           if (action === 'route-undo')  undoRoutePoint();
-          if (action === 'route-done')  autoNumberAlongRoute();
+          if (action === 'route-done')  optimizeRouteWithTSP();
+          if (action === 'trace-clear') clearTrace();
+          if (action === 'trace-undo')  undoTracePoint();
+          if (action === 'trace-save')  saveTrace();
         });
       });
 
@@ -1432,7 +1794,7 @@
           b.setAttribute('aria-selected', isActive ? 'true' : 'false');
         });
         body.setAttribute('data-map-mode', mode);
-        if (mode === 'record' || mode === 'route') {
+        if (mode === 'record' || mode === 'route' || mode === 'trace') {
           map.getCanvas().style.cursor = 'crosshair';
         } else {
           map.getCanvas().style.cursor = '';
@@ -1446,7 +1808,8 @@
 
         if (window.ICM && window.ICM.showSnackbar) {
           var msg = mode === 'record' ? '記録モード：地図をタップして地点を選択'
-                  : mode === 'route'  ? 'ルートモード：地図をタップしてルートを描画'
+                  : mode === 'route'  ? 'ルートモード：タップで収集ポイントを置き、完了でTSP最適化'
+                  : mode === 'trace'  ? 'トレースモード：道路区分を選び、地図を連続タップでなぞって保存'
                   :                     '閲覧モードに切替';
           window.ICM.showSnackbar(msg);
         }
@@ -1502,6 +1865,15 @@
           updateRouteSource();
           addRouteVertexMarker(e.lngLat, routePoints.length - 1);
           updateRouteCount();
+          return;
+        }
+
+        // --- トレースモード: 道路頂点を追加 ---
+        if (mode === 'trace') {
+          tracePoints.push([e.lngLat.lng, e.lngLat.lat]);
+          addTraceVertexMarker(e.lngLat, tracePoints.length - 1);
+          updateTraceCount();
+          updateTracePreview();
           return;
         }
 
