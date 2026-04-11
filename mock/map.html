@@ -111,6 +111,17 @@
                   <span class="switch-track"><span class="switch-thumb"></span></span>
                 </label>
               </li>
+              <li class="layer-item">
+                <span class="layer-dot" style="--dot: var(--md-sys-color-primary);"></span>
+                <div class="layer-text">
+                  <div class="layer-name">記録済み点検</div>
+                  <div class="layer-meta">直近7日 · 6件</div>
+                </div>
+                <label class="switch" aria-label="記録済み点検レイヤ">
+                  <input type="checkbox" data-layer="records" checked />
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                </label>
+              </li>
             </ul>
           </div>
 
@@ -138,6 +149,10 @@
               <li class="legend-row">
                 <span class="legend-swatch" style="background: var(--layer-sewer); border-radius: 50%;"></span>
                 <span class="legend-label">マンホール</span>
+              </li>
+              <li class="legend-row">
+                <span class="legend-swatch legend-record" style="background: var(--md-sys-color-primary); border-radius: 50%;"></span>
+                <span class="legend-label">記録済み点検</span>
               </li>
             </ul>
           </div>
@@ -337,6 +352,272 @@
       // キーボードナビは有効のまま、不要なUIのみ抑制
       map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
 
+      // ============================================================
+      // サンプルインフラGeoJSON（伊丹市役所〜JR伊丹駅周辺）
+      // 実装フェーズではPMTiles/GeoJSONに置き換える想定
+      // ============================================================
+      var INFRA = {
+        // 下水道幹線（cyan: --layer-sewer）
+        sewer: {
+          type: 'FeatureCollection',
+          features: [
+            { type: 'Feature', properties: { name: '中央汚水幹線' }, geometry: { type: 'LineString', coordinates: [
+              [135.3920, 34.7805], [135.3960, 34.7812], [135.4000, 34.7818],
+              [135.4040, 34.7822], [135.4080, 34.7828], [135.4120, 34.7835]
+            ] } },
+            { type: 'Feature', properties: { name: '南北合流管' }, geometry: { type: 'LineString', coordinates: [
+              [135.4002, 34.7760], [135.4002, 34.7800], [135.4002, 34.7840], [135.4002, 34.7880]
+            ] } },
+            { type: 'Feature', properties: { name: '東西分枝A' }, geometry: { type: 'LineString', coordinates: [
+              [135.3950, 34.7860], [135.3990, 34.7862], [135.4030, 34.7864], [135.4070, 34.7866]
+            ] } },
+            { type: 'Feature', properties: { name: '東西分枝B' }, geometry: { type: 'LineString', coordinates: [
+              [135.3950, 34.7770], [135.3990, 34.7768], [135.4030, 34.7766], [135.4070, 34.7764]
+            ] } }
+          ]
+        },
+        // 側溝（green: --layer-ditch）
+        ditch: {
+          type: 'FeatureCollection',
+          features: [
+            { type: 'Feature', properties: { name: '市道1号北側' }, geometry: { type: 'LineString', coordinates: [
+              [135.3960, 34.7840], [135.3980, 34.7842], [135.4000, 34.7844], [135.4020, 34.7846]
+            ] } },
+            { type: 'Feature', properties: { name: '市道1号南側' }, geometry: { type: 'LineString', coordinates: [
+              [135.3960, 34.7836], [135.3980, 34.7838], [135.4000, 34.7840], [135.4020, 34.7842]
+            ] } },
+            { type: 'Feature', properties: { name: '東有岡U型' }, geometry: { type: 'LineString', coordinates: [
+              [135.4060, 34.7795], [135.4080, 34.7800], [135.4100, 34.7805], [135.4120, 34.7808]
+            ] } },
+            { type: 'Feature', properties: { name: '昆陽L型' }, geometry: { type: 'LineString', coordinates: [
+              [135.3900, 34.7790], [135.3920, 34.7788], [135.3940, 34.7785], [135.3960, 34.7783]
+            ] } },
+            { type: 'Feature', properties: { name: '中野西排水路' }, geometry: { type: 'LineString', coordinates: [
+              [135.4045, 34.7895], [135.4048, 34.7870], [135.4050, 34.7845], [135.4052, 34.7820]
+            ] } },
+            { type: 'Feature', properties: { name: '荒牧排水路' }, geometry: { type: 'LineString', coordinates: [
+              [135.3980, 34.7900], [135.3982, 34.7878], [135.3984, 34.7856], [135.3986, 34.7834]
+            ] } }
+          ]
+        },
+        // マンホール（cyan dot: --layer-sewer）
+        manhole: {
+          type: 'FeatureCollection',
+          features: [
+            { type: 'Feature', properties: { id: 'MH-1001' }, geometry: { type: 'Point', coordinates: [135.3960, 34.7812] } },
+            { type: 'Feature', properties: { id: 'MH-1002' }, geometry: { type: 'Point', coordinates: [135.4000, 34.7818] } },
+            { type: 'Feature', properties: { id: 'MH-1003' }, geometry: { type: 'Point', coordinates: [135.4040, 34.7822] } },
+            { type: 'Feature', properties: { id: 'MH-1004' }, geometry: { type: 'Point', coordinates: [135.4080, 34.7828] } },
+            { type: 'Feature', properties: { id: 'MH-1005' }, geometry: { type: 'Point', coordinates: [135.4002, 34.7800] } },
+            { type: 'Feature', properties: { id: 'MH-1006' }, geometry: { type: 'Point', coordinates: [135.4002, 34.7840] } },
+            { type: 'Feature', properties: { id: 'MH-1007' }, geometry: { type: 'Point', coordinates: [135.3990, 34.7862] } },
+            { type: 'Feature', properties: { id: 'MH-1008' }, geometry: { type: 'Point', coordinates: [135.4030, 34.7864] } },
+            { type: 'Feature', properties: { id: 'MH-1009' }, geometry: { type: 'Point', coordinates: [135.3990, 34.7768] } },
+            { type: 'Feature', properties: { id: 'MH-1010' }, geometry: { type: 'Point', coordinates: [135.4030, 34.7766] } }
+          ]
+        },
+        // 処理施設（purple: --layer-facility）
+        facility: {
+          type: 'FeatureCollection',
+          features: [
+            { type: 'Feature', properties: { name: '伊丹市環境クリーンセンター' }, geometry: { type: 'Point', coordinates: [135.4225, 34.7690] } },
+            { type: 'Feature', properties: { name: '北部リサイクルセンター' }, geometry: { type: 'Point', coordinates: [135.3980, 34.7920] } },
+            { type: 'Feature', properties: { name: '中央ポンプ所' }, geometry: { type: 'Point', coordinates: [135.4105, 34.7845] } }
+          ]
+        }
+      };
+
+      // サンプル記録済み点検（6件）
+      var PAST_RECORDS = [
+        { id: 'REC-2501', title: 'MH-1002 定期点検', type: '下水道', status: 'done',     date: '2026-04-08', inspector: '田中', lng: 135.4000, lat: 34.7818, note: '異常なし。蓋の摩耗なし。' },
+        { id: 'REC-2498', title: '東有岡U型 清掃', type: '側溝',   status: 'done',     date: '2026-04-07', inspector: '佐藤', lng: 135.4088, lat: 34.7801, note: '土砂堆積 30%、清掃完了。' },
+        { id: 'REC-2495', title: '中央ポンプ所 目視点検', type: '施設', status: 'done', date: '2026-04-06', inspector: '山田', lng: 135.4105, lat: 34.7845, note: '稼働異常なし。油量OK。' },
+        { id: 'REC-2492', title: 'MH-1005 補修依頼', type: '下水道', status: 'revisit', date: '2026-04-05', inspector: '田中', lng: 135.4002, lat: 34.7800, note: '鉄蓋にひび、要交換（次回手配）' },
+        { id: 'REC-2489', title: '昆陽L型 詰まり調査', type: '側溝', status: 'progress', date: '2026-04-04', inspector: '佐藤', lng: 135.3920, lat: 34.7788, note: '枯葉による部分閉塞、経過観察中' },
+        { id: 'REC-2486', title: '北部RC 月例巡視', type: '施設',   status: 'done',     date: '2026-04-03', inspector: '山田', lng: 135.3980, lat: 34.7920, note: '特記事項なし' }
+      ];
+      var pastMarkers = [];
+      var pastLayerVisible = true;
+
+      // ============================================================
+      // インフラレイヤ追加: スタイルロードのたびに呼ぶ
+      // ============================================================
+      function addInfrastructureLayers() {
+        // --- 下水道 ---
+        if (!map.getSource('sewer-src')) {
+          map.addSource('sewer-src', { type: 'geojson', data: INFRA.sewer });
+        }
+        if (!map.getLayer('sewer-line')) {
+          map.addLayer({
+            id: 'sewer-line',
+            type: 'line',
+            source: 'sewer-src',
+            paint: {
+              'line-color': '#0891b2',     // --layer-sewer
+              'line-width': 5,
+              'line-opacity': 0.9
+            },
+            layout: { 'line-cap': 'round', 'line-join': 'round' }
+          });
+        }
+
+        // --- 側溝 ---
+        if (!map.getSource('ditch-src')) {
+          map.addSource('ditch-src', { type: 'geojson', data: INFRA.ditch });
+        }
+        if (!map.getLayer('ditch-line')) {
+          map.addLayer({
+            id: 'ditch-line',
+            type: 'line',
+            source: 'ditch-src',
+            paint: {
+              'line-color': '#16a34a',     // --layer-ditch
+              'line-width': 4,
+              'line-opacity': 0.9,
+              'line-dasharray': [2, 1]
+            },
+            layout: { 'line-cap': 'round', 'line-join': 'round' }
+          });
+        }
+
+        // --- マンホール ---
+        if (!map.getSource('manhole-src')) {
+          map.addSource('manhole-src', { type: 'geojson', data: INFRA.manhole });
+        }
+        if (!map.getLayer('manhole-circle')) {
+          map.addLayer({
+            id: 'manhole-circle',
+            type: 'circle',
+            source: 'manhole-src',
+            paint: {
+              'circle-radius': 6,
+              'circle-color': '#0891b2',        // --layer-sewer
+              'circle-stroke-color': '#ffffff',
+              'circle-stroke-width': 2
+            }
+          });
+        }
+
+        // --- 処理施設 ---
+        if (!map.getSource('facility-src')) {
+          map.addSource('facility-src', { type: 'geojson', data: INFRA.facility });
+        }
+        if (!map.getLayer('facility-halo')) {
+          map.addLayer({
+            id: 'facility-halo',
+            type: 'circle',
+            source: 'facility-src',
+            paint: {
+              'circle-radius': 18,
+              'circle-color': '#b14ad6',        // --layer-facility
+              'circle-opacity': 0.18
+            }
+          });
+        }
+        if (!map.getLayer('facility-circle')) {
+          map.addLayer({
+            id: 'facility-circle',
+            type: 'circle',
+            source: 'facility-src',
+            paint: {
+              'circle-radius': 9,
+              'circle-color': '#b14ad6',        // --layer-facility
+              'circle-stroke-color': '#ffffff',
+              'circle-stroke-width': 2.5
+            }
+          });
+        }
+        // トグル状態を再適用
+        applyLayerVisibility();
+      }
+
+      function applyLayerVisibility() {
+        var map_layers = {
+          sewer:    ['sewer-line'],
+          ditch:    ['ditch-line'],
+          manhole:  ['manhole-circle'],
+          facility: ['facility-halo', 'facility-circle']
+        };
+        Object.keys(map_layers).forEach(function (key) {
+          var cb = document.querySelector('.layer-item .switch input[data-layer="' + key + '"]');
+          var visible = cb ? cb.checked : true;
+          map_layers[key].forEach(function (id) {
+            if (map.getLayer(id)) {
+              map.setLayoutProperty(id, 'visibility', visible ? 'visible' : 'none');
+            }
+          });
+        });
+      }
+
+      // ============================================================
+      // 記録済み点検マーカー（HTMLマーカー + ポップアップ）
+      // ============================================================
+      function buildPastPopupHTML(rec) {
+        var statusText = { new: '未着手', progress: '進行中', done: '完了', revisit: '要再訪' }[rec.status] || rec.status;
+        return (
+          '<div class="past-popup">' +
+            '<div class="past-popup-head">' +
+              '<span class="past-popup-badge past-badge-' + rec.status + '">' + statusText + '</span>' +
+              '<span class="past-popup-type">' + rec.type + '</span>' +
+            '</div>' +
+            '<div class="past-popup-title">' + rec.title + '</div>' +
+            '<div class="past-popup-meta">' +
+              '<span><span class="material-symbols-rounded">event</span>' + rec.date + '</span>' +
+              '<span><span class="material-symbols-rounded">person</span>' + rec.inspector + '</span>' +
+            '</div>' +
+            '<div class="past-popup-note">' + rec.note + '</div>' +
+            '<div class="past-popup-actions">' +
+              '<a href="./inspect.html?id=' + rec.id + '" class="past-popup-open">' +
+                '<span class="material-symbols-rounded">open_in_new</span>記録を開く' +
+              '</a>' +
+            '</div>' +
+          '</div>'
+        );
+      }
+
+      function addPastRecordMarkers() {
+        PAST_RECORDS.forEach(function (rec) {
+          var el = document.createElement('div');
+          el.className = 'past-record-pin past-pin-' + rec.status;
+          el.innerHTML =
+            '<span class="past-pin-dot"></span>' +
+            '<span class="past-pin-ring"></span>';
+
+          var popup = new maplibregl.Popup({
+            offset: 18,
+            closeButton: true,
+            closeOnClick: true,
+            maxWidth: '280px',
+            className: 'past-popup-wrap'
+          }).setHTML(buildPastPopupHTML(rec));
+
+          var marker = new maplibregl.Marker({ element: el, anchor: 'center' })
+            .setLngLat([rec.lng, rec.lat])
+            .setPopup(popup)
+            .addTo(map);
+
+          pastMarkers.push(marker);
+        });
+      }
+
+      function setPastMarkersVisible(visible) {
+        pastLayerVisible = visible;
+        pastMarkers.forEach(function (m) {
+          m.getElement().style.display = visible ? '' : 'none';
+        });
+      }
+
+      // 初回ロード + ベースマップ切替後の再ロード両方で発火
+      map.on('style.load', function () {
+        addInfrastructureLayers();
+      });
+
+      // 初回ロード後に記録済み点検マーカーを配置
+      map.on('load', function () {
+        addPastRecordMarkers();
+        setPastMarkersVisible(pastLayerVisible);
+      });
+
       // ============ カスタムコントロール ============
       document.querySelectorAll('[data-action]').forEach(function (btn) {
         var action = btn.getAttribute('data-action');
@@ -369,11 +650,29 @@
         });
       });
 
-      // ============ レイヤスイッチ（現状はSnackbarのみ、実データ接続は Phase 2）============
+      // ============ レイヤスイッチ：MapLibreレイヤの可視性を切替 ============
+      var LAYER_MAP = {
+        sewer:    ['sewer-line'],
+        ditch:    ['ditch-line'],
+        manhole:  ['manhole-circle'],
+        facility: ['facility-halo', 'facility-circle']
+      };
       var switches = document.querySelectorAll('.layer-item .switch input');
       switches.forEach(function (s) {
         s.addEventListener('change', function () {
+          var key = s.getAttribute('data-layer');
           var name = s.closest('.layer-item').querySelector('.layer-name').textContent;
+
+          if (key === 'records') {
+            setPastMarkersVisible(s.checked);
+          } else if (LAYER_MAP[key]) {
+            LAYER_MAP[key].forEach(function (id) {
+              if (map.getLayer(id)) {
+                map.setLayoutProperty(id, 'visibility', s.checked ? 'visible' : 'none');
+              }
+            });
+          }
+
           if (window.ICM && window.ICM.showSnackbar) {
             window.ICM.showSnackbar((s.checked ? '表示' : '非表示') + ': ' + name);
           }
