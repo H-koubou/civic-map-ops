@@ -180,6 +180,16 @@ I_itami_civic_map/
   - OSM 実線の上に「casing + 本線 + 白点線オーバーレイ」で重ねて描画
   - ベースマップ切替後も永続データを再適用
   - 本番では PostGIS / REST API に POST する想定
+- [x] **トレースモード全面削除＋ルートの道路追従化（2026-04-12）**
+  - ユーザー要望「自分で線を作るのではなく道路でしたんだよ」を受けて方針修正
+  - トレースモード（HTML ボタン／CSS／JS／localStorage）を完全撤去
+  - OSM 道路 LineString から隣接リストグラフを構築（`ROAD_NODES` Map、~20k ノード）
+  - `BinaryHeap` 実装の Dijkstra で任意2点の道路沿い最短経路を算出
+  - ルートモードのタップ座標を最寄り道路ノードへスナップ（200m 閾値）
+  - waypoint 間を `rebuildRouteLineFromWaypoints()` で Dijkstra 連結し描画
+  - ごみステーション【デモ】座標を起動時に最寄り道路ノードへスナップ
+  - `optimizeRouteWithTSP()` の距離指標を haversine → 道路距離（Dijkstra + キャッシュ）
+  - 総距離を km 単位でスナックバー表示
 - [ ] docs/plan.md を業務ツール方針で書き換え
 - [ ] 伊丹市以外の自治体向け横展開計画（テナント設計）
 - [ ] Next.js プロジェクト初期化
