@@ -406,17 +406,37 @@
           </div>
         </div>
 
+        <!-- 道路分類ピッカー（記録・ルートモード共通） -->
+        <div class="road-class-picker" role="group" aria-label="道路分類選択">
+          <span class="road-class-label">対象道路</span>
+          <button class="road-class-btn active" type="button" data-road-class="all">
+            <span class="road-class-swatch road-class-swatch-all"></span>全て
+          </button>
+          <button class="road-class-btn" type="button" data-road-class="kokudo">
+            <span class="road-class-swatch" style="background: var(--layer-road-kokudo);"></span>国道
+          </button>
+          <button class="road-class-btn" type="button" data-road-class="kendo">
+            <span class="road-class-swatch" style="background: var(--layer-road-kendo);"></span>県道
+          </button>
+          <button class="road-class-btn" type="button" data-road-class="shido">
+            <span class="road-class-swatch" style="background: var(--layer-road-shido);"></span>市道
+          </button>
+          <button class="road-class-btn" type="button" data-road-class="private">
+            <span class="road-class-swatch" style="background: var(--layer-road-private);"></span>私道
+          </button>
+        </div>
+
         <!-- 記録モード時のヒント -->
         <div class="map-record-hint" role="status" aria-live="polite">
           <span class="material-symbols-rounded">touch_app</span>
-          地図をタップして記録する地点を選択
+          道路分類を選択 → 地図をタップして記録地点を選択
         </div>
 
         <!-- ルートモード時のヒント + 完了/クリア ボタン -->
         <div class="map-route-hint" role="status" aria-live="polite">
           <div class="map-route-hint-text">
             <span class="material-symbols-rounded">draw</span>
-            地図をタップしてルートを描画
+            道路分類を選択 → 道路上をタップしてルートを描画
             <span class="route-point-count" id="route-pt-count">0点</span>
           </div>
           <div class="map-route-hint-actions">
@@ -606,9 +626,10 @@
       // に使う。
       // node key = lng.toFixed(6) + ',' + lat.toFixed(6)  (≒1m 精度)
       // ============================================================
-      var ROAD_NODES = new Map();   // key -> { lng, lat, edges: [{ to, w }] }
+      var ROAD_NODES = new Map();   // key -> { lng, lat, edges: [{ to, w, cls }], classes: Set }
       var ROAD_NODE_LIST = [];       // { key, lng, lat } の配列（nearest 検索用）
       var ROAD_GRAPH_READY = false;
+      var activeRoadClass = 'all';   // 'all' | 'kokudo' | 'kendo' | 'shido' | 'private'
 
       function nodeKey(lng, lat) {
         return lng.toFixed(6) + ',' + lat.toFixed(6);
@@ -617,14 +638,14 @@
       function ensureRoadNode(lng, lat) {
         var key = nodeKey(lng, lat);
         if (!ROAD_NODES.has(key)) {
-          var node = { lng: lng, lat: lat, edges: [] };
+          var node = { lng: lng, lat: lat, edges: [], classes: new Set() };
           ROAD_NODES.set(key, node);
           ROAD_NODE_LIST.push({ key: key, lng: lng, lat: lat });
         }
         return key;
       }
 
-      function addRoadFeatureToGraph(feature) {
+      function addRoadFeatureToGraph(feature, cls) {
         var coords = feature && feature.geometry && feature.geometry.coordinates;
         if (!coords || coords.length < 2) return;
         for (var i = 0; i < coords.length - 1; i++) {
@@ -633,8 +654,10 @@
           var kb = ensureRoadNode(b[0], b[1]);
           if (ka === kb) continue;
           var w = haversine(a, b);
-          ROAD_NODES.get(ka).edges.push({ to: kb, w: w });
-          ROAD_NODES.get(kb).edges.push({ to: ka, w: w });
+          ROAD_NODES.get(ka).edges.push({ to: kb, w: w, cls: cls });
+          ROAD_NODES.get(kb).edges.push({ to: ka, w: w, cls: cls });
+          ROAD_NODES.get(ka).classes.add(cls);
+          ROAD_NODES.get(kb).classes.add(cls);
         }
       }
 
@@ -642,7 +665,7 @@
         ROAD_NODES = new Map();
         ROAD_NODE_LIST = [];
         ['kokudo', 'kendo', 'shido', 'private'].forEach(function (k) {
-          ROADS[k].features.forEach(addRoadFeatureToGraph);
+          ROADS[k].features.forEach(function (f) { addRoadFeatureToGraph(f, k); });
         });
         ROAD_GRAPH_READY = true;
         var edgeCount = 0;
@@ -652,11 +675,18 @@
       }
 
       // 線形スキャン最寄り検索（20k ノード程度なら十分速い）
-      function snapToNearestRoadNode(lng, lat) {
+      // cls: 道路分類フィルタ（'all' or null → 全道路、'kokudo' 等 → その分類のノードのみ）
+      function snapToNearestRoadNode(lng, lat, cls) {
         if (!ROAD_NODE_LIST.length) return null;
+        var filterCls = cls && cls !== 'all';
         var best = null, bestD = Infinity;
         for (var i = 0; i < ROAD_NODE_LIST.length; i++) {
           var n = ROAD_NODE_LIST[i];
+          // 分類フィルタ: そのノードが指定分類のエッジを持つか
+          if (filterCls) {
+            var node = ROAD_NODES.get(n.key);
+            if (!node || !node.classes.has(cls)) continue;
+          }
           // まず粗い L∞ 距離で足切り（高速化）
           var dLng = Math.abs(n.lng - lng);
           var dLat = Math.abs(n.lat - lat);
@@ -668,6 +698,10 @@
           // 広範囲フォールバック
           for (var j = 0; j < ROAD_NODE_LIST.length; j++) {
             var m = ROAD_NODE_LIST[j];
+            if (filterCls) {
+              var nd = ROAD_NODES.get(m.key);
+              if (!nd || !nd.classes.has(cls)) continue;
+            }
             var d2 = haversine([m.lng, m.lat], [lng, lat]);
             if (d2 < bestD) { bestD = d2; best = m; }
           }
@@ -709,12 +743,14 @@
 
       // startKey から endKey まで Dijkstra。戻り値: { coords: [[lng,lat],...], distance }
       // 見つからなければ null
-      function dijkstraPath(startKey, endKey) {
+      // cls: 道路分類フィルタ（'all' or null → 全道路、'kokudo' 等 → その分類のエッジのみ）
+      function dijkstraPath(startKey, endKey, cls) {
         if (!ROAD_GRAPH_READY || !ROAD_NODES.has(startKey) || !ROAD_NODES.has(endKey)) return null;
         if (startKey === endKey) {
           var sn = ROAD_NODES.get(startKey);
           return { coords: [[sn.lng, sn.lat]], distance: 0 };
         }
+        var filterCls = cls && cls !== 'all';
         var dist = new Map();
         var prev = new Map();
         dist.set(startKey, 0);
@@ -730,6 +766,8 @@
           if (!node) continue;
           for (var i = 0; i < node.edges.length; i++) {
             var e = node.edges[i];
+            // 道路分類フィルタ
+            if (filterCls && e.cls !== cls) continue;
             var nd = d + e.w;
             var cur = dist.has(e.to) ? dist.get(e.to) : Infinity;
             if (nd < cur) {
@@ -1350,6 +1388,7 @@
       }
 
       // routeWaypoints を繋いで routeLineCoords を再構築（道路追従）
+      // activeRoadClass に基づいて、その分類の道路のみで経路探索する
       function rebuildRouteLineFromWaypoints() {
         routeLineCoords = [];
         if (routeWaypoints.length === 0) {
@@ -1361,7 +1400,7 @@
         for (var i = 0; i < routeWaypoints.length - 1; i++) {
           var a = routeWaypoints[i];
           var b = routeWaypoints[i + 1];
-          var path = dijkstraPath(a.key, b.key);
+          var path = dijkstraPath(a.key, b.key, activeRoadClass);
           if (path && path.coords.length >= 2) {
             // 先頭は既に push 済みなのでスキップ
             for (var j = 1; j < path.coords.length; j++) {
@@ -1445,13 +1484,13 @@
         return best;
       }
 
-      // 道路距離キャッシュ（同一セッション内）
+      // 道路距離キャッシュ（同一セッション内・分類ごと）
       var roadDistCache = new Map();
       function roadDist(aKey, bKey) {
         if (aKey === bKey) return 0;
-        var ck = aKey < bKey ? aKey + '|' + bKey : bKey + '|' + aKey;
+        var ck = activeRoadClass + ':' + (aKey < bKey ? aKey + '|' + bKey : bKey + '|' + aKey);
         if (roadDistCache.has(ck)) return roadDistCache.get(ck);
-        var p = dijkstraPath(aKey, bKey);
+        var p = dijkstraPath(aKey, bKey, activeRoadClass);
         var d = p ? p.distance : Infinity;
         roadDistCache.set(ck, d);
         return d;
@@ -1628,7 +1667,7 @@
       // ============================================================
       function loadOsmRoads() {
         // キャッシュバスタ: 再生成した GeoJSON をブラウザキャッシュに引っ張られず反映
-        var cb = '?v=' + (window.ICM_OSM_BUILD || '20260412');
+        var cb = '?v=' + (window.ICM_OSM_BUILD || '20260413');
         var pending = Object.keys(ROAD_DATA_URLS).length;
         Object.keys(ROAD_DATA_URLS).forEach(function (key) {
           var url = ROAD_DATA_URLS[key] + cb;
@@ -1665,6 +1704,36 @@
             });
         });
       }
+
+      // ============ 道路分類ラベル ============
+      function roadClassLabel(cls) {
+        if (cls === 'kokudo')  return '国道';
+        if (cls === 'kendo')   return '県道';
+        if (cls === 'shido')   return '市道';
+        if (cls === 'private') return '私道';
+        return '道路';
+      }
+
+      // ============ 道路分類ピッカー ============
+      var roadClassBtns = document.querySelectorAll('.road-class-btn');
+      roadClassBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          roadClassBtns.forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          activeRoadClass = btn.getAttribute('data-road-class');
+
+          // ルート中なら再構築（分類切替で経路が変わる）
+          if (routeWaypoints.length >= 2) {
+            roadDistCache = new Map();
+            rebuildRouteLineFromWaypoints();
+          }
+
+          var label = activeRoadClass === 'all' ? '全道路' : roadClassLabel(activeRoadClass);
+          if (window.ICM && window.ICM.showSnackbar) {
+            window.ICM.showSnackbar('対象道路: ' + label);
+          }
+        });
+      });
 
       // ============ カスタムコントロール ============
       document.querySelectorAll('[data-action]').forEach(function (btn) {
@@ -1767,8 +1836,9 @@
         }
 
         if (window.ICM && window.ICM.showSnackbar) {
-          var msg = mode === 'record' ? '記録モード：地図をタップして地点を選択'
-                  : mode === 'route'  ? 'ルートモード：道路上の点をタップ → 完了で道路沿いTSP最適化'
+          var clsInfo = activeRoadClass === 'all' ? '' : '（' + roadClassLabel(activeRoadClass) + '）';
+          var msg = mode === 'record' ? '記録モード：道路分類を選択 → 地図をタップ' + clsInfo
+                  : mode === 'route'  ? 'ルートモード：道路分類を選択 → 道路上をタップ → 完了でTSP最適化' + clsInfo
                   :                     '閲覧モードに切替';
           window.ICM.showSnackbar(msg);
         }
@@ -1792,14 +1862,18 @@
         return el;
       }
 
-      function buildPopupHTML(lngLat) {
+      function buildPopupHTML(lngLat, roadCls) {
         var lng = lngLat.lng.toFixed(5);
         var lat = lngLat.lat.toFixed(5);
+        var clsParam = roadCls && roadCls !== 'all' ? '&road_class=' + encodeURIComponent(roadCls) : '';
+        var clsBadge = roadCls && roadCls !== 'all'
+          ? '<span class="record-popup-road-class" style="background: var(--layer-road-' + roadCls + ');">' + roadClassLabel(roadCls) + '</span>'
+          : '';
         return (
           '<div class="record-popup">' +
             '<div class="record-popup-title">' +
               '<span class="material-symbols-rounded">edit_location</span>' +
-              'この地点を記録' +
+              'この地点を記録' + clsBadge +
             '</div>' +
             '<div class="record-popup-coords">' +
               '<span>緯度 ' + lat + '</span>' +
@@ -1807,7 +1881,7 @@
             '</div>' +
             '<div class="record-popup-actions">' +
               '<button type="button" class="record-popup-cancel">キャンセル</button>' +
-              '<a href="./inspect.html?lat=' + lat + '&lng=' + lng + '" class="record-popup-go">' +
+              '<a href="./inspect.html?lat=' + lat + '&lng=' + lng + clsParam + '" class="record-popup-go">' +
                 '<span class="material-symbols-rounded">add_a_photo</span>記録する' +
               '</a>' +
             '</div>' +
@@ -1818,7 +1892,7 @@
       map.on('click', function (e) {
         var mode = body.getAttribute('data-map-mode');
 
-        // --- ルートモード: 最寄り道路ノードへスナップして waypoint を追加 ---
+        // --- ルートモード: 選択中の道路分類の最寄りノードへスナップして waypoint を追加 ---
         if (mode === 'route') {
           if (!ROAD_GRAPH_READY) {
             if (window.ICM && window.ICM.showSnackbar) {
@@ -1826,16 +1900,17 @@
             }
             return;
           }
-          var snap = snapToNearestRoadNode(e.lngLat.lng, e.lngLat.lat);
+          var clsLabel = roadClassLabel(activeRoadClass);
+          var snap = snapToNearestRoadNode(e.lngLat.lng, e.lngLat.lat, activeRoadClass);
           if (!snap) {
             if (window.ICM && window.ICM.showSnackbar) {
-              window.ICM.showSnackbar('近くに道路が見つかりません');
+              window.ICM.showSnackbar('近くに' + clsLabel + 'が見つかりません');
             }
             return;
           }
           if (snap.distance > 200) {
             if (window.ICM && window.ICM.showSnackbar) {
-              window.ICM.showSnackbar('最寄り道路まで ' + Math.round(snap.distance) + 'm：道路上をタップしてください');
+              window.ICM.showSnackbar('最寄り' + clsLabel + 'まで ' + Math.round(snap.distance) + 'm：道路上をタップしてください');
             }
             return;
           }
@@ -1853,10 +1928,19 @@
         if (recordMarker) { recordMarker.remove(); recordMarker = null; }
         if (recordPopup)  { recordPopup.remove();  recordPopup  = null; }
 
+        // 選択中の道路分類の最寄りノードへスナップ（道路が読込み済みなら）
+        var pinLngLat = e.lngLat;
+        if (ROAD_GRAPH_READY) {
+          var recSnap = snapToNearestRoadNode(e.lngLat.lng, e.lngLat.lat, activeRoadClass);
+          if (recSnap && recSnap.distance <= 200) {
+            pinLngLat = { lng: recSnap.lng, lat: recSnap.lat };
+          }
+        }
+
         // 新しいピンを配置
         var el = createRecordPinElement();
         recordMarker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
-          .setLngLat(e.lngLat)
+          .setLngLat([pinLngLat.lng, pinLngLat.lat])
           .addTo(map);
 
         // ポップアップ
@@ -1866,8 +1950,8 @@
           closeOnClick: false,
           className: 'record-popup-wrap'
         })
-          .setLngLat(e.lngLat)
-          .setHTML(buildPopupHTML(e.lngLat))
+          .setLngLat([pinLngLat.lng, pinLngLat.lat])
+          .setHTML(buildPopupHTML(pinLngLat, activeRoadClass))
           .addTo(map);
 
         // キャンセルボタン

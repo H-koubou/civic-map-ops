@@ -58,11 +58,11 @@
   --layer-ditch: #16a34a;        /* 側溝 */
   --layer-shelter: #dc2626;      /* 避難所 */
 
-  /* 道路分類（私道は警告色で明示） */
-  --layer-road-kokudo:  #e11d48;   /* 国道 - ローズレッド */
-  --layer-road-kendo:   #f59e0b;   /* 県道 - アンバー */
-  --layer-road-shido:   #64748b;   /* 市道 - スレートグレー */
-  --layer-road-private: #dc2626;   /* 私道 - 警告赤（公道外の事故処理区分のため強調） */
+  /* 道路分類（MapLibre描画色と統一） */
+  --layer-road-kokudo:  #d946ef;   /* 国道 - マゼンタ */
+  --layer-road-kendo:   #06b6d4;   /* 県道 - シアン */
+  --layer-road-shido:   #84cc16;   /* 市道 - ライム */
+  --layer-road-private: #ef4444;   /* 私道 - 赤破線（公道外の事故処理区分のため強調） */
 
   /* ごみステーション分類 */
   --layer-gs-home:    #f59e0b;     /* 家庭ごみ - オレンジ */

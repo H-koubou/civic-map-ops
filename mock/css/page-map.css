@@ -56,7 +56,7 @@
 /* 記録モードヒントバナー */
 .map-record-hint {
   position: absolute;
-  top: calc(var(--space-4) + 136px);
+  top: calc(var(--space-4) + 184px);
   left: 50%;
   transform: translateX(-50%) translateY(-8px);
   z-index: 17;
@@ -724,7 +724,7 @@ body[data-map-mode="record"] .map-canvas::after {
    ============================================================ */
 .map-route-hint {
   position: absolute;
-  top: 80px;
+  top: calc(var(--space-4) + 184px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 6;
@@ -2346,6 +2346,90 @@ body[data-map-mode="route"] .map-record-hint {
   font-variation-settings: 'FILL' 1;
 }
 
+/* ============ 道路分類ピッカー（記録・ルートモード共通） ============ */
+.road-class-picker {
+  position: absolute;
+  top: calc(var(--space-4) + 72px + 52px + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 18;
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: var(--md-sys-color-surface-container-low);
+  border-radius: var(--md-sys-shape-corner-full);
+  box-shadow: var(--md-sys-elevation-3);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+body[data-map-mode="record"] .road-class-picker,
+body[data-map-mode="route"]  .road-class-picker {
+  display: inline-flex;
+}
+.road-class-label {
+  font: var(--md-sys-typescale-label-small);
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface-variant);
+  padding: 0 4px 0 6px;
+  white-space: nowrap;
+}
+.road-class-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 34px;
+  padding: 0 12px;
+  border: none;
+  background: transparent;
+  border-radius: var(--md-sys-shape-corner-full);
+  font: var(--md-sys-typescale-label-medium);
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  transition: background var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-standard),
+              color var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-standard);
+}
+.road-class-btn:hover {
+  background: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+}
+.road-class-btn.active {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  box-shadow: var(--md-sys-elevation-1);
+}
+.road-class-btn.active .road-class-swatch {
+  box-shadow: 0 0 0 1.5px var(--md-sys-color-on-primary);
+}
+.road-class-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.road-class-swatch-all {
+  background: conic-gradient(
+    var(--layer-road-kokudo) 0deg 90deg,
+    var(--layer-road-kendo)  90deg 180deg,
+    var(--layer-road-shido)  180deg 270deg,
+    var(--layer-road-private) 270deg 360deg
+  );
+}
+
+/* 記録ポップアップ内の道路分類バッジ */
+.record-popup-road-class {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 8px;
+  margin-left: 6px;
+  border-radius: var(--md-sys-shape-corner-full);
+  font: var(--md-sys-typescale-label-small);
+  font-weight: 700;
+  color: #fff;
+  vertical-align: middle;
+}
+
 /* ----- 同期ステータスチップ ----- */
 .map-sync-chip {
   display: inline-flex;
@@ -2591,6 +2675,13 @@ body[data-map-mode="record"] .map-canvas::after {
   }
   .mode-btn { height: 40px; padding: 0 var(--space-4); }
   .map-sync-chip { height: 36px; padding: 0 var(--space-3); }
+  .road-class-picker {
+    top: calc(var(--space-3) + 68px + 48px + 8px);
+  }
+  .map-record-hint,
+  .map-route-hint {
+    top: calc(var(--space-3) + 68px + 48px + 46px + 8px);
+  }
 }
 
 @media (max-width: 600px) {
@@ -2606,6 +2697,21 @@ body[data-map-mode="record"] .map-canvas::after {
     display: none;
   }
   .map-sync-chip { padding: 0 var(--space-2); }
+  .road-class-picker {
+    top: calc(var(--space-3) + 60px + 44px + 6px);
+    gap: 3px;
+    padding: 3px 6px;
+  }
+  .road-class-btn {
+    height: 30px;
+    padding: 0 8px;
+    font: var(--md-sys-typescale-label-small);
+  }
+  .road-class-label { font-size: 10px; }
+  .map-record-hint,
+  .map-route-hint {
+    top: calc(var(--space-3) + 60px + 44px + 38px + 8px);
+  }
 }
 
 /* ============ Reduced motion ============ */
