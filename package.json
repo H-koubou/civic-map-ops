@@ -1,0 +1,19 @@
+{
+  "name": "i_itami_civic_map",
+  "version": "1.0.0",
+  "description": "> 自治体インフラ維持管理の現場業務を、タブレット1台で完結させるSaaS",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mapbox/vector-tile": "^2.0.4",
+    "pbf": "^4.0.1"
+  }
+}

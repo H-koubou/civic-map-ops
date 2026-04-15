@@ -89,10 +89,14 @@
 - **shadcn/ui** + **Tailwind CSS v4**
 - **PWA**（next-pwa）でオフライン対応
 
-### 地図タイル / ベースマップ
-- **国土地理院ベクトルタイル**（無料・公式）
-  - https://maps.gsi.go.jp/development/ichiran.html
-- **OpenStreetMap**（補助）
+### 地図タイル / ベースマップ / 道路データ
+- **国土地理院ラスタータイル**（背景地図: 標準/淡色/航空写真）
+  - `https://cyberjapandata.gsi.go.jp/xyz/{std|pale|seamlessphoto}/{z}/{x}/{y}.png`
+- **国土地理院 最適化ベクトルタイル**（道路中心線データ: 国道/県道/市道）
+  - `https://cyberjapandata.gsi.go.jp/xyz/optimal_bvmap-v1/{z}/{x}/{y}.pbf`
+  - RdCL レイヤーの `vt_rdctg` で分類（国道/都道府県道/市区町村道等/高速自動車国道等）
+  - 測量法に基づく基本測量成果（精度保証あり）
+  - ※私道は国の測量対象外のため含まれない
 
 ### 空間データ管理
 - **PMTiles**（Protomaps形式・単一ファイル・静的ホスト可能）
@@ -155,15 +159,17 @@ I_itami_civic_map/
 - [x] `mock/inspect.html`（現場記録フォーム）新規作成
   - 写真グリッド、チェックリスト、状態評価、メモ、測定、サイドパネル、固定アクションバー
 - [x] `mock/css/page-inspect.css` 新規作成
-- [x] **道路データを OSM 実データに差し替え（2026-04-11）**
-  - `scripts/fetch_osm_roads.js`: Overpass API で伊丹市 admin_level=7 内の道路を取得
-  - `data/osm/roads-{kokudo,kendo,shido,private}.geojson` (計1.5MB)
-  - 手書きサンプル（意味のない位置に線が引かれていた問題）を撤去
-  - 下水道・側溝・記録済み点検は「未登録」状態
-  - ズーム依存の line-width で 4,000+ 本の市道でも低ズーム時に重くならないよう調整
+- [x] ~~道路データを OSM 実データに差し替え（2026-04-11）~~ → 国土地理院に完全移行
+- [x] **道路データを国土地理院ベクトルタイルに完全移行（2026-04-15）**
+  - `scripts/fetch_gsi_roads.js`: 最適化ベクトルタイル（optimal_bvmap-v1）zoom 16 から RdCL 抽出
+  - `data/gsi/roads-{kokudo,kendo,shido}.geojson` (計 8.0MB / 37,192 features)
+  - 分類: vt_rdctg（国道 + 高速自動車国道等 / 都道府県道 / 市区町村道等）
+  - OSM 由来データ（data/osm/）はアーカイブ扱い
+  - 私道は国土地理院対象外のため OSM データで補完（data/osm/roads-private.geojson）
+  - 測量法に基づく精度保証あり → 自治体への説得力◎
 - [x] **OSM 道路の視認性修正（2026-04-11）**
   - pale 地図で埋もれないよう全クラスに濃色 casing (#0b1220) + 太線
-  - 色相を完全分離: 国道=マゼンタ / 県道=シアン / 市道=ライム / 私道=赤破線+グロー
+  - 色相を完全分離: 国道=マゼンタ / 県道=シアン / 市道=ライム
 - [x] **ごみステーション デモデータ復活 + 双方向通信 UI（2026-04-11）**
   - 7 分類 × 13 拠点の【デモ】ピンを OSM 道路沿いに配置
   - 不法投棄 / 死獣(平日) / 側溝汚泥 にサンプルスレッドを投入（市民⇄市役所⇄業者）
@@ -183,7 +189,7 @@ I_itami_civic_map/
 - [x] **トレースモード全面削除＋ルートの道路追従化（2026-04-12）**
   - ユーザー要望「自分で線を作るのではなく道路でしたんだよ」を受けて方針修正
   - トレースモード（HTML ボタン／CSS／JS／localStorage）を完全撤去
-  - OSM 道路 LineString から隣接リストグラフを構築（`ROAD_NODES` Map、~20k ノード）
+  - 国土地理院道路中心線 LineString から隣接リストグラフを構築（`ROAD_NODES` Map）
   - `BinaryHeap` 実装の Dijkstra で任意2点の道路沿い最短経路を算出
   - ルートモードのタップ座標を最寄り道路ノードへスナップ（200m 閾値）
   - waypoint 間を `rebuildRouteLineFromWaypoints()` で Dijkstra 連結し描画

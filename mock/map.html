@@ -56,14 +56,14 @@
               レイヤ
             </h2>
 
-            <!-- 道路分類: OSM 由来の実データ -->
-            <h3 class="map-sidebar-subheading">道路分類 <span class="layer-source-chip">OSM</span></h3>
+            <!-- 道路分類: 国土地理院ベクトルタイル由来 -->
+            <h3 class="map-sidebar-subheading">道路分類 <span class="layer-source-chip">国土地理院</span></h3>
             <ul class="layer-list" role="list">
               <li class="layer-item">
                 <span class="layer-dot" style="--dot: var(--layer-road-kokudo);"></span>
                 <div class="layer-text">
                   <div class="layer-name">国道・高速</div>
-                  <div class="layer-meta">trunk / motorway · <span data-road-count="kokudo">読込中…</span></div>
+                  <div class="layer-meta">国道・高速自動車国道等 · <span data-road-count="kokudo">読込中…</span></div>
                 </div>
                 <label class="switch" aria-label="国道レイヤ">
                   <input type="checkbox" data-layer="road-kokudo" checked />
@@ -74,7 +74,7 @@
                 <span class="layer-dot" style="--dot: var(--layer-road-kendo);"></span>
                 <div class="layer-text">
                   <div class="layer-name">県道</div>
-                  <div class="layer-meta">primary / secondary · <span data-road-count="kendo">読込中…</span></div>
+                  <div class="layer-meta">都道府県道 · <span data-road-count="kendo">読込中…</span></div>
                 </div>
                 <label class="switch" aria-label="県道レイヤ">
                   <input type="checkbox" data-layer="road-kendo" checked />
@@ -85,7 +85,7 @@
                 <span class="layer-dot" style="--dot: var(--layer-road-shido);"></span>
                 <div class="layer-text">
                   <div class="layer-name">市道</div>
-                  <div class="layer-meta">tertiary / residential · <span data-road-count="shido">読込中…</span></div>
+                  <div class="layer-meta">市区町村道等 · <span data-road-count="shido">読込中…</span></div>
                 </div>
                 <label class="switch" aria-label="市道レイヤ">
                   <input type="checkbox" data-layer="road-shido" checked />
@@ -96,7 +96,7 @@
                 <span class="layer-dot" style="--dot: var(--layer-road-private);"></span>
                 <div class="layer-text">
                   <div class="layer-name">私道 <span class="layer-warn-chip">公道外</span></div>
-                  <div class="layer-meta">事故処理区分が異なります · <span data-road-count="private">読込中…</span></div>
+                  <div class="layer-meta">OSM補完（国土地理院対象外） · <span data-road-count="private">読込中…</span></div>
                 </div>
                 <label class="switch" aria-label="私道レイヤ">
                   <input type="checkbox" data-layer="road-private" checked />
@@ -296,7 +296,7 @@
               </li>
               <li class="legend-row">
                 <span class="legend-swatch legend-line legend-line-dash" style="--c: var(--layer-road-private);"></span>
-                <span class="legend-label">私道（公道外）</span>
+                <span class="legend-label">私道（OSM補完）</span>
               </li>
             </ul>
 
@@ -373,8 +373,8 @@
           <!-- 出典 -->
           <div class="map-sidebar-section">
             <p class="map-sidebar-note">
-              地図タイル: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">国土地理院</a><br />
-              道路: © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a> (ODbL)<br />
+              地図タイル・道路中心線: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">国土地理院</a>（最適化ベクトルタイル）<br />
+              私道: © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a> (ODbL)<br />
               台帳データ（下水道・側溝・ごみ拠点）: 各自治体との連携で投入
             </p>
           </div>
@@ -496,7 +496,7 @@
 
         <!-- 属性表示 -->
         <div class="map-attribution">
-          © <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">国土地理院タイル</a> · MapLibre GL JS
+          © <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">国土地理院</a>（タイル・道路中心線） · MapLibre GL JS
         </div>
 
         <!-- モバイル用タブ -->
@@ -598,10 +598,10 @@
       };
 
       // ============================================================
-      // 道路分類（国道・県道・市道・私道）
-      // 初期は空 → DOMContentLoaded 後に OSM 由来 GeoJSON (data/osm/*)
-      // を fetch() で読み込み setData する。
-      // データ出典: © OpenStreetMap contributors (ODbL)
+      // 道路分類（国道・県道・市道）
+      // 初期は空 → DOMContentLoaded 後に国土地理院ベクトルタイル由来の
+      // GeoJSON (data/gsi/*) を fetch() で読み込み setData する。
+      // データ出典: 国土地理院 最適化ベクトルタイル（optimal_bvmap-v1）
       // ============================================================
       var ROADS = {
         kokudo:  { type: 'FeatureCollection', features: [] },
@@ -610,17 +610,19 @@
         private: { type: 'FeatureCollection', features: [] }
       };
 
-      // OSM 道路 GeoJSON の相対パス（mock/ → ../data/osm/）
+      // 道路 GeoJSON パス
+      //   公道（国道/県道/市道）: 国土地理院ベクトルタイル由来 → data/gsi/
+      //   私道: OSM 由来（国の測量対象外のため） → data/osm/
       var ROAD_DATA_URLS = {
-        kokudo:  '../data/osm/roads-kokudo.geojson',
-        kendo:   '../data/osm/roads-kendo.geojson',
-        shido:   '../data/osm/roads-shido.geojson',
+        kokudo:  '../data/gsi/roads-kokudo.geojson',
+        kendo:   '../data/gsi/roads-kendo.geojson',
+        shido:   '../data/gsi/roads-shido.geojson',
         private: '../data/osm/roads-private.geojson'
       };
 
       // ============================================================
       // 道路ネットワークグラフ（Dijkstra 用）
-      // OSM 道路の全 LineString を隣接リストに変換し、
+      // 国土地理院道路中心線の全 LineString を隣接リストに変換し、
       //  - 任意座標を最寄り道路ノードにスナップ
       //  - 2点間の最短経路（道路追従）を算出
       // に使う。
@@ -949,7 +951,7 @@
           });
         }
 
-        // ===== 私道 =====  色: 警告赤 + 破線 + グロー
+        // ===== 私道（OSM補完）=====  色: 警告赤 + 破線 + グロー
         if (!map.getSource('road-private-src')) {
           map.addSource('road-private-src', { type: 'geojson', data: ROADS.private });
         }
@@ -1658,16 +1660,16 @@
         addPastRecordMarkers();
         setPastMarkersVisible(pastLayerVisible);
         addGarbageMarkers();
-        loadOsmRoads();
+        loadGsiRoads();
       });
 
       // ============================================================
-      // OSM 由来の道路 GeoJSON を fetch して ROADS に注入する
+      // 国土地理院由来の道路 GeoJSON を fetch して ROADS に注入する
       // fetch 完了後に各ソースの data を差し替え → MapLibre が再描画
       // ============================================================
-      function loadOsmRoads() {
+      function loadGsiRoads() {
         // キャッシュバスタ: 再生成した GeoJSON をブラウザキャッシュに引っ張られず反映
-        var cb = '?v=' + (window.ICM_OSM_BUILD || '20260413');
+        var cb = '?v=' + (window.ICM_GSI_BUILD || '20260415');
         var pending = Object.keys(ROAD_DATA_URLS).length;
         Object.keys(ROAD_DATA_URLS).forEach(function (key) {
           var url = ROAD_DATA_URLS[key] + cb;
@@ -1684,7 +1686,7 @@
               if (countEl) countEl.textContent = fc.features.length.toLocaleString() + '本';
             })
             .catch(function (err) {
-              console.warn('[OSM road load] failed:', key, err.message);
+              console.warn('[GSI road load] failed:', key, err.message);
               var countEl = document.querySelector('[data-road-count="' + key + '"]');
               if (countEl) countEl.textContent = '読込失敗';
             })
